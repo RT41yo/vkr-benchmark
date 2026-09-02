@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from bisect import bisect_left
 from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import Any, Mapping
@@ -42,6 +43,13 @@ class MethodEnvironment:
             raise ValueError("allowed token ID lies outside output vocabulary")
 
         object.__setattr__(self, "allowed_token_ids", token_ids)
+
+    def is_allowed(self, token_id: int) -> bool:
+        """Check V_allowed membership in O(log |V|) without another large set."""
+
+        value = int(token_id)
+        index = bisect_left(self.allowed_token_ids, value)
+        return index < len(self.allowed_token_ids) and self.allowed_token_ids[index] == value
 
 
 @dataclass(frozen=True, slots=True)

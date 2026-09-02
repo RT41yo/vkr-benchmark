@@ -16,3 +16,14 @@ def test_method_environment_rejects_duplicate_ids() -> None:
 def test_method_environment_rejects_out_of_range_id() -> None:
     with pytest.raises(ValueError, match="outside"):
         MethodEnvironment(output_vocab_size=4, allowed_token_ids=(0, 4))
+
+
+def test_method_environment_membership_helper() -> None:
+    env = MethodEnvironment(output_vocab_size=10, allowed_token_ids=(7, 1, 4))
+
+    assert env.allowed_token_ids == (1, 4, 7)
+    assert env.is_allowed(1) is True
+    assert env.is_allowed(4) is True
+    assert env.is_allowed(7) is True
+    assert env.is_allowed(0) is False
+    assert env.is_allowed(8) is False

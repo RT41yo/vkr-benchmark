@@ -48,6 +48,23 @@ models/
 - отдельный GPU smoke test `scripts/check_lm_adapter.py`, включая точное сравнение логитов adapter path с независимым Stage-1-style путем до и после одного cached step;
 - `MethodEnvironment` с фиксированным `V_allowed`, не раскрывающий методу LM/tokenizer;
 - normalized `BinsMethod`: фиксированное разбиение `V_allowed`, streaming encoder/decoder sessions, изолированный method RNG и exact explicit `Q_stego`;
-- 42 synthetic unit tests для контрактов, token space, `P_reference` и Bins.
+- `LMAdapter.encode_text()` и `TextChannel` для обязательного обычного текстового transport `tokens → text → retokenize` без BPE-repair эвристик;
+- минимальный `runner/streaming.py`, который независимо строит encoder- и decoder-side LM/KV-cache пути;
+- `RecordingSecretSource` для проверки фактически использованного payload;
+- end-to-end smoke script `scripts/check_bins_e2e.py` для реальной Llama/Qwen;
+- 49 synthetic unit/integration tests для контрактов, token space, `P_reference`, Bins, text transport и streaming runner.
 
-LM/reference-distribution слой локально проверен на Llama и Qwen. Bins пока проверен синтетически без GPU; следующий шаг — интеграционный encode/decode с реальной LM и затем обязательный text transport `tokens → text → tokens`.
+LM/reference-distribution слой локально проверен на Llama и Qwen. Ядро Bins и полный encode → text → retokenize → decode path проверены синтетически; следующий контрольный шаг — короткий end-to-end Bins run на реальной Llama через `scripts/check_bins_e2e.py`.
+
+## Bins end-to-end smoke test
+
+После обычного `pytest -q` реальную GPU-проверку следует запускать отдельно:
+
+```bash
+python scripts/check_bins_e2e.py \
+  configs/models/llama-3.2-3b.local.json \
+  --block-size 2 \
+  --carrier-tokens 16
+```
+
+Smoke test не является основным экспериментом benchmark. Он проверяет, что единая инфраструктура проходит полный путь от LM до восстановления секрета после обычного текстового канала. `roundtrip_exact=False` при изменении токенизации не маскируется и само по себе не означает ошибку инфраструктуры — это диагностируемый reliability-результат метода/канала.

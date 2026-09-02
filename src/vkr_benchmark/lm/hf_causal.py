@@ -139,9 +139,20 @@ class HFCausalLMAdapter(LMAdapter):
         return self._config.prompt_add_special_tokens
 
     def encode_prompt(self, text: str) -> tuple[int, ...]:
-        token_ids = self._tokenizer.encode(
+        return self.encode_text(
             text,
             add_special_tokens=self._config.prompt_add_special_tokens,
+        )
+
+    def encode_text(
+        self,
+        text: str,
+        *,
+        add_special_tokens: bool,
+    ) -> tuple[int, ...]:
+        token_ids = self._tokenizer.encode(
+            text,
+            add_special_tokens=add_special_tokens,
         )
         return tuple(int(token_id) for token_id in token_ids)
 

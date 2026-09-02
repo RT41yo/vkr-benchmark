@@ -50,6 +50,21 @@ class LMAdapter(ABC):
         """Tokenize an exact prompt using the adapter's explicit prompt policy."""
 
     @abstractmethod
+    def encode_text(
+        self,
+        text: str,
+        *,
+        add_special_tokens: bool,
+    ) -> tuple[int, ...]:
+        """Tokenize arbitrary text with an explicit special-token policy.
+
+        This is intentionally separate from ``encode_prompt``: prompt
+        tokenization may add model-specific BOS tokens, while text received
+        from the transport channel must be retokenized with
+        ``add_special_tokens=False``.
+        """
+
+    @abstractmethod
     def decode_tokens(self, token_ids: tuple[int, ...] | list[int]) -> str:
         """Decode carrier ids without skipping special tokens or cleanup."""
 
