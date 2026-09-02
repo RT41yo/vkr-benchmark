@@ -1,4 +1,4 @@
-"""Shared method-session result types."""
+"""Shared method-session input and result types."""
 
 from __future__ import annotations
 
@@ -11,6 +11,37 @@ from vkr_benchmark.distributions import DistributionInfo
 
 def _metadata(values: Mapping[str, Any] | None) -> Mapping[str, Any]:
     return MappingProxyType(dict(values or {}))
+
+
+@dataclass(frozen=True, slots=True)
+class MethodEnvironment:
+    """Run-invariant information exposed to a steganographic method.
+
+    The environment contains only benchmark-normalized token-space information.
+    It deliberately does not expose the LM, tokenizer, logits, device, or common
+    generation-policy implementation to the method.
+
+    ``allowed_token_ids`` is canonicalized to increasing token ID order so that
+    a keyed/randomized method partition does not depend on incidental caller
+    ordering.
+    """
+
+    output_vocab_size: int
+    allowed_token_ids: tuple[int, ...]
+
+    def __post_init__(self) -> None:
+        if self.output_vocab_size <= 0:
+            raise ValueError("output_vocab_size must be positive")
+
+        token_ids = tuple(sorted(int(token_id) for token_id in self.allowed_token_ids))
+        if not token_ids:
+            raise ValueError("allowed_token_ids must be non-empty")
+        if len(set(token_ids)) != len(token_ids):
+            raise ValueError("allowed_token_ids must not contain duplicates")
+        if token_ids[0] < 0 or token_ids[-1] >= self.output_vocab_size:
+            raise ValueError("allowed token ID lies outside output vocabulary")
+
+        object.__setattr__(self, "allowed_token_ids", token_ids)
 
 
 @dataclass(frozen=True, slots=True)

@@ -11,6 +11,7 @@ from vkr_benchmark.methods.types import (
     DecoderFinalization,
     EncodeDecision,
     EncoderFinalization,
+    MethodEnvironment,
 )
 from vkr_benchmark.randomness import RandomSource, SecretSource
 
@@ -62,6 +63,7 @@ class StegoMethod(ABC):
         self,
         *,
         config: MethodConfig,
+        environment: MethodEnvironment,
         secret_source: SecretSource,
         random_source: RandomSource | None = None,
         key: KeyMaterial = None,
@@ -73,6 +75,7 @@ class StegoMethod(ABC):
         self,
         *,
         config: MethodConfig,
+        environment: MethodEnvironment,
         random_source: RandomSource | None = None,
         key: KeyMaterial = None,
         expected_payload_bits: int | None = None,
