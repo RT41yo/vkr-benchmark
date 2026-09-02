@@ -1,0 +1,20 @@
+output vocab: 128256
+tokenizer vocab: 128256
+tokenizer ids in output: 128256
+output-only ids: 0
+special ids: 2
+prompt tokens: 7
+prompt token ids: [128000, 791, 3925, 315, 21075, 11478, 6137]
+raw logits dtype: torch.bfloat16
+raw logits device: cuda:0
+prefill logits exact: True
+prefill logits max abs diff: 0
+P_reference sum: 0.999999917
+forbidden mass: 0.000000000
+support size: 128254
+top token id: 304
+cached-step logits exact: True
+cached-step logits max abs diff: 0
+state length after one generated token: 8
+next P_reference sum: 1.000000244
+LM adapter smoke test: OK

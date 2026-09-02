@@ -1,0 +1,34 @@
+{
+  "sources": [
+    {
+      "method_family": ["bins", "huffman", "arithmetic_coding"],
+      "repository": "https://github.com/harvardnlp/NeuralSteganography",
+      "commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+      "role": "algorithm_reference"
+    },
+    {
+      "method_family": ["adg"],
+      "repository": "https://github.com/Mhzzzzz/ADG-steganography",
+      "commit": "b4a7e802a97bc3a3b84d07e63f24627b16c51a10",
+      "role": "future_algorithm_reference"
+    },
+    {
+      "method_family": ["discop"],
+      "repository": "https://github.com/comydream/Discop",
+      "commit": "3c3a10099a242eae405b49cc4d09fba1abb148ad",
+      "role": "future_algorithm_reference"
+    },
+    {
+      "method_family": ["dairstega"],
+      "repository": "https://github.com/WangYH-BUPT/DAIRstega",
+      "commit": "8d85edf98d48c3efa827a125b6d4e90f88141ea2",
+      "role": "future_algorithm_reference"
+    },
+    {
+      "method_family": ["rrc"],
+      "repository": "https://github.com/ryehr/RRC_steganography",
+      "commit": "8b6a86a66e516e3763c907a1ac640c17bcd3641d",
+      "role": "future_algorithm_reference"
+    }
+  ]
+}

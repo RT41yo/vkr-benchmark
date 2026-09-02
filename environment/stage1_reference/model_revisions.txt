@@ -1,0 +1,2 @@
+Qwen/Qwen3-4B-Base: 906bfd4b4dc7f14ee4320094d8b41684abff8539
+meta-llama/Llama-3.2-3B: 13afe5124825b4f3751f836b40dafda64c1ed062
