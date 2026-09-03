@@ -160,3 +160,79 @@ def test_extra_recovered_bits_force_roundtrip_failure() -> None:
     assert result.expected_length_bits == 8
     assert result.length_delta_bits == 2
     assert result.roundtrip_exact is False
+
+
+def test_huffman_full_text_roundtrip_through_common_runner() -> None:
+    from vkr_benchmark.methods import HuffmanMethod
+
+    lm = _DeterministicFakeLM()
+    builder = ReferenceDistributionBuilder(
+        token_space=lm.token_space,
+        policy=GenerationPolicy(),
+    )
+    environment = method_environment_from_builder(builder)
+
+    result = run_streaming_text_roundtrip(
+        lm_adapter=lm,
+        reference_builder=builder,
+        method=HuffmanMethod(),
+        method_config={"bits_per_word": 2},
+        environment=environment,
+        prompt_text="prompt",
+        carrier_tokens=8,
+        secret_source=Shake256SecretSource("000001"),
+        encoder_random_source=None,
+        decoder_random_source=None,
+    )
+
+    assert result.encode.carrier_tokens == 8
+    assert result.encode.payload_bits == len(result.encode.consumed_secret_bits)
+    assert result.encode.payload_bits == sum(
+        int(bits) for bits in result.encode.step_bits_consumed if bits is not None
+    )
+    assert all(bits is not None and bits > 0 for bits in result.encode.step_bits_consumed)
+    # Unlike Bins, Huffman payload is determined by per-step code lengths rather
+    # than a fixed block size. This deterministic run exercises that contract.
+    assert len(set(result.encode.step_bits_consumed)) >= 2
+
+    assert result.transport.token_sequence_roundtrip_exact is True
+    assert result.transport.receiver_token_ids == result.encode.carrier_token_ids
+    assert result.decode.recovered_bits == result.encode.consumed_secret_bits
+    assert result.roundtrip_exact is True
+    assert result.first_bit_mismatch is None
+    assert result.recovered_extra_bits == 0
+    assert result.recovered_length_bits == result.expected_length_bits
+    assert result.length_delta_bits == 0
+    assert result.decode.finalization.complete is True
+
+    # Eight carrier tokens require seven cached advances on encode and seven on
+    # decode. The same runner is reused without Huffman-specific LM logic.
+    assert lm.prefill_calls == 2
+    assert lm.advance_calls == 14
+
+
+def test_huffman_common_runner_requires_no_method_rng() -> None:
+    from vkr_benchmark.methods import HuffmanMethod
+
+    lm = _DeterministicFakeLM()
+    builder = ReferenceDistributionBuilder(
+        token_space=lm.token_space,
+        policy=GenerationPolicy(),
+    )
+    environment = method_environment_from_builder(builder)
+
+    result = run_streaming_text_roundtrip(
+        lm_adapter=lm,
+        reference_builder=builder,
+        method=HuffmanMethod(),
+        method_config={"bits_per_word": 1},
+        environment=environment,
+        prompt_text="prompt",
+        carrier_tokens=4,
+        secret_source=Shake256SecretSource("huffman-no-rng"),
+        encoder_random_source=None,
+        decoder_random_source=None,
+    )
+
+    assert result.roundtrip_exact is True
+    assert result.encode.payload_bits == result.expected_length_bits

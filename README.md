@@ -53,9 +53,11 @@ models/
 - `RecordingSecretSource` для проверки фактически использованного payload;
 - end-to-end smoke script `scripts/check_bins_e2e.py` для реальной Llama/Qwen;
 - normalized `HuffmanMethod`: per-step top `2**bits_per_word`, детерминированное дерево, переменный `bits_consumed`, decoder и exact explicit `Q_stego`;
-- synthetic unit tests Huffman, включая tie-break, variable-length payload, exact Q и roundtrip без GPU.
+- synthetic unit tests Huffman, включая tie-break, variable-length payload, exact Q и roundtrip без GPU;
+- Huffman подключён к тому же `runner/streaming.py` и `TextChannel` без отдельного method-specific runner;
+- `scripts/check_huffman_e2e.py` для реальной Llama/Qwen с выводом per-step variable payload.
 
-LM/reference-distribution слой локально проверен на Llama и Qwen. Bins core и end-to-end путь уже проверены на обеих реальных моделях. Huffman на текущем шаге реализован и проверяется как независимое алгоритмическое ядро; его GPU/end-to-end подключение выполняется следующим шагом через существующий streaming runner.
+LM/reference-distribution слой локально проверен на Llama и Qwen. Bins core и end-to-end путь уже проверены на обеих реальных моделях. Huffman core подключён к общей end-to-end инфраструктуре; следующий алгоритмический слой этапа 2 — Arithmetic Coding.
 
 ## Bins end-to-end smoke test
 
@@ -69,3 +71,17 @@ python scripts/check_bins_e2e.py \
 ```
 
 Smoke test не является основным экспериментом benchmark. Он проверяет, что единая инфраструктура проходит полный путь от LM до восстановления секрета после обычного текстового канала. `roundtrip_exact=False` при изменении токенизации не маскируется и само по себе не означает ошибку инфраструктуры — это диагностируемый reliability-результат метода/канала.
+
+
+## Huffman end-to-end smoke test
+
+После `pytest -q` Huffman проверяется на реальной модели отдельно:
+
+```bash
+python scripts/check_huffman_e2e.py \
+  configs/models/llama-3.2-3b.local.json \
+  --bits-per-word 2 \
+  --carrier-tokens 16
+```
+
+`bits_per_word` задаёт `2**bits_per_word` кандидатов, а не фиксированный BPT. Скрипт поэтому дополнительно выводит `step bits consumed` и фактический средний `payload_bits / carrier_tokens`. Полный roundtrip, как и для Bins, проходит только через ordinary-text transport.

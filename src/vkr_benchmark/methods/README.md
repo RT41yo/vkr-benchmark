@@ -38,4 +38,8 @@ Decoder заново строит дерево на том же `P_reference` и
 репозитория и commit. Нормализующее правило tie-break и остальные отличия описаны в
 `docs/decisions/0006-huffman-normalized-adaptation.md`.
 
+Huffman использует тот же общий `runner/streaming.py` и `TextChannel`, что и Bins;
+отдельной Huffman-specific оркестрации нет. End-to-end smoke script находится в
+`scripts/check_huffman_e2e.py`.
+
 Следующий метод этапа 2: Arithmetic Coding.

@@ -2,7 +2,7 @@
 
 ## Статус
 
-Принято на этапе 2. На данном шаге реализовано и проверяется только алгоритмическое ядро Huffman на синтетических распределениях; GPU/end-to-end интеграция выполняется следующим отдельным шагом.
+Принято на этапе 2. Алгоритмическое ядро Huffman проверено синтетическими unit-тестами и подключено к существующим `runner/streaming.py` и `TextChannel` без изменений метода или LM-слоя. Реальная GPU/end-to-end проверка выполняется отдельным smoke script на Llama и Qwen.
 
 ## Контекст
 
@@ -72,6 +72,19 @@ KL/TVD далее вычисляет независимый metric layer.
 
 Для каждого шага требуется как минимум `2**bits_per_word` токенов с положительной вероятностью в `P_reference`. Если общая top-k/top-p policy уменьшила support ниже этого значения, конфигурация считается несовместимой и завершается `UnsupportedConfigurationError`, а secret stream до ошибки не продвигается.
 
+## End-to-end интеграция
+
+`HuffmanMethod` использует тот же общий `runner/streaming.py` и `TextChannel`, что и Bins. Отдельная Huffman-ветка runner не создаётся. Это проверяет, что общий lifecycle поддерживает переменное `bits_consumed`: итоговый `payload_bits` равен сумме фактически пройденных Huffman-кодов, а decoder сравнивается именно с реально использованным префиксом secret stream.
+
+GPU smoke test находится в `scripts/check_huffman_e2e.py` и проходит полный путь:
+
+```text
+LM -> P_reference -> Huffman -> token IDs -> text -> retokenization
+   -> независимый decoder LM/KV-cache path -> recovered bits
+```
+
+BPE-repair эвристики author implementation по-прежнему не применяются. Изменение token sequence после обычного текстового transport должно фиксироваться как reliability-результат, а не исправляться внутри метода.
+
 ## Следующий шаг
 
-После synthetic unit tests этот же `HuffmanMethod` подключается к уже существующему `runner/streaming.py` и `TextChannel`, после чего выполняются короткие end-to-end smoke tests на Llama и Qwen без добавления model-specific логики в Huffman.
+После проверки Huffman end-to-end на основной и резервной моделях следующий базовый метод этапа 2 — Arithmetic Coding.
