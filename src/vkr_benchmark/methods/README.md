@@ -1,8 +1,41 @@
-# Method implementations
+# Реализации стегометодов
 
-Все методы реализуются через общий lifecycle из `base.py`. Метод получает только
-канонический `StepContext`, собственный секрет/ключ/RNG и внутреннее состояние.
-Он не должен загружать LM, токенизировать текст, применять общую temperature / top-k /
+Все методы реализуются через общий lifecycle из `base.py`. Метод получает только:
+
+- `MethodEnvironment` с нормализованным допустимым token space;
+- канонический `StepContext` / `P_reference`;
+- собственный секрет, ключ/RNG и внутреннее состояние.
+
+Метод не должен загружать LM, токенизировать текст, применять общую temperature / top-k /
 top-p policy или считать основные benchmark-метрики самостоятельно.
 
-Первым concrete adapter на этапе 2 будет Bins, затем Huffman и Arithmetic Coding.
+## Bins
+
+Первым concrete adapter реализован `BinsMethod` (`bins.py`). Алгоритмический reference:
+`harvardnlp/NeuralSteganography/block_baseline.py`, commit
+`14e982564aeaf9a33f7b4de440deda2184d17f12`.
+
+Normalized-версия сохраняет фиксированное разбиение допустимого словаря на `2^b` bins,
+отображение `b` secret bits -> bin и выбор наиболее вероятного токена выбранного bin.
+Разбиение использует изолированный `MethodRandomSource`, а не глобальный NumPy RNG.
+Метод возвращает точное explicit `Q_stego`.
+
+Подробности и отличия от reference-кода зафиксированы в
+`docs/decisions/0004-bins-normalized-adaptation.md`.
+
+## Huffman
+
+`HuffmanMethod` (`huffman.py`) на каждом шаге выбирает top `2**bits_per_word`
+кандидатов из канонического `P_reference`, строит детерминированное дерево Хаффмана
+и читает секретные биты до достижения листа. Поэтому фактический `bits_consumed`
+переменный и равен длине кода выбранного токена.
+
+Decoder заново строит дерево на том же `P_reference` и восстанавливает Huffman-код
+наблюдаемого токена. Для каждого шага adapter возвращает точное explicit
+`Q_stego(token)=2^(-code_length)` на candidate set.
+
+Алгоритмический reference: `huffman_baseline.py` + `huffman.py` того же Harvard
+репозитория и commit. Нормализующее правило tie-break и остальные отличия описаны в
+`docs/decisions/0006-huffman-normalized-adaptation.md`.
+
+Следующий метод этапа 2: Arithmetic Coding.

@@ -10,6 +10,7 @@ from vkr_benchmark.methods import (
     EncodeDecision,
     EncoderFinalization,
     EncoderSession,
+    MethodEnvironment,
     StegoMethod,
 )
 from vkr_benchmark.randomness import RandomSource, SecretSource, Shake256SecretSource
@@ -57,27 +58,34 @@ class FixedMessageMethod(StegoMethod):
         self,
         *,
         config: Mapping[str, Any],
+        environment: MethodEnvironment,
         secret_source: SecretSource,
         random_source: RandomSource | None = None,
         key: bytes | str | int | None = None,
     ) -> EncoderSession:
+        del environment
         return FixedMessageEncoder()
 
     def create_decoder(
         self,
         *,
         config: Mapping[str, Any],
+        environment: MethodEnvironment,
         random_source: RandomSource | None = None,
         key: bytes | str | int | None = None,
         expected_payload_bits: int | None = None,
     ) -> DecoderSession:
+        del environment
         return FixedMessageDecoder()
 
 
 def test_session_contract_supports_fixed_message_method() -> None:
     method = FixedMessageMethod()
     secret = Shake256SecretSource("contract-test")
-    encoder = method.create_encoder(config={}, secret_source=secret)
+    environment = MethodEnvironment(output_vocab_size=2, allowed_token_ids=(0, 1))
+    encoder = method.create_encoder(
+        config={}, environment=environment, secret_source=secret
+    )
     reference = ReferenceDistribution(np.array([0.6, 0.4], dtype=np.float32))
 
     decisions = []
@@ -88,7 +96,9 @@ def test_session_contract_supports_fixed_message_method() -> None:
     assert [d.bits_consumed for d in decisions] == [None, None]
     assert final_encode.payload_bits == 8
 
-    decoder = method.create_decoder(config={}, expected_payload_bits=8)
+    decoder = method.create_decoder(
+        config={}, environment=environment, expected_payload_bits=8
+    )
     for i, decision in enumerate(decisions):
         progress = decoder.observe(
             StepContext(i, reference),

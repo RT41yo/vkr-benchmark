@@ -1,0 +1,8 @@
+{
+  "method_id": "huffman",
+  "run_kind": "normalized",
+  "params": {
+    "bits_per_word": 3
+  },
+  "notes": "bits_per_word controls candidate_count=2^bits_per_word; actual embedded bits per carrier token are the selected Huffman code length and are variable."
+}

@@ -56,3 +56,24 @@ class Shake256SecretSource(SecretSource):
         )
         self._position = stop
         return bits
+
+
+class RecordingSecretSource(SecretSource):
+    """Transparent wrapper that records exactly the bits consumed in a run."""
+
+    def __init__(self, source: SecretSource) -> None:
+        self._source = source
+        self._consumed: list[int] = []
+
+    @property
+    def position(self) -> int:
+        return self._source.position
+
+    @property
+    def consumed_bits(self) -> tuple[int, ...]:
+        return tuple(self._consumed)
+
+    def read_bits(self, count: int) -> tuple[int, ...]:
+        bits = self._source.read_bits(count)
+        self._consumed.extend(bits)
+        return bits

@@ -1,7 +1,8 @@
-"""Shared method-session result types."""
+"""Shared method-session input and result types."""
 
 from __future__ import annotations
 
+from bisect import bisect_left
 from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import Any, Mapping
@@ -11,6 +12,44 @@ from vkr_benchmark.distributions import DistributionInfo
 
 def _metadata(values: Mapping[str, Any] | None) -> Mapping[str, Any]:
     return MappingProxyType(dict(values or {}))
+
+
+@dataclass(frozen=True, slots=True)
+class MethodEnvironment:
+    """Run-invariant information exposed to a steganographic method.
+
+    The environment contains only benchmark-normalized token-space information.
+    It deliberately does not expose the LM, tokenizer, logits, device, or common
+    generation-policy implementation to the method.
+
+    ``allowed_token_ids`` is canonicalized to increasing token ID order so that
+    a keyed/randomized method partition does not depend on incidental caller
+    ordering.
+    """
+
+    output_vocab_size: int
+    allowed_token_ids: tuple[int, ...]
+
+    def __post_init__(self) -> None:
+        if self.output_vocab_size <= 0:
+            raise ValueError("output_vocab_size must be positive")
+
+        token_ids = tuple(sorted(int(token_id) for token_id in self.allowed_token_ids))
+        if not token_ids:
+            raise ValueError("allowed_token_ids must be non-empty")
+        if len(set(token_ids)) != len(token_ids):
+            raise ValueError("allowed_token_ids must not contain duplicates")
+        if token_ids[0] < 0 or token_ids[-1] >= self.output_vocab_size:
+            raise ValueError("allowed token ID lies outside output vocabulary")
+
+        object.__setattr__(self, "allowed_token_ids", token_ids)
+
+    def is_allowed(self, token_id: int) -> bool:
+        """Check V_allowed membership in O(log |V|) without another large set."""
+
+        value = int(token_id)
+        index = bisect_left(self.allowed_token_ids, value)
+        return index < len(self.allowed_token_ids) and self.allowed_token_ids[index] == value
 
 
 @dataclass(frozen=True, slots=True)

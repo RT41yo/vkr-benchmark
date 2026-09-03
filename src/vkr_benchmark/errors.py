@@ -13,6 +13,10 @@ class ConfigurationError(BenchmarkError):
     """Raised for an invalid or unsupported benchmark configuration."""
 
 
+class UnsupportedConfigurationError(ConfigurationError):
+    """Raised when individually valid components form an unsupported run."""
+
+
 class DistributionError(ContractError):
     """Raised when a probability distribution is malformed."""
 
@@ -27,6 +31,10 @@ class LMError(BenchmarkError):
 
 class ModelLoadError(LMError):
     """Raised when a configured local model cannot be loaded faithfully."""
+
+
+class MethodError(BenchmarkError):
+    """Raised when a steganographic method cannot complete a valid operation."""
 
 
 class SessionStateError(ContractError):

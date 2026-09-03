@@ -1,0 +1,7 @@
+{
+  "id": "bins",
+  "implementation": "normalized",
+  "params": {
+    "block_size": 2
+  }
+}
