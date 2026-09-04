@@ -42,4 +42,24 @@ Huffman использует тот же общий `runner/streaming.py` и `Te
 отдельной Huffman-specific оркестрации нет. End-to-end smoke script находится в
 `scripts/check_huffman_e2e.py`.
 
-Следующий метод этапа 2: Arithmetic Coding.
+## Arithmetic Coding
+
+`ArithmeticMethod` (`arithmetic.py`) сохраняет finite-precision integer-range ядро
+Harvard `arithmetic.py`: текущий интервал `[L, R)` делится на подинтервалы
+кандидатов, секретное `precision`-битное look-ahead окно задает точку выбора,
+а общий двоичный префикс границ выбранного подинтервала считается реально
+встроенным payload и используется для перенормировки состояния.
+
+В normalized mode метод получает уже готовый `P_reference`; author-side `temp` не
+переносится внутрь adapter. `top_k` остается method-internal candidate cap после
+`P_reference`. Finite-precision integer widths дают exact explicit `Q_stego`.
+
+В отличие от Bins/Huffman Arithmetic Coding должен читать вперед `precision` битов.
+Поэтому `secret_bits_read` больше `payload_bits`: авторитетный payload хранится в
+`EncoderFinalization.payload_bits`. Это учтено в архитектуре метода и будет учтено
+в общем runner на следующем AC E2E-шаге.
+
+Подробности: `docs/decisions/0007-arithmetic-normalized-adaptation.md`.
+
+Следующий шаг этапа 2: подключить Arithmetic Coding к общему streaming runner и
+`TextChannel`, затем провести Llama/Qwen E2E smoke tests.

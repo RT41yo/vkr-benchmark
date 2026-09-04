@@ -50,14 +50,18 @@ models/
 - normalized `BinsMethod`: фиксированное разбиение `V_allowed`, streaming encoder/decoder sessions, изолированный method RNG и exact explicit `Q_stego`;
 - `LMAdapter.encode_text()` и `TextChannel` для обязательного обычного текстового transport `tokens → text → retokenize` без BPE-repair эвристик;
 - минимальный `runner/streaming.py`, который независимо строит encoder- и decoder-side LM/KV-cache пути;
-- `RecordingSecretSource` для проверки фактически использованного payload;
+- `RecordingSecretSource` для фиксации всех битов, реально прочитанных методом из secret stream; runner отдельно хранит `read_secret_bits` и подтвержденный `payload_secret_bits`;
 - end-to-end smoke script `scripts/check_bins_e2e.py` для реальной Llama/Qwen;
 - normalized `HuffmanMethod`: per-step top `2**bits_per_word`, детерминированное дерево, переменный `bits_consumed`, decoder и exact explicit `Q_stego`;
 - synthetic unit tests Huffman, включая tie-break, variable-length payload, exact Q и roundtrip без GPU;
 - Huffman подключён к тому же `runner/streaming.py` и `TextChannel` без отдельного method-specific runner;
-- `scripts/check_huffman_e2e.py` для реальной Llama/Qwen с выводом per-step variable payload.
+- `scripts/check_huffman_e2e.py` для реальной Llama/Qwen с выводом per-step variable payload;
+- normalized `ArithmeticMethod`: stateful finite-precision interval, method-internal candidate cutoff/top-k, overlapping secret look-ahead, per-step confirmed payload и exact explicit `Q_stego` из integer interval widths;
+- synthetic unit tests Arithmetic Coding, включая integer rounding, candidate cutoff, state persistence, encode/decode symmetry, exact Q и отдельный учет look-ahead против полезного payload;
+- общий streaming runner обобщён для методов с look-ahead: `secret_bits_read` больше не отождествляется с полезным `payload_bits`;
+- `scripts/check_arithmetic_e2e.py` для реальной Llama/Qwen через тот же `TextChannel`.
 
-LM/reference-distribution слой локально проверен на Llama и Qwen. Bins core и end-to-end путь уже проверены на обеих реальных моделях. Huffman core подключён к общей end-to-end инфраструктуре; следующий алгоритмический слой этапа 2 — Arithmetic Coding.
+LM/reference-distribution слой локально проверен на Llama и Qwen. Bins и Huffman core/end-to-end пути проверены на обеих реальных моделях. Arithmetic Coding core реализован и проверен синтетически; AC теперь подключен к тому же общему streaming runner и готов к реальным Llama/Qwen end-to-end smoke tests.
 
 ## Bins end-to-end smoke test
 
@@ -85,3 +89,18 @@ python scripts/check_huffman_e2e.py \
 ```
 
 `bits_per_word` задаёт `2**bits_per_word` кандидатов, а не фиксированный BPT. Скрипт поэтому дополнительно выводит `step bits consumed` и фактический средний `payload_bits / carrier_tokens`. Полный roundtrip, как и для Bins, проходит только через ordinary-text transport.
+
+
+## Arithmetic Coding end-to-end smoke test
+
+После `pytest -q` AC проверяется на реальной модели отдельно:
+
+```bash
+python scripts/check_arithmetic_e2e.py \
+  configs/models/llama-3.2-3b.local.json \
+  --precision 16 \
+  --top-k 50000 \
+  --carrier-tokens 16
+```
+
+Для AC скрипт отдельно выводит `payload bits` и `secret bits read`. Последнее число включает `precision`-битное look-ahead окно и поэтому в нормальном fixed-carrier run ожидается больше полезного payload. В BPT учитываются только подтвержденные `payload bits`. Полный decode выполняется только после `tokens → text → retokenize`; никакие внутренние sender token IDs decoder'у не передаются.

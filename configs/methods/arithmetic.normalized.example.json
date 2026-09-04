@@ -1,0 +1,9 @@
+{
+  "method_id": "arithmetic_coding",
+  "run_kind": "normalized",
+  "params": {
+    "precision": 16,
+    "top_k": 50000
+  },
+  "notes": "precision задает целочисленный диапазон [0, 2^precision); top_k является внутренним ограничением кандидатов Arithmetic Coding после построения канонического P_reference и не является common generation top-k."
+}
