@@ -2,8 +2,7 @@
 """Run one Stage-2 normalized experiment from a single JSON config.
 
 Step 7.4 completes the base single-run metric block with raw-LM NLL/PPL,
-reliability/BER, and computational-efficiency timing. Persistent run storage is
-added in the next Stage-2 step.
+reliability/BER, and computational-efficiency timing. Step 7.5 persists canonical run artifacts and updates summary.parquet.
 """
 
 from __future__ import annotations
@@ -15,6 +14,11 @@ from vkr_benchmark.config import ExperimentConfig, LocalModelConfig
 from vkr_benchmark.inputs import PromptRegistry
 from vkr_benchmark.lm import HFCausalLMAdapter
 from vkr_benchmark.runner import run_experiment
+from vkr_benchmark.storage import (
+    ensure_summary_backend_available,
+    persist_experiment_execution,
+    persist_failed_run,
+)
 
 
 def _format_metric(value: float | None, *, digits: int = 6) -> str:
@@ -34,6 +38,22 @@ def main() -> None:
         default=None,
         help="Prompt JSONL path; defaults to <project_root>/data/prompts.jsonl",
     )
+    parser.add_argument(
+        "--results-root",
+        type=Path,
+        default=None,
+        help="Results directory; defaults to <project_root>/results",
+    )
+    parser.add_argument(
+        "--no-save",
+        action="store_true",
+        help="Run diagnostics without writing run artifacts",
+    )
+    parser.add_argument(
+        "--skip-summary-parquet",
+        action="store_true",
+        help="Persist per-run files but do not update summary.parquet",
+    )
     args = parser.parse_args()
 
     experiment = ExperimentConfig.from_json(args.experiment_config)
@@ -45,11 +65,21 @@ def main() -> None:
         else project_root / "data" / "prompts.jsonl"
     )
     prompts = PromptRegistry.from_jsonl(prompts_path)
+    results_root = (
+        args.results_root.expanduser().resolve()
+        if args.results_root is not None
+        else project_root / "results"
+    )
 
     model_config = LocalModelConfig.from_json(
         experiment.model_config_path,
         project_root=project_root,
     )
+    update_summary = not args.skip_summary_parquet
+    if not args.no_save and update_summary:
+        # Fail before loading the multi-GB model if the optional storage backend
+        # is missing.
+        ensure_summary_backend_available()
 
     print("Unified Stage-2 experiment runner")
     print("experiment config:", experiment.source_path)
@@ -65,12 +95,35 @@ def main() -> None:
     )
     print("Loading local model...")
 
-    lm = HFCausalLMAdapter.from_local_config(model_config)
-    execution = run_experiment(
-        config=experiment,
-        prompt_registry=prompts,
-        lm_adapter=lm,
-    )
+    try:
+        lm = HFCausalLMAdapter.from_local_config(model_config)
+        execution = run_experiment(
+            config=experiment,
+            prompt_registry=prompts,
+            lm_adapter=lm,
+        )
+    except Exception as exc:
+        if not args.no_save:
+            artifacts = persist_failed_run(
+                config=experiment,
+                model_config=model_config,
+                error=exc,
+                results_root=results_root,
+                update_summary=update_summary,
+            )
+            print("run_id:", artifacts.run_id)
+            print("failed run saved to:", artifacts.run_directory)
+        raise
+
+    artifacts = None
+    if not args.no_save:
+        artifacts = persist_experiment_execution(
+            execution,
+            model_config=model_config,
+            results_root=results_root,
+            update_summary=update_summary,
+        )
+
     result = execution.roundtrip
     capacity = execution.capacity_entropy_metrics
     distortion = execution.distribution_distortion_metrics
@@ -161,6 +214,14 @@ def main() -> None:
     print()
     print("stegotext:")
     print(result.transport.text)
+    if artifacts is not None:
+        print()
+        print("run_id:", artifacts.run_id)
+        print("run directory:", artifacts.run_directory)
+        if artifacts.summary_path is not None:
+            print("summary parquet:", artifacts.summary_path)
+        else:
+            print("summary parquet: skipped")
     print()
     print("Unified experiment pipeline: COMPLETED")
 

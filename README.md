@@ -252,5 +252,48 @@ python scripts/run_experiment.py configs/experiments/stage2_huffman.example.json
 python scripts/run_experiment.py configs/experiments/stage2_arithmetic.example.json
 ```
 
-Следующий шаг этапа 2 — единый `RunResult`, воспроизводимый `run_id` и
-постоянное сохранение per-run artifacts / общей summary table.
+Шаг 7.5 добавляет воспроизводимый `run_id`, per-run artifacts и общую `summary.parquet`.
+
+
+## Persistent run storage (этап 2, шаг 7.5)
+
+Каждый unified run по умолчанию теперь сохраняется в `results/`. Идентификатор
+вычисляется по фиксированному правилу specification v0.1:
+
+```text
+run_id = SHA256(canonical_config_json)[:16]
+```
+
+Физическая структура одного успешного запуска:
+
+```text
+results/runs/<run_id>/
+├── config.json
+├── result.json
+├── stegotext.txt
+├── token_ids.json
+└── trace.jsonl.gz
+```
+
+`results/summary.parquet` содержит одну строку на run и обновляется по `run_id`,
+поэтому повтор той же canonical config не создает дубликат. Для Parquet нужен
+optional dependency:
+
+```bash
+pip install -e ".[storage]"
+```
+
+Строгий JSON не поддерживает numeric Infinity, поэтому законный benchmark-native
+KL `+inf` записывается в JSON как строка `"inf"`; в Parquet остается числовым
+`+inf`. `null` означает именно недоступное значение, а не бесконечность.
+
+Обычный запуск сохраняет результаты автоматически:
+
+```bash
+python scripts/run_experiment.py configs/experiments/stage2_bins.example.json
+```
+
+Для диагностического запуска без storage доступен `--no-save`; для сохранения
+per-run файлов без обновления общей таблицы — `--skip-summary-parquet`. Storage и
+формирование trace выполняются после измеряемых encode/decode sections и не
+входят в performance metrics.

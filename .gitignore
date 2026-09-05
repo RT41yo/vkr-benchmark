@@ -12,4 +12,7 @@ venv/
 # Local model weights are multi-GB experimental assets.
 /models/*
 !/models/README.md
-environment/stage1_reference/hf.txt
+/results/summary.parquet
+/results/steganalysis_summary.parquet
+
+environment/**/hf.txt

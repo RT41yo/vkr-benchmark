@@ -43,3 +43,7 @@ class MethodError(BenchmarkError):
 
 class SessionStateError(ContractError):
     """Raised when an encoder/decoder session is used in an invalid state."""
+
+
+class StorageError(BenchmarkError):
+    """Raised when canonical run persistence cannot be completed safely."""
