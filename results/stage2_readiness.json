@@ -54,6 +54,11 @@
       "detail": "Hugging Face token file is not tracked",
       "name": "secret_hygiene",
       "ok": true
+    },
+    {
+      "detail": "182 passed in 0.77s",
+      "name": "test_suite",
+      "ok": true
     }
   ],
   "ready": true,

@@ -1,6 +1,6 @@
 # Закрытие Этапа 2: базовая экспериментальная инфраструктура
 
-Статус: **техническая часть Этапа 2 готова к закрытию** после прохождения `scripts/check_stage2_readiness.py`. Этот документ сопоставляет фактически реализованное состояние репозитория с ROADMAP. Презентация Typst является отдельным формальным результатом ROADMAP и оформляется после технического readiness-gate на основе `docs/stage2_presentation_outline.md`.
+Статус: **техническая часть Этапа 2 готова к закрытию** после прохождения `scripts/check_stage2_readiness.py`. Этот документ сопоставляет фактически реализованное состояние репозитория с ROADMAP. Презентация Typst является отдельным формальным результатом ROADMAP и оформляется после технического readiness-gate на основе `docs/stages/stage2/stage2_presentation_outline.md`.
 
 ## 1. Сопоставление с составом работ ROADMAP
 
@@ -31,7 +31,7 @@
 - reliability и BER через ordinary-text channel;
 - encode/decode timing и decomposition на LM / distribution processing / stego algorithm.
 
-Определения зафиксированы в `docs/metrics.md`. Уточнения, не меняющие frozen specification v0.1, накоплены в ADR и `specification/benchmark_specification_v0.1_notes.md`.
+Определения зафиксированы в `docs/reference/metrics.md`. Уточнения, не меняющие frozen specification v0.1, накоплены в ADR и `specification/benchmark_specification_v0.1_notes.md`.
 
 ### Работа 3. Обеспечить единый формат параметров и результатов
 
@@ -51,7 +51,7 @@ Canonical run идентифицируется через `run_id = SHA256(canon
 
 ### 3. Пример единой таблицы экспериментальных результатов
 
-**Готово.** `results/summary.parquet` содержит по одной canonical row для Bins/Huffman/Arithmetic Coding; `scripts/summarize_results.py` формирует Markdown-представление. Snapshot условий и интерпретации хранится в `docs/stage2_validation.md`.
+**Готово.** `results/summary.parquet` содержит по одной canonical row для Bins/Huffman/Arithmetic Coding; `scripts/summarize_results.py` формирует Markdown-представление. Snapshot условий и интерпретации хранится в `docs/stages/stage2/stage2_validation.md`.
 
 Последняя техническая smoke-таблица:
 
@@ -65,11 +65,11 @@ Canonical run идентифицируется через `run_id = SHA256(canon
 
 ### 4. Документ с точными определениями и реализацией базовых метрик
 
-**Готово:** `docs/metrics.md` + ADR-0010/0011/0012/0013.
+**Готово:** `docs/reference/metrics.md` + ADR-0010/0011/0012/0013.
 
 ### 5. Презентация Typst с результатами Этапа 2
 
-**Требует оформления после технического readiness-gate.** Содержание и рекомендуемая структура подготовлены в `docs/stage2_presentation_outline.md`. До появления финального `.typ` формально весь ROADMAP deliverable set Этапа 2 нельзя считать полностью закрытым, хотя программная часть уже завершена.
+**Требует оформления после технического readiness-gate.** Содержание и рекомендуемая структура подготовлены в `docs/stages/stage2/stage2_presentation_outline.md`. До появления финального `.typ` формально весь ROADMAP deliverable set Этапа 2 нельзя считать полностью закрытым, хотя программная часть уже завершена.
 
 ## 3. Что проверяет readiness-gate
 

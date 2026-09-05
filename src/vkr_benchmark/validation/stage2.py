@@ -25,8 +25,8 @@ REQUIRED_REPOSITORY_PATHS = (
     "configs/experiments/stage2_huffman.example.json",
     "configs/experiments/stage2_arithmetic.example.json",
     "data/prompts.jsonl",
-    "docs/metrics.md",
-    "docs/stage2_validation.md",
+    "docs/reference/metrics.md",
+    "docs/stages/stage2/stage2_validation.md",
     "docs/decisions/0009-unified-experiment-inputs-and-runner.md",
     "docs/decisions/0010-capacity-and-entropy-metrics.md",
     "docs/decisions/0011-kl-tvd-distribution-distortion.md",
@@ -34,8 +34,8 @@ REQUIRED_REPOSITORY_PATHS = (
     "docs/decisions/0013-quality-reliability-and-performance-metrics.md",
     "docs/decisions/0014-canonical-run-storage-and-summary.md",
     "docs/decisions/0015-stage2-readiness-and-v0.2-milestone.md",
-    "docs/stage2_closeout.md",
-    "docs/stage2_presentation_outline.md",
+    "docs/stages/stage2/stage2_closeout.md",
+    "docs/stages/stage2/stage2_presentation_outline.md",
     "docs/releases/v0.2.md",
 )
 
