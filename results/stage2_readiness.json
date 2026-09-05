@@ -1,0 +1,61 @@
+{
+  "checks": [
+    {
+      "detail": "all 26 required implementation/documentation paths exist",
+      "name": "repository_structure",
+      "ok": true
+    },
+    {
+      "detail": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/results/summary.parquet",
+      "name": "summary_file",
+      "ok": true
+    },
+    {
+      "detail": "Parquet summary decoded successfully",
+      "name": "summary_readable",
+      "ok": true
+    },
+    {
+      "detail": "summary contains 3 row(s)",
+      "name": "summary_present",
+      "ok": true
+    },
+    {
+      "detail": "required columns present",
+      "name": "summary_schema",
+      "ok": true
+    },
+    {
+      "detail": "all normalized baselines have an ok row",
+      "name": "baseline_methods",
+      "ok": true
+    },
+    {
+      "detail": "baseline run_id values are present and unique",
+      "name": "run_id_uniqueness",
+      "ok": true
+    },
+    {
+      "detail": "all baseline smoke rows have BER=0 and exact text/token roundtrip",
+      "name": "reliability_smoke",
+      "ok": true
+    },
+    {
+      "detail": "baseline metric vectors satisfy Stage-2 sanity constraints",
+      "name": "metric_sanity",
+      "ok": true
+    },
+    {
+      "detail": "all three Stage-2 baselines expose analytic_exact Q_stego",
+      "name": "exact_q_available",
+      "ok": true
+    },
+    {
+      "detail": "Hugging Face token file is not tracked",
+      "name": "secret_hygiene",
+      "ok": true
+    }
+  ],
+  "ready": true,
+  "stage": 2
+}

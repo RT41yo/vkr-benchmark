@@ -19,9 +19,9 @@ All three runs used the same model revision, prompt, secret id, normalized `P_re
 
 | Method | BPT | Entropy util. (%) | KL ref→stego | TVD mean | Raw-LM NLL | Raw-LM PPL | BER | Encode ms/token | Decode ms/token |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Bins | 2.0000 | 64.603 | inf | 0.596192 | 2.879901 | 17.812511 | 0.000000 | 18.604 | 18.345 |
-| Huffman | 2.1875 | 52.606 | inf | 0.422220 | 2.205473 | 9.074547 | 0.000000 | 20.900 | 17.161 |
-| Arithmetic Coding | 2.4375 | 65.838 | inf | 0.053387 | 1.800315 | 6.051556 | 0.000000 | 60.683 | 63.055 |
+| Bins | 2.0000 | 64.603 | inf | 0.596192 | 2.879901 | 17.812511 | 0.000000 | 18.734 | 18.486 |
+| Huffman | 2.1875 | 52.606 | inf | 0.422220 | 2.205473 | 9.074547 | 0.000000 | 17.292 | 17.213 |
+| Arithmetic Coding | 2.4375 | 65.838 | inf | 0.053387 | 1.800315 | 6.051556 | 0.000000 | 62.551 | 62.051 |
 
 All three runs additionally passed the text-only transport checks:
 
@@ -29,6 +29,8 @@ All three runs additionally passed the text-only transport checks:
 - `roundtrip_exact = true`;
 - decoder complete;
 - zero bit errors.
+
+The timing values above are the latest rerun persisted in `summary.parquet`; wall-clock timing is environment-dependent and may vary between repeated executions of the same canonical `run_id`.
 
 ## Interpretation limited to this smoke run
 
