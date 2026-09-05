@@ -154,6 +154,29 @@ def test_all_three_baselines_run_through_one_experiment_entrypoint(
     assert distortion.tvd_max is not None
     assert 0.0 <= distortion.tvd_max <= 1.0
 
+    quality = execution.quality_metrics
+    assert quality.nll_raw_lm_nats_per_token >= 0.0
+    assert quality.ppl_raw_lm >= 1.0
+    assert len(execution.roundtrip.encode.step_raw_lm_nll_nats) == 8
+
+    reliability = execution.reliability_metrics
+    assert reliability.roundtrip_exact is True
+    assert reliability.ber == 0.0
+    assert reliability.bit_errors == 0
+    assert reliability.token_sequence_roundtrip_exact is True
+    assert reliability.expected_length_bits == execution.roundtrip.encode.payload_bits
+
+    performance = execution.performance_metrics
+    assert performance.encode_total_ms > 0.0
+    assert performance.decode_total_ms > 0.0
+    assert performance.encode_ms_per_token > 0.0
+    assert performance.decode_ms_per_token > 0.0
+    assert performance.payload_bits_per_second_encode >= 0.0
+    assert performance.payload_bits_per_second_decode >= 0.0
+    assert performance.lm_forward_total_ms > 0.0
+    assert performance.distribution_processing_total_ms > 0.0
+    assert performance.stego_algorithm_total_ms > 0.0
+
     assert execution.roundtrip.roundtrip_exact is True
     assert execution.roundtrip.transport.token_sequence_roundtrip_exact is True
 

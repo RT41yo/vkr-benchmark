@@ -147,3 +147,48 @@ p95 = sorted_values[rank - 1]
 Выявлено при реализации KL/TVD на этапе 2, шаг 7.3.
 
 Учесть при подготовке `benchmark_specification_v1.0`.
+
+---
+
+## Замечание 4. Явно зафиксировать timing scope и support для `P_LM-raw`
+
+### Причина
+
+При реализации NLL/PPL и вычислительной эффективности на этапе 2, шаге 7.4,
+выяснилось, что specification v0.1 задает формулы и необходимость CUDA
+synchronization/warm-up, но не перечисляет точные границы `encode_total_ms` и
+`decode_total_ms`. Также формулировка `P_LM-raw` должна явно отвечать на вопрос,
+применяется ли к ней benchmark-маска `V_allowed`.
+
+### Решение реализации v0.2
+
+Текущая реализация:
+
+- считает raw-LM NLL непосредственно из исходных output logits при
+  `temperature=1`, без маски `V_allowed`, top-k/top-p и stego-модификаций;
+- выполняет warm-up до measured run;
+- при CUDA синхронизирует устройство до и после каждого timed component;
+- включает в encode/decode timing LM prefill/advances, canonical distribution
+  processing и stego adapter operations;
+- исключает model loading, text transport, metric instrumentation, aggregation
+  и storage;
+- определяет total time как сумму непересекающихся measured components.
+
+Подробный контракт зафиксирован в ADR-0013.
+
+### Предлагаемое уточнение для v1.0
+
+Явно закрепить:
+
+1. support и masking policy для `P_LM-raw`;
+2. включение/исключение prompt prefill и tokenization;
+3. включение/исключение text transport;
+4. способ отделения metric instrumentation от measured algorithm time;
+5. правила агрегации component timings.
+
+### Статус
+
+Выявлено при реализации базовых quality/reliability/performance metrics на
+этапе 2, шаге 7.4.
+
+Учесть при подготовке `benchmark_specification_v1.0`.

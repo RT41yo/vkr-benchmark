@@ -12,8 +12,14 @@ from vkr_benchmark.lm import LMAdapter
 from vkr_benchmark.metrics import (
     CapacityEntropyMetrics,
     DistributionDistortionMetrics,
+    PerformanceMetrics,
+    RawLMQualityMetrics,
+    ReliabilityMetrics,
     compute_capacity_entropy_metrics,
     compute_distribution_distortion_metrics,
+    compute_performance_metrics,
+    compute_raw_lm_quality_metrics,
+    compute_reliability_metrics,
 )
 from vkr_benchmark.methods import ArithmeticMethod, BinsMethod, HuffmanMethod, StegoMethod
 from vkr_benchmark.randomness import MethodRandomSource, RandomSource
@@ -21,6 +27,7 @@ from vkr_benchmark.runner.streaming import (
     StreamingTextRoundtripResult,
     method_environment_from_builder,
     run_streaming_text_roundtrip,
+    warm_up_streaming_path,
 )
 
 
@@ -35,13 +42,16 @@ class MethodRuntime:
 
 @dataclass(frozen=True, slots=True)
 class ExperimentExecution:
-    """Result of one configured run with metrics currently available in Stage 2."""
+    """Result of one configured run with Stage-2 normalized metrics."""
 
     config: ExperimentConfig
     prompt: PromptRecord
     roundtrip: StreamingTextRoundtripResult
     capacity_entropy_metrics: CapacityEntropyMetrics
     distribution_distortion_metrics: DistributionDistortionMetrics
+    quality_metrics: RawLMQualityMetrics
+    reliability_metrics: ReliabilityMetrics
+    performance_metrics: PerformanceMetrics
 
     @property
     def method_id(self) -> str:
@@ -112,6 +122,14 @@ def run_experiment(
     environment = method_environment_from_builder(builder)
     runtime = create_method_runtime(config)
 
+    # FIXED v0.1 timing rule: warm-up is completed before measured sections.
+    warm_up_streaming_path(
+        lm_adapter=lm_adapter,
+        reference_builder=builder,
+        environment=environment,
+        prompt_text=prompt.text,
+    )
+
     roundtrip = run_streaming_text_roundtrip(
         lm_adapter=lm_adapter,
         reference_builder=builder,
@@ -133,6 +151,27 @@ def run_experiment(
     distribution_distortion_metrics = compute_distribution_distortion_metrics(
         roundtrip.encode.step_distribution_distortion
     )
+    quality_metrics = compute_raw_lm_quality_metrics(
+        roundtrip.encode.step_raw_lm_nll_nats
+    )
+    reliability_metrics = compute_reliability_metrics(
+        expected_bits=roundtrip.encode.payload_secret_bits,
+        recovered_bits=roundtrip.decode.incremental_recovered_bits,
+        roundtrip_exact=roundtrip.roundtrip_exact,
+        first_mismatch_bit=roundtrip.first_bit_mismatch,
+        recovered_extra_bits=roundtrip.recovered_extra_bits,
+        token_sequence_roundtrip_exact=(
+            roundtrip.transport.token_sequence_roundtrip_exact
+        ),
+        first_token_roundtrip_mismatch=roundtrip.transport.first_token_mismatch,
+    )
+    performance_metrics = compute_performance_metrics(
+        payload_bits=roundtrip.encode.payload_bits,
+        encode_tokens=roundtrip.encode.carrier_tokens,
+        decode_tokens=len(roundtrip.decode.observed_token_ids),
+        encode_timing=roundtrip.encode.timing,
+        decode_timing=roundtrip.decode.timing,
+    )
 
     return ExperimentExecution(
         config=config,
@@ -140,4 +179,7 @@ def run_experiment(
         roundtrip=roundtrip,
         capacity_entropy_metrics=capacity_entropy_metrics,
         distribution_distortion_metrics=distribution_distortion_metrics,
+        quality_metrics=quality_metrics,
+        reliability_metrics=reliability_metrics,
+        performance_metrics=performance_metrics,
     )

@@ -210,3 +210,47 @@ python scripts/run_experiment.py configs/experiments/stage2_arithmetic.example.j
 
 NLL/PPL, агрегированная reliability/performance и постоянное хранение
 результатов добавляются следующими шагами этапа 2.
+
+## NLL/PPL + reliability + performance (этап 2, шаг 7.4)
+
+Unified runner дополняет предыдущие метрики тремя группами. Raw-LM quality
+рассчитывается по исходным logits генерирующей модели при `temperature=1`, без
+`V_allowed` mask, top-k/top-p и stego-модификаций:
+
+```text
+nll_raw_lm_nats_per_token
+ppl_raw_lm
+```
+
+Reliability агрегируется после обязательного ordinary-text round-trip:
+
+```text
+roundtrip_exact
+ber
+bit_errors
+expected_length_bits
+recovered_length_bits
+length_delta_bits
+recovered_extra_bits
+token_sequence_roundtrip_exact
+```
+
+Для AC BER и throughput используют только подтвержденный `payload_bits`, а не
+`secret_bits_read` с look-ahead.
+
+Перед timing выполняется отдельный warm-up. При CUDA каждый measured component
+обрамляется `torch.cuda.synchronize()`. `encode_total_ms`/`decode_total_ms`
+составляются из LM forward, canonical distribution processing и stego
+algorithm components; model loading, text transport, metric calculations и
+storage не включаются.
+
+Единый launcher остается тем же:
+
+```bash
+python scripts/run_experiment.py configs/experiments/stage2_bins.example.json
+python scripts/run_experiment.py configs/experiments/stage2_huffman.example.json
+python scripts/run_experiment.py configs/experiments/stage2_arithmetic.example.json
+```
+
+Следующий шаг этапа 2 — единый `RunResult`, воспроизводимый `run_id` и
+постоянное сохранение per-run artifacts / общей summary table.

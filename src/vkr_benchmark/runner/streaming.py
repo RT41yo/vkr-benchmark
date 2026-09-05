@@ -1,9 +1,10 @@
-"""Minimal fixed-carrier streaming runner used during Stage-2 integration."""
+"""Fixed-carrier streaming runner with Stage-2 metric instrumentation."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Mapping
+from time import perf_counter
+from typing import Any, Callable, Mapping, TypeVar
 
 import numpy as np
 
@@ -12,7 +13,9 @@ from vkr_benchmark.errors import ContractError
 from vkr_benchmark.lm import LMAdapter
 from vkr_benchmark.metrics import (
     StepDistributionDistortion,
+    TimingBreakdown,
     distribution_distortion_step,
+    raw_lm_token_nll_nats,
     reference_entropy_bits,
 )
 from vkr_benchmark.methods import (
@@ -24,6 +27,8 @@ from vkr_benchmark.methods import (
 from vkr_benchmark.methods.base import KeyMaterial
 from vkr_benchmark.randomness import RandomSource, RecordingSecretSource, SecretSource
 from vkr_benchmark.transport import TextChannel, TextTransportResult
+
+_T = TypeVar("_T")
 
 
 @dataclass(frozen=True, slots=True)
@@ -37,6 +42,8 @@ class StreamingEncodeResult:
     step_bits_consumed: tuple[int | None, ...]
     step_reference_entropy_bits: tuple[float, ...]
     step_distribution_distortion: tuple[StepDistributionDistortion, ...]
+    step_raw_lm_nll_nats: tuple[float, ...]
+    timing: TimingBreakdown
     finalization: EncoderFinalization
 
     @property
@@ -51,13 +58,7 @@ class StreamingEncodeResult:
 
     @property
     def consumed_secret_bits(self) -> tuple[int, ...]:
-        """Backward-compatible alias for the confirmed useful payload bits.
-
-        Earlier Stage-2 streaming methods consumed exactly the useful payload,
-        so this field originally meant both "read" and "embedded". Arithmetic
-        Coding proves those concepts must be separate because it keeps a
-        precision-bit look-ahead window.
-        """
+        """Backward-compatible alias for the confirmed useful payload bits."""
 
         return self.payload_secret_bits
 
@@ -73,6 +74,7 @@ class StreamingDecodeResult:
     prompt_token_ids: tuple[int, ...]
     observed_token_ids: tuple[int, ...]
     incremental_recovered_bits: tuple[int, ...]
+    timing: TimingBreakdown
     finalization: DecoderFinalization
 
     @property
@@ -124,6 +126,52 @@ def _first_bit_mismatch(
     return None
 
 
+def _cuda_synchronize_if_needed(lm_adapter: LMAdapter) -> None:
+    """Synchronize the configured CUDA device before/after timed GPU work."""
+
+    device = str(getattr(lm_adapter, "device", "cpu"))
+    if not device.startswith("cuda"):
+        return
+
+    try:
+        import torch
+    except ImportError:  # pragma: no cover - CUDA adapter requires torch
+        return
+    if torch.cuda.is_available():
+        torch.cuda.synchronize()
+
+
+def _measure_ms(lm_adapter: LMAdapter, operation: Callable[[], _T]) -> tuple[_T, float]:
+    _cuda_synchronize_if_needed(lm_adapter)
+    started = perf_counter()
+    result = operation()
+    _cuda_synchronize_if_needed(lm_adapter)
+    elapsed_ms = (perf_counter() - started) * 1000.0
+    return result, float(elapsed_ms)
+
+
+def warm_up_streaming_path(
+    *,
+    lm_adapter: LMAdapter,
+    reference_builder: ReferenceDistributionBuilder,
+    environment: MethodEnvironment,
+    prompt_text: str,
+) -> None:
+    """Warm prefill, canonical P_reference, and one cached LM advance.
+
+    This warm-up is deliberately executed before measured encode/decode paths.
+    It does not consume secret bits or initialize a steganographic method.
+    """
+
+    prompt_token_ids = lm_adapter.encode_prompt(prompt_text)
+    state = lm_adapter.prefill(prompt_token_ids)
+    raw_logits, state = lm_adapter.next_logits(state)
+    reference_builder.build(raw_logits)
+    if environment.allowed_token_ids:
+        lm_adapter.next_logits(state, int(environment.allowed_token_ids[0]))
+    _cuda_synchronize_if_needed(lm_adapter)
+
+
 def encode_fixed_carrier_tokens(
     *,
     lm_adapter: LMAdapter,
@@ -139,35 +187,63 @@ def encode_fixed_carrier_tokens(
 ) -> StreamingEncodeResult:
     """Generate at most ``carrier_tokens`` through one streaming method session.
 
-    The first carrier token is chosen from logits already produced by prefill;
-    therefore N carrier tokens require only N-1 cached LM advances, matching
-    the Stage-1 inference path.
+    Timing includes prompt prefill, canonical distribution processing, method
+    session creation/steps/finalization and cached LM advances. Metric
+    calculations themselves are intentionally outside the timed components.
     """
 
     if carrier_tokens <= 0:
         raise ValueError("carrier_tokens must be positive")
 
+    lm_ms = 0.0
+    distribution_ms = 0.0
+    stego_ms = 0.0
+
     prompt_token_ids = lm_adapter.encode_prompt(prompt_text)
-    state = lm_adapter.prefill(prompt_token_ids)
-    recorded_secret = RecordingSecretSource(secret_source)
-    encoder = method.create_encoder(
-        config=method_config,
-        environment=environment,
-        secret_source=recorded_secret,
-        random_source=method_random_source,
-        key=key,
+    state, elapsed = _measure_ms(
+        lm_adapter, lambda: lm_adapter.prefill(prompt_token_ids)
     )
+    lm_ms += elapsed
+
+    recorded_secret = RecordingSecretSource(secret_source)
+    encoder, elapsed = _measure_ms(
+        lm_adapter,
+        lambda: method.create_encoder(
+            config=method_config,
+            environment=environment,
+            secret_source=recorded_secret,
+            random_source=method_random_source,
+            key=key,
+        ),
+    )
+    stego_ms += elapsed
 
     generated: list[int] = []
     step_bits: list[int | None] = []
     step_entropies: list[float] = []
     step_distortion: list[StepDistributionDistortion] = []
+    step_raw_nll: list[float] = []
 
     for step_index in range(carrier_tokens):
-        raw_logits, state = lm_adapter.next_logits(state)
-        reference = reference_builder.build(raw_logits)
+        (raw_logits, state), elapsed = _measure_ms(
+            lm_adapter, lambda: lm_adapter.next_logits(state)
+        )
+        lm_ms += elapsed
+
+        reference, elapsed = _measure_ms(
+            lm_adapter, lambda: reference_builder.build(raw_logits)
+        )
+        distribution_ms += elapsed
+
+        # Diagnostic metric calculations are excluded from performance timing.
         step_entropies.append(reference_entropy_bits(reference))
-        decision = encoder.step(StepContext(step_index=step_index, reference=reference))
+        decision, elapsed = _measure_ms(
+            lm_adapter,
+            lambda: encoder.step(
+                StepContext(step_index=step_index, reference=reference)
+            ),
+        )
+        stego_ms += elapsed
         step_distortion.append(
             distribution_distortion_step(reference, decision.distribution_info)
         )
@@ -177,6 +253,7 @@ def encode_fixed_carrier_tokens(
             raise ContractError(
                 f"method emitted token {token_id}, which is outside V_allowed"
             )
+        step_raw_nll.append(raw_lm_token_nll_nats(raw_logits, token_id))
 
         generated.append(token_id)
         step_bits.append(decision.bits_consumed)
@@ -184,18 +261,21 @@ def encode_fixed_carrier_tokens(
         if encoder.done or step_index + 1 >= carrier_tokens:
             break
 
-        _, state = lm_adapter.next_logits(state, token_id)
+        (_, state), elapsed = _measure_ms(
+            lm_adapter, lambda: lm_adapter.next_logits(state, token_id)
+        )
+        lm_ms += elapsed
 
-    finalization = encoder.finalize()
+    finalization, elapsed = _measure_ms(lm_adapter, encoder.finalize)
+    stego_ms += elapsed
     read_secret_bits = recorded_secret.consumed_bits
     if finalization.payload_bits > len(read_secret_bits):
         raise ContractError(
             "encoder reports more useful payload bits than were read from SecretSource"
         )
 
-    # For streaming prefix methods used in Stage 2, useful payload is the
-    # confirmed prefix of the secret stream. Arithmetic Coding may have read an
-    # additional precision-bit look-ahead suffix that is *not* useful payload.
+    # Useful payload is the confirmed prefix. Arithmetic Coding can hold an
+    # additional precision-bit look-ahead suffix that is not embedded payload.
     payload_secret_bits = read_secret_bits[: finalization.payload_bits]
 
     if all(bits is not None for bits in step_bits):
@@ -213,6 +293,12 @@ def encode_fixed_carrier_tokens(
         step_bits_consumed=tuple(step_bits),
         step_reference_entropy_bits=tuple(step_entropies),
         step_distribution_distortion=tuple(step_distortion),
+        step_raw_lm_nll_nats=tuple(step_raw_nll),
+        timing=TimingBreakdown(
+            lm_forward_ms=lm_ms,
+            distribution_processing_ms=distribution_ms,
+            stego_algorithm_ms=stego_ms,
+        ),
         finalization=finalization,
     )
 
@@ -235,35 +321,68 @@ def decode_streaming_tokens(
     if expected_payload_bits < 0:
         raise ValueError("expected_payload_bits must be non-negative")
 
+    lm_ms = 0.0
+    distribution_ms = 0.0
+    stego_ms = 0.0
+
     observed = tuple(int(token_id) for token_id in observed_token_ids)
     prompt_token_ids = lm_adapter.encode_prompt(prompt_text)
-    state = lm_adapter.prefill(prompt_token_ids)
-    decoder = method.create_decoder(
-        config=method_config,
-        environment=environment,
-        random_source=method_random_source,
-        key=key,
-        expected_payload_bits=expected_payload_bits,
+    state, elapsed = _measure_ms(
+        lm_adapter, lambda: lm_adapter.prefill(prompt_token_ids)
     )
+    lm_ms += elapsed
+
+    decoder, elapsed = _measure_ms(
+        lm_adapter,
+        lambda: method.create_decoder(
+            config=method_config,
+            environment=environment,
+            random_source=method_random_source,
+            key=key,
+            expected_payload_bits=expected_payload_bits,
+        ),
+    )
+    stego_ms += elapsed
 
     incremental: list[int] = []
     for step_index, token_id in enumerate(observed):
-        raw_logits, state = lm_adapter.next_logits(state)
-        reference = reference_builder.build(raw_logits)
-        progress = decoder.observe(
-            StepContext(step_index=step_index, reference=reference),
-            token_id,
+        (raw_logits, state), elapsed = _measure_ms(
+            lm_adapter, lambda: lm_adapter.next_logits(state)
         )
+        lm_ms += elapsed
+
+        reference, elapsed = _measure_ms(
+            lm_adapter, lambda: reference_builder.build(raw_logits)
+        )
+        distribution_ms += elapsed
+
+        progress, elapsed = _measure_ms(
+            lm_adapter,
+            lambda: decoder.observe(
+                StepContext(step_index=step_index, reference=reference),
+                token_id,
+            ),
+        )
+        stego_ms += elapsed
         incremental.extend(progress.recovered_bits)
 
         if step_index + 1 < len(observed):
-            _, state = lm_adapter.next_logits(state, token_id)
+            (_, state), elapsed = _measure_ms(
+                lm_adapter, lambda: lm_adapter.next_logits(state, token_id)
+            )
+            lm_ms += elapsed
 
-    finalization = decoder.finalize()
+    finalization, elapsed = _measure_ms(lm_adapter, decoder.finalize)
+    stego_ms += elapsed
     return StreamingDecodeResult(
         prompt_token_ids=prompt_token_ids,
         observed_token_ids=observed,
         incremental_recovered_bits=tuple(incremental),
+        timing=TimingBreakdown(
+            lm_forward_ms=lm_ms,
+            distribution_processing_ms=distribution_ms,
+            stego_algorithm_ms=stego_ms,
+        ),
         finalization=finalization,
     )
 
@@ -297,6 +416,8 @@ def run_streaming_text_roundtrip(
         key=key,
     )
 
+    # Text transport is part of reliability validation but intentionally not
+    # included in encode/decode computational-efficiency timing.
     transport = TextChannel(lm_adapter).transmit(encoded.carrier_token_ids)
 
     decoded = decode_streaming_tokens(

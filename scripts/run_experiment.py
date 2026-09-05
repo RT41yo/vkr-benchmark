@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Run one Stage-2 normalized experiment from a single JSON config.
 
-Step 7.3 adds distribution distortion metrics KL(P_reference || Q_stego)
-and TVD on top of the common capacity/reference-entropy metric block. Persistent
-run storage and the remaining metric groups are added in later Stage-2 steps.
+Step 7.4 completes the base single-run metric block with raw-LM NLL/PPL,
+reliability/BER, and computational-efficiency timing. Persistent run storage is
+added in the next Stage-2 step.
 """
 
 from __future__ import annotations
@@ -72,27 +72,31 @@ def main() -> None:
         lm_adapter=lm,
     )
     result = execution.roundtrip
-    metrics = execution.capacity_entropy_metrics
+    capacity = execution.capacity_entropy_metrics
     distortion = execution.distribution_distortion_metrics
+    quality = execution.quality_metrics
+    reliability = execution.reliability_metrics
+    performance = execution.performance_metrics
 
     print()
     print("generated carrier tokens:", result.encode.carrier_tokens)
     print("payload bits:", result.encode.payload_bits)
     print("secret bits read:", result.encode.secret_bits_read)
-    print("bits per token:", f"{metrics.bits_per_token:.6f}")
+    print("bits per token:", f"{capacity.bits_per_token:.6f}")
     print(
         "reference entropy mean (bits/token):",
-        f"{metrics.reference_entropy_mean_bits:.6f}",
+        f"{capacity.reference_entropy_mean_bits:.6f}",
     )
     print(
         "reference entropy sum (bits):",
-        f"{metrics.reference_entropy_sum_bits:.6f}",
+        f"{capacity.reference_entropy_sum_bits:.6f}",
     )
-    print("entropy utilization:", f"{metrics.entropy_utilization:.6f}")
+    print("entropy utilization:", f"{capacity.entropy_utilization:.6f}")
     print(
         "entropy utilization (%):",
-        f"{metrics.entropy_utilization_percent:.3f}",
+        f"{capacity.entropy_utilization_percent:.3f}",
     )
+
     print("q_mode:", distortion.q_mode.value)
     print("KL mean (bits/token):", _format_metric(distortion.kl_mean_bits))
     print("KL median (bits/token):", _format_metric(distortion.kl_median_bits))
@@ -104,11 +108,56 @@ def main() -> None:
     print("TVD median:", _format_metric(distortion.tvd_median))
     print("TVD p95:", _format_metric(distortion.tvd_p95))
     print("TVD max:", _format_metric(distortion.tvd_max))
-    print("token_sequence_roundtrip_exact:", result.transport.token_sequence_roundtrip_exact)
-    print("roundtrip_exact:", result.roundtrip_exact)
+
+    print(
+        "raw-LM NLL (nats/token):",
+        _format_metric(quality.nll_raw_lm_nats_per_token),
+    )
+    print("raw-LM PPL:", _format_metric(quality.ppl_raw_lm))
+
+    print("BER:", _format_metric(reliability.ber))
+    print("bit errors:", reliability.bit_errors)
+    print("token_sequence_roundtrip_exact:", reliability.token_sequence_roundtrip_exact)
+    print("roundtrip_exact:", reliability.roundtrip_exact)
     print("decoder complete:", result.decode.finalization.complete)
-    print("first_token_mismatch:", result.transport.first_token_mismatch)
-    print("first_bit_mismatch:", result.first_bit_mismatch)
+    print("expected length bits:", reliability.expected_length_bits)
+    print("recovered length bits:", reliability.recovered_length_bits)
+    print("length delta bits:", reliability.length_delta_bits)
+    print("recovered extra bits:", reliability.recovered_extra_bits)
+    print("first_token_mismatch:", reliability.first_token_roundtrip_mismatch)
+    print("first_bit_mismatch:", reliability.first_mismatch_bit)
+
+    print("encode total (ms):", _format_metric(performance.encode_total_ms, digits=3))
+    print("decode total (ms):", _format_metric(performance.decode_total_ms, digits=3))
+    print(
+        "encode ms/token:",
+        _format_metric(performance.encode_ms_per_token, digits=3),
+    )
+    print(
+        "decode ms/token:",
+        _format_metric(performance.decode_ms_per_token, digits=3),
+    )
+    print(
+        "payload bits/s encode:",
+        _format_metric(performance.payload_bits_per_second_encode, digits=3),
+    )
+    print(
+        "payload bits/s decode:",
+        _format_metric(performance.payload_bits_per_second_decode, digits=3),
+    )
+    print(
+        "LM forward total (ms):",
+        _format_metric(performance.lm_forward_total_ms, digits=3),
+    )
+    print(
+        "distribution processing total (ms):",
+        _format_metric(performance.distribution_processing_total_ms, digits=3),
+    )
+    print(
+        "stego algorithm total (ms):",
+        _format_metric(performance.stego_algorithm_total_ms, digits=3),
+    )
+
     print()
     print("stegotext:")
     print(result.transport.text)
