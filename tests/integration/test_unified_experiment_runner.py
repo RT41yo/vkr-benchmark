@@ -123,6 +123,26 @@ def test_all_three_baselines_run_through_one_experiment_entrypoint(
     assert execution.method_id == method_id
     assert execution.prompt.prompt_id == "p000001"
     assert execution.roundtrip.encode.carrier_tokens == 8
+    assert len(execution.roundtrip.encode.step_reference_entropy_bits) == 8
+    assert all(value > 0.0 for value in execution.roundtrip.encode.step_reference_entropy_bits)
+
+    metrics = execution.capacity_entropy_metrics
+    assert metrics.payload_bits == execution.roundtrip.encode.payload_bits
+    assert metrics.carrier_tokens == 8
+    assert metrics.bits_per_token == pytest.approx(metrics.payload_bits / 8)
+    assert metrics.reference_entropy_sum_bits == pytest.approx(
+        sum(execution.roundtrip.encode.step_reference_entropy_bits)
+    )
+    assert metrics.reference_entropy_mean_bits == pytest.approx(
+        metrics.reference_entropy_sum_bits / 8
+    )
+    assert metrics.entropy_utilization == pytest.approx(
+        metrics.payload_bits / metrics.reference_entropy_sum_bits
+    )
+    assert metrics.entropy_utilization_percent == pytest.approx(
+        100.0 * metrics.entropy_utilization
+    )
+
     assert execution.roundtrip.roundtrip_exact is True
     assert execution.roundtrip.transport.token_sequence_roundtrip_exact is True
 

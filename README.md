@@ -123,3 +123,37 @@ python scripts/run_experiment.py configs/experiments/stage2_arithmetic.example.j
 ```
 
 Во всех трех случаях prompt загружается из `data/prompts.jsonl` по `prompt_id`, секрет воспроизводится по `secret_id`, а общая generation policy применяется через один `ReferenceDistributionBuilder`. Текущий `p000001` — только технический Stage-2 smoke prompt, а не финальный корпус benchmark v1.0. На шаге 7.1 runner еще не рассчитывает полный набор benchmark metrics и не сохраняет `run_id/result.json/trace/summary.parquet`; эти слои добавляются следующими шагами этапа 2.
+
+## Capacity + entropy metrics (этап 2, шаг 7.2)
+
+Единый `run_experiment()` теперь рассчитывает первый общий блок benchmark-метрик
+для Bins, Huffman и Arithmetic Coding. На каждом sender-side шаге из того же
+канонического `P_reference` вычисляется Shannon entropy в битах, после чего
+агрегируются:
+
+```text
+payload_bits
+carrier_tokens
+bits_per_token
+reference_entropy_mean_bits
+reference_entropy_sum_bits
+entropy_utilization
+entropy_utilization_percent
+```
+
+BPT и entropy utilization используют только подтвержденный полезный payload.
+Для Arithmetic Coding `secret_bits_read` включает look-ahead и поэтому может
+быть больше `payload_bits`, но эти дополнительные биты в метрики емкости не
+попадают. `entropy_utilization` реализован ровно как `B / sum_t H_t` и не
+клиппируется до 1.
+
+Единый launcher выводит эти значения сразу после генерации:
+
+```bash
+python scripts/run_experiment.py configs/experiments/stage2_bins.example.json
+python scripts/run_experiment.py configs/experiments/stage2_huffman.example.json
+python scripts/run_experiment.py configs/experiments/stage2_arithmetic.example.json
+```
+
+KL/TVD, NLL/PPL, агрегированная reliability/performance и постоянное хранение
+результатов в шаг 7.2 намеренно не входят.

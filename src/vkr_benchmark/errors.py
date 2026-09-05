@@ -21,6 +21,10 @@ class DistributionError(ContractError):
     """Raised when a probability distribution is malformed."""
 
 
+class MetricError(BenchmarkError):
+    """Raised when a benchmark metric cannot be computed validly."""
+
+
 class NumericalError(BenchmarkError):
     """Raised when LM/distribution computation contains invalid numerics."""
 

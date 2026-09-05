@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Run one Stage-2 normalized experiment from a single JSON config.
 
-Step 7.1 intentionally stops before metric aggregation and persistent result
-storage. Its job is to prove that prompt, secret, method, generation policy and
-termination are all supplied through one common configuration path.
+Step 7.2 adds the first common benchmark metric block: useful capacity and
+reference-entropy utilization. Persistent run storage and the remaining metric
+groups are added in later Stage-2 steps.
 """
 
 from __future__ import annotations
@@ -64,11 +64,26 @@ def main() -> None:
         lm_adapter=lm,
     )
     result = execution.roundtrip
+    metrics = execution.capacity_entropy_metrics
 
     print()
     print("generated carrier tokens:", result.encode.carrier_tokens)
     print("payload bits:", result.encode.payload_bits)
     print("secret bits read:", result.encode.secret_bits_read)
+    print("bits per token:", f"{metrics.bits_per_token:.6f}")
+    print(
+        "reference entropy mean (bits/token):",
+        f"{metrics.reference_entropy_mean_bits:.6f}",
+    )
+    print(
+        "reference entropy sum (bits):",
+        f"{metrics.reference_entropy_sum_bits:.6f}",
+    )
+    print("entropy utilization:", f"{metrics.entropy_utilization:.6f}")
+    print(
+        "entropy utilization (%):",
+        f"{metrics.entropy_utilization_percent:.3f}",
+    )
     print("token_sequence_roundtrip_exact:", result.transport.token_sequence_roundtrip_exact)
     print("roundtrip_exact:", result.roundtrip_exact)
     print("decoder complete:", result.decode.finalization.complete)
