@@ -1,0 +1,26 @@
+{
+  "benchmark_version": "0.1",
+  "run_kind": "normalized",
+  "model_config": "configs/models/llama-3.2-3b.local.json",
+  "prompt_id": "p000001",
+  "method": {
+    "id": "bins",
+    "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+    "params": {
+      "block_size": 2
+    },
+    "random_seed": 12345
+  },
+  "generation": {
+    "temperature": 1.0,
+    "top_k": null,
+    "top_p": 1.0,
+    "exclude_special_tokens": true,
+    "kv_cache": true
+  },
+  "secret_id": "000001",
+  "termination": {
+    "mode": "fixed_carrier_tokens",
+    "target_carrier_tokens": 16
+  }
+}

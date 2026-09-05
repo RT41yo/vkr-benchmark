@@ -236,3 +236,81 @@ def test_huffman_common_runner_requires_no_method_rng() -> None:
 
     assert result.roundtrip_exact is True
     assert result.encode.payload_bits == result.expected_length_bits
+
+
+def test_arithmetic_full_text_roundtrip_through_common_runner() -> None:
+    from vkr_benchmark.methods import ArithmeticMethod
+
+    lm = _DeterministicFakeLM()
+    builder = ReferenceDistributionBuilder(
+        token_space=lm.token_space,
+        policy=GenerationPolicy(),
+    )
+    environment = method_environment_from_builder(builder)
+
+    result = run_streaming_text_roundtrip(
+        lm_adapter=lm,
+        reference_builder=builder,
+        method=ArithmeticMethod(),
+        method_config={"precision": 8, "top_k": 8},
+        environment=environment,
+        prompt_text="prompt",
+        carrier_tokens=8,
+        secret_source=Shake256SecretSource("arithmetic-e2e"),
+        encoder_random_source=None,
+        decoder_random_source=None,
+    )
+
+    assert result.encode.carrier_tokens == 8
+    assert result.encode.payload_bits == sum(
+        int(bits) for bits in result.encode.step_bits_consumed if bits is not None
+    )
+    assert result.encode.secret_bits_read == 8 + result.encode.payload_bits
+    assert len(result.encode.read_secret_bits) == result.encode.secret_bits_read
+    assert len(result.encode.payload_secret_bits) == result.encode.payload_bits
+    assert result.encode.payload_secret_bits == result.encode.read_secret_bits[: result.encode.payload_bits]
+    assert result.encode.secret_bits_read > result.encode.payload_bits
+    # Backward-compatible name now means useful payload, not all look-ahead reads.
+    assert result.encode.consumed_secret_bits == result.encode.payload_secret_bits
+
+    assert result.transport.token_sequence_roundtrip_exact is True
+    assert result.transport.receiver_token_ids == result.encode.carrier_token_ids
+    assert result.decode.recovered_bits == result.encode.payload_secret_bits
+    assert result.roundtrip_exact is True
+    assert result.first_bit_mismatch is None
+    assert result.recovered_extra_bits == 0
+    assert result.recovered_length_bits == result.expected_length_bits
+    assert result.expected_length_bits == result.encode.payload_bits
+    assert result.length_delta_bits == 0
+    assert result.decode.finalization.complete is True
+
+    # Eight carrier tokens require seven cached advances on encode and seven on decode.
+    assert lm.prefill_calls == 2
+    assert lm.advance_calls == 14
+
+
+def test_streaming_runner_keeps_read_and_payload_bits_equal_for_bins() -> None:
+    lm = _DeterministicFakeLM()
+    builder = ReferenceDistributionBuilder(
+        token_space=lm.token_space,
+        policy=GenerationPolicy(),
+    )
+    environment = method_environment_from_builder(builder)
+
+    result = run_streaming_text_roundtrip(
+        lm_adapter=lm,
+        reference_builder=builder,
+        method=BinsMethod(),
+        method_config={"block_size": 2},
+        environment=environment,
+        prompt_text="prompt",
+        carrier_tokens=4,
+        secret_source=Shake256SecretSource("bins-accounting-regression"),
+        encoder_random_source=MethodRandomSource(12345),
+        decoder_random_source=MethodRandomSource(12345),
+    )
+
+    assert result.encode.read_secret_bits == result.encode.payload_secret_bits
+    assert result.encode.secret_bits_read == result.encode.payload_bits
+    assert result.encode.consumed_secret_bits == result.encode.payload_secret_bits
+    assert result.roundtrip_exact is True

@@ -1,6 +1,13 @@
 """Steganographic method adapter contracts and implementations."""
 
 from vkr_benchmark.methods.base import DecoderSession, EncoderSession, StegoMethod
+from vkr_benchmark.methods.arithmetic import (
+    ArithmeticConfig,
+    ArithmeticDecoderSession,
+    ArithmeticEncoderSession,
+    ArithmeticMethod,
+    ArithmeticPartition,
+)
 from vkr_benchmark.methods.bins import (
     BinsConfig,
     BinsDecoderSession,
@@ -24,6 +31,11 @@ from vkr_benchmark.methods.types import (
 )
 
 __all__ = [
+    "ArithmeticConfig",
+    "ArithmeticDecoderSession",
+    "ArithmeticEncoderSession",
+    "ArithmeticMethod",
+    "ArithmeticPartition",
     "BinsConfig",
     "BinsDecoderSession",
     "BinsEncoderSession",

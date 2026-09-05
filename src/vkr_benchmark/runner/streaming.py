@@ -27,13 +27,32 @@ class StreamingEncodeResult:
 
     prompt_token_ids: tuple[int, ...]
     carrier_token_ids: tuple[int, ...]
-    consumed_secret_bits: tuple[int, ...]
+    read_secret_bits: tuple[int, ...]
+    payload_secret_bits: tuple[int, ...]
     step_bits_consumed: tuple[int | None, ...]
     finalization: EncoderFinalization
 
     @property
     def payload_bits(self) -> int:
         return self.finalization.payload_bits
+
+    @property
+    def secret_bits_read(self) -> int:
+        """Number of bits fetched from SecretSource, including method look-ahead."""
+
+        return len(self.read_secret_bits)
+
+    @property
+    def consumed_secret_bits(self) -> tuple[int, ...]:
+        """Backward-compatible alias for the confirmed useful payload bits.
+
+        Earlier Stage-2 streaming methods consumed exactly the useful payload,
+        so this field originally meant both "read" and "embedded". Arithmetic
+        Coding proves those concepts must be separate because it keeps a
+        precision-bit look-ahead window.
+        """
+
+        return self.payload_secret_bits
 
     @property
     def carrier_tokens(self) -> int:
@@ -155,15 +174,29 @@ def encode_fixed_carrier_tokens(
         _, state = lm_adapter.next_logits(state, token_id)
 
     finalization = encoder.finalize()
-    if finalization.payload_bits != len(recorded_secret.consumed_bits):
+    read_secret_bits = recorded_secret.consumed_bits
+    if finalization.payload_bits > len(read_secret_bits):
         raise ContractError(
-            "encoder payload accounting disagrees with bits consumed from SecretSource"
+            "encoder reports more useful payload bits than were read from SecretSource"
         )
+
+    # For streaming prefix methods used in Stage 2, useful payload is the
+    # confirmed prefix of the secret stream. Arithmetic Coding may have read an
+    # additional precision-bit look-ahead suffix that is *not* useful payload.
+    payload_secret_bits = read_secret_bits[: finalization.payload_bits]
+
+    if all(bits is not None for bits in step_bits):
+        step_payload = sum(int(bits) for bits in step_bits)
+        if step_payload != finalization.payload_bits:
+            raise ContractError(
+                "per-step payload accounting disagrees with encoder finalization"
+            )
 
     return StreamingEncodeResult(
         prompt_token_ids=prompt_token_ids,
         carrier_token_ids=tuple(generated),
-        consumed_secret_bits=recorded_secret.consumed_bits,
+        read_secret_bits=read_secret_bits,
+        payload_secret_bits=payload_secret_bits,
         step_bits_consumed=tuple(step_bits),
         finalization=finalization,
     )
@@ -264,7 +297,7 @@ def run_streaming_text_roundtrip(
         key=key,
     )
 
-    expected = encoded.consumed_secret_bits
+    expected = encoded.payload_secret_bits
     recovered = decoded.recovered_bits
     mismatch = _first_bit_mismatch(expected, recovered)
     raw_recovered_length = len(decoded.incremental_recovered_bits)
