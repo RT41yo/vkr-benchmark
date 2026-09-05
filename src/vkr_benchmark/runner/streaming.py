@@ -10,7 +10,11 @@ import numpy as np
 from vkr_benchmark.distributions import ReferenceDistributionBuilder, StepContext
 from vkr_benchmark.errors import ContractError
 from vkr_benchmark.lm import LMAdapter
-from vkr_benchmark.metrics import reference_entropy_bits
+from vkr_benchmark.metrics import (
+    StepDistributionDistortion,
+    distribution_distortion_step,
+    reference_entropy_bits,
+)
 from vkr_benchmark.methods import (
     DecoderFinalization,
     EncoderFinalization,
@@ -32,6 +36,7 @@ class StreamingEncodeResult:
     payload_secret_bits: tuple[int, ...]
     step_bits_consumed: tuple[int | None, ...]
     step_reference_entropy_bits: tuple[float, ...]
+    step_distribution_distortion: tuple[StepDistributionDistortion, ...]
     finalization: EncoderFinalization
 
     @property
@@ -156,12 +161,16 @@ def encode_fixed_carrier_tokens(
     generated: list[int] = []
     step_bits: list[int | None] = []
     step_entropies: list[float] = []
+    step_distortion: list[StepDistributionDistortion] = []
 
     for step_index in range(carrier_tokens):
         raw_logits, state = lm_adapter.next_logits(state)
         reference = reference_builder.build(raw_logits)
         step_entropies.append(reference_entropy_bits(reference))
         decision = encoder.step(StepContext(step_index=step_index, reference=reference))
+        step_distortion.append(
+            distribution_distortion_step(reference, decision.distribution_info)
+        )
 
         token_id = int(decision.token_id)
         if not environment.is_allowed(token_id):
@@ -203,6 +212,7 @@ def encode_fixed_carrier_tokens(
         payload_secret_bits=payload_secret_bits,
         step_bits_consumed=tuple(step_bits),
         step_reference_entropy_bits=tuple(step_entropies),
+        step_distribution_distortion=tuple(step_distortion),
         finalization=finalization,
     )
 

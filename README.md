@@ -66,6 +66,8 @@ models/
 - общий method factory для Bins/Huffman/Arithmetic Coding и воспроизводимое создание sender/receiver method RNG;
 - высокоуровневый `runner/experiment.py`, который запускает любой из трех методов через один и тот же `run_experiment()`;
 - `scripts/run_experiment.py` — первый единый launcher вместо ручного задания входов в `check_*_e2e.py`; диагностические smoke scripts при этом сохранены.
+- общий `metrics/capacity_entropy.py`: BPT, reference entropy и entropy utilization по фактической sender-side траектории;
+- общий `metrics/distribution_distortion.py`: exact/available `Q_stego` → KL(`P_reference || Q_stego`) и TVD без epsilon smoothing, с run-level aggregation и явным учетом `inf`.
 
 LM/reference-distribution слой локально проверен на Llama и Qwen. Bins, Huffman и Arithmetic Coding прошли core/unit и end-to-end проверки на обеих реальных моделях. Пункт 1 этапа 2 (адаптация трех базовых методов) завершен.
 
@@ -155,5 +157,56 @@ python scripts/run_experiment.py configs/experiments/stage2_huffman.example.json
 python scripts/run_experiment.py configs/experiments/stage2_arithmetic.example.json
 ```
 
-KL/TVD, NLL/PPL, агрегированная reliability/performance и постоянное хранение
+NLL/PPL, агрегированная reliability/performance и постоянное хранение
 результатов в шаг 7.2 намеренно не входят.
+
+## KL/TVD distribution distortion (этап 2, шаг 7.3)
+
+На sender-side каждом carrier-шаге общий metric layer теперь сравнивает
+каноническое `P_reference` с `Q_stego`, возвращенным adapter'ом метода.
+Реализованы фиксированные спецификацией v0.1 определения:
+
+```text
+KL = D_KL(P_reference || Q_stego), log base 2
+TVD = 0.5 * sum_x |P_reference(x) - Q_stego(x)|
+```
+
+Скрытое epsilon-сглаживание запрещено: если `P_reference(x) > 0`, а
+`Q_stego(x) = 0`, KL данного шага равна `inf`. Поэтому для Bins/Huffman и
+некоторых конфигураций Arithmetic Coding бесконечная KL является ожидаемым
+структурным результатом ограниченного support `Q_stego`, а не ошибкой. TVD
+при этом остается конечной в `[0, 1]`.
+
+Run-level агрегируются:
+
+```text
+q_mode
+kl_mean_bits
+kl_median_bits
+kl_p95_bits
+kl_max_bits
+kl_infinite_steps
+kl_finite_steps
+tvd_mean
+tvd_median
+tvd_p95
+tvd_max
+```
+
+Если хотя бы один шаг имеет бесконечную KL, `kl_mean_bits = inf`. Для p95
+реализация v0.2 использует empirical nearest-rank percentile, чтобы не
+интерполировать между конечным значением и `+inf`; это уточнение отдельно
+зафиксировано в `benchmark_specification_v0.1_notes.md` для рассмотрения в v1.0.
+Полные `P/Q` по всем шагам не сохраняются: после вычисления step KL/TVD runner
+оставляет только scalar diagnostics, чтобы не раздувать память и будущий trace.
+
+Единый launcher выводит KL/TVD вместе с capacity/entropy:
+
+```bash
+python scripts/run_experiment.py configs/experiments/stage2_bins.example.json
+python scripts/run_experiment.py configs/experiments/stage2_huffman.example.json
+python scripts/run_experiment.py configs/experiments/stage2_arithmetic.example.json
+```
+
+NLL/PPL, агрегированная reliability/performance и постоянное хранение
+результатов добавляются следующими шагами этапа 2.

@@ -9,7 +9,12 @@ from vkr_benchmark.distributions import ReferenceDistributionBuilder
 from vkr_benchmark.errors import ConfigurationError
 from vkr_benchmark.inputs import PromptRecord, PromptRegistry, create_secret_source
 from vkr_benchmark.lm import LMAdapter
-from vkr_benchmark.metrics import CapacityEntropyMetrics, compute_capacity_entropy_metrics
+from vkr_benchmark.metrics import (
+    CapacityEntropyMetrics,
+    DistributionDistortionMetrics,
+    compute_capacity_entropy_metrics,
+    compute_distribution_distortion_metrics,
+)
 from vkr_benchmark.methods import ArithmeticMethod, BinsMethod, HuffmanMethod, StegoMethod
 from vkr_benchmark.randomness import MethodRandomSource, RandomSource
 from vkr_benchmark.runner.streaming import (
@@ -36,6 +41,7 @@ class ExperimentExecution:
     prompt: PromptRecord
     roundtrip: StreamingTextRoundtripResult
     capacity_entropy_metrics: CapacityEntropyMetrics
+    distribution_distortion_metrics: DistributionDistortionMetrics
 
     @property
     def method_id(self) -> str:
@@ -124,10 +130,14 @@ def run_experiment(
         payload_bits=roundtrip.encode.payload_bits,
         reference_entropies_bits=roundtrip.encode.step_reference_entropy_bits,
     )
+    distribution_distortion_metrics = compute_distribution_distortion_metrics(
+        roundtrip.encode.step_distribution_distortion
+    )
 
     return ExperimentExecution(
         config=config,
         prompt=prompt,
         roundtrip=roundtrip,
         capacity_entropy_metrics=capacity_entropy_metrics,
+        distribution_distortion_metrics=distribution_distortion_metrics,
     )

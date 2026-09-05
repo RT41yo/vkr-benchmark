@@ -143,6 +143,17 @@ def test_all_three_baselines_run_through_one_experiment_entrypoint(
         100.0 * metrics.entropy_utilization
     )
 
+    distortion = execution.distribution_distortion_metrics
+    assert distortion.q_mode.value == "analytic_exact"
+    assert len(execution.roundtrip.encode.step_distribution_distortion) == 8
+    assert distortion.kl_infinite_steps + distortion.kl_finite_steps == 8
+    assert distortion.tvd_mean is not None
+    assert 0.0 <= distortion.tvd_mean <= 1.0
+    assert distortion.tvd_median is not None
+    assert distortion.tvd_p95 is not None
+    assert distortion.tvd_max is not None
+    assert 0.0 <= distortion.tvd_max <= 1.0
+
     assert execution.roundtrip.roundtrip_exact is True
     assert execution.roundtrip.transport.token_sequence_roundtrip_exact is True
 

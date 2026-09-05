@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Run one Stage-2 normalized experiment from a single JSON config.
 
-Step 7.2 adds the first common benchmark metric block: useful capacity and
-reference-entropy utilization. Persistent run storage and the remaining metric
-groups are added in later Stage-2 steps.
+Step 7.3 adds distribution distortion metrics KL(P_reference || Q_stego)
+and TVD on top of the common capacity/reference-entropy metric block. Persistent
+run storage and the remaining metric groups are added in later Stage-2 steps.
 """
 
 from __future__ import annotations
@@ -15,6 +15,14 @@ from vkr_benchmark.config import ExperimentConfig, LocalModelConfig
 from vkr_benchmark.inputs import PromptRegistry
 from vkr_benchmark.lm import HFCausalLMAdapter
 from vkr_benchmark.runner import run_experiment
+
+
+def _format_metric(value: float | None, *, digits: int = 6) -> str:
+    if value is None:
+        return "unavailable"
+    if value == float("inf"):
+        return "inf"
+    return f"{value:.{digits}f}"
 
 
 def main() -> None:
@@ -65,6 +73,7 @@ def main() -> None:
     )
     result = execution.roundtrip
     metrics = execution.capacity_entropy_metrics
+    distortion = execution.distribution_distortion_metrics
 
     print()
     print("generated carrier tokens:", result.encode.carrier_tokens)
@@ -84,6 +93,17 @@ def main() -> None:
         "entropy utilization (%):",
         f"{metrics.entropy_utilization_percent:.3f}",
     )
+    print("q_mode:", distortion.q_mode.value)
+    print("KL mean (bits/token):", _format_metric(distortion.kl_mean_bits))
+    print("KL median (bits/token):", _format_metric(distortion.kl_median_bits))
+    print("KL p95 (bits/token):", _format_metric(distortion.kl_p95_bits))
+    print("KL max (bits/token):", _format_metric(distortion.kl_max_bits))
+    print("KL infinite steps:", distortion.kl_infinite_steps)
+    print("KL finite steps:", distortion.kl_finite_steps)
+    print("TVD mean:", _format_metric(distortion.tvd_mean))
+    print("TVD median:", _format_metric(distortion.tvd_median))
+    print("TVD p95:", _format_metric(distortion.tvd_p95))
+    print("TVD max:", _format_metric(distortion.tvd_max))
     print("token_sequence_roundtrip_exact:", result.transport.token_sequence_roundtrip_exact)
     print("roundtrip_exact:", result.roundtrip_exact)
     print("decoder complete:", result.decode.finalization.complete)
