@@ -59,12 +59,12 @@ def test_normalize_order_is_deterministic() -> None:
 
 def test_markdown_formats_infinity_percent_and_metrics() -> None:
     table = build_markdown_table([_row("bins", run_id="1")])
-    assert "| Method | BPT | Entropy util. (%) |" in table
+    assert "| Метод | BPT | Использование энтропии, % |" in table
     assert "| bins | 2.0000 | 50.00 | inf | 0.2500 | 1.5000 | 4.5000 | 0.000000 | 10.000 | 11.000 | ok |" in table
 
 
 def test_markdown_empty_table_is_explicit() -> None:
-    assert build_markdown_table([]) == "_No matching runs._\n"
+    assert build_markdown_table([]) == "_Нет подходящих запусков._\n"
 
 
 def test_markdown_missing_values_use_em_dash() -> None:

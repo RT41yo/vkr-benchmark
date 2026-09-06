@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render results/summary.parquet as a compact Stage-2 Markdown table."""
+"""Сформировать компактную Markdown-таблицу из results/summary.parquet."""
 
 from __future__ import annotations
 
@@ -10,17 +10,11 @@ from vkr_benchmark.reporting import build_markdown_table, normalize_summary_reco
 
 
 def _read_parquet_records(path: Path) -> list[dict[str, object]]:
-    """Read summary.parquet using the same pyarrow dependency as storage.
-
-    The ``storage`` extra already installs pyarrow, so reporting must not add an
-    unrelated pandas dependency just to convert the table into ordinary records.
-    """
-
     try:
         import pyarrow.parquet as pq
     except ImportError as exc:  # pragma: no cover - environment dependent
         raise SystemExit(
-            'Parquet reporting requires the storage extra: pip install -e ".[storage]"'
+            'Для чтения Parquet установите storage-зависимости: pip install -e ".[storage]"'
         ) from exc
 
     table = pq.read_table(path)
@@ -28,32 +22,34 @@ def _read_parquet_records(path: Path) -> list[dict[str, object]]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description="Сформировать компактную Markdown-сводку результатов Этапа 2."
+    )
     parser.add_argument(
         "summary",
         type=Path,
         nargs="?",
         default=Path("results/summary.parquet"),
-        help="Path to summary.parquet (default: results/summary.parquet)",
+        help="Путь к summary.parquet (по умолчанию results/summary.parquet)",
     )
-    parser.add_argument("--model-id", default=None)
-    parser.add_argument("--prompt-id", default=None)
+    parser.add_argument("--model-id", default=None, help="Фильтр по идентификатору модели")
+    parser.add_argument("--prompt-id", default=None, help="Фильтр по идентификатору промпта")
     parser.add_argument(
         "--all-statuses",
         action="store_true",
-        help="Include failed runs as well as status=ok runs",
+        help="Показывать не только успешные, но и неуспешные запуски",
     )
     parser.add_argument(
         "--output",
         type=Path,
         default=None,
-        help="Optional Markdown output path; stdout is always printed",
+        help="Необязательный путь для записи Markdown-файла; таблица также выводится в stdout",
     )
     args = parser.parse_args()
 
     summary_path = args.summary.expanduser().resolve()
     if not summary_path.is_file():
-        raise SystemExit(f"summary parquet not found: {summary_path}")
+        raise SystemExit(f"Файл summary.parquet не найден: {summary_path}")
 
     rows = _read_parquet_records(summary_path)
     rows = normalize_summary_records(
@@ -69,7 +65,7 @@ def main() -> None:
         output_path = args.output.expanduser().resolve()
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(markdown, encoding="utf-8")
-        print(f"\nwritten: {output_path}")
+        print(f"\nЗаписано: {output_path}")
 
 
 if __name__ == "__main__":

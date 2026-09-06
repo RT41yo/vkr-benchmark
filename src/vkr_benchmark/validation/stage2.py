@@ -35,7 +35,7 @@ REQUIRED_REPOSITORY_PATHS = (
     "docs/decisions/0014-canonical-run-storage-and-summary.md",
     "docs/decisions/0015-stage2-readiness-and-v0.2-milestone.md",
     "docs/stages/stage2/stage2_closeout.md",
-    "docs/stages/stage2/stage2_presentation_outline.md",
+    "docs/stages/stage2/stage_2.typ",
     "docs/releases/v0.2.md",
 )
 

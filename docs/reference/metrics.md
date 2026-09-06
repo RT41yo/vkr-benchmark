@@ -1,118 +1,184 @@
-# Stage-2 baseline metrics
+# Базовые метрики Этапа 2
 
-This document records the exact interpretation used by the normalized Stage-2 runner. It is an implementation-facing companion to benchmark specification v0.1 and the ADRs; it does not modify the frozen v0.1 specification.
+Этот документ фиксирует точные определения и правила расчёта базовых метрик, реализованных в нормализованном экспериментальном контуре Этапа 2. Документ дополняет спецификацию бенчмарка v0.1 и ADR, но не изменяет зафиксированную спецификацию v0.1.
 
-## Common notation
+## 1. Обозначения и общий принцип расчёта
 
-At carrier step `t`, `P_reference,t` is the canonical reference distribution produced from the shared LM path, and `Q_stego,t` is the method-induced distribution exposed by the stego implementation. `T` is the number of generated carrier tokens. `B` is the number of **confirmed useful payload bits** embedded in those carrier tokens. Bits merely read as algorithmic look-ahead are not counted as payload.
+На шаге генерации `t`:
 
-All normalized Stage-2 methods use the same text-only transport check: sender token IDs are decoded to ordinary text; only that text is passed to the receiver; the receiver retokenizes it and performs stego decoding from the reconstructed token sequence.
+- `P_reference,t` — эталонное распределение вероятностей токенов, полученное из общего контура языковой модели;
+- `Q_stego,t` — распределение выбора токенов, которое задаёт конкретный стегометод;
+- `T` — число сгенерированных токенов-носителей;
+- `B` — число **подтверждённых полезных битов**, действительно встроенных в эти токены.
 
-## Capacity
+Биты, которые метод только считал в рабочее состояние «с запасом» и ещё не подтвердил как встроенные, в `B` не входят. Это особенно важно для Arithmetic Coding, где рабочее окно может содержать дополнительные биты предварительного считывания (look-ahead).
 
-### Payload bits
+Проверка восстановления секрета выполняется через обычный текстовый канал:
+
+`токены отправителя → текст → повторная токенизация → декодирование секрета`.
+
+Идентификаторы токенов отправителя напрямую декодеру не передаются.
+
+## 2. Ёмкость
+
+### 2.1. Полезная нагрузка
 
 `payload_bits = B`.
 
-For fixed-rate methods this may equal the number of secret bits read. For stateful interval methods it need not: Arithmetic Coding can keep uncommitted look-ahead bits in its working state, so `secret_bits_read` may exceed `payload_bits`.
+Для методов с фиксированной скоростью это значение может совпадать с числом считанных секретных битов. Для методов с внутренним состоянием, например Arithmetic Coding, возможно:
 
-### Bits per token
+`secret_bits_read > payload_bits`.
+
+В метриках ёмкости учитываются только подтверждённые полезные биты.
+
+### 2.2. Биты на токен
 
 `bits_per_token = B / T`.
 
-This is the canonical Stage-2 payload-rate metric. It uses confirmed payload, not working-window or look-ahead bits.
+Это основная метрика скорости встраивания на Этапе 2. В тексте работы используется сокращение **BPT** (bits per token).
 
-## Reference entropy and entropy utilization
+## 3. Энтропия эталонного распределения и эффективность её использования
 
-Per-step reference entropy is
+Для каждого шага вычисляется энтропия:
 
 `H_t = - sum_x P_reference,t(x) log2 P_reference,t(x)`.
 
-The runner stores:
+Сохраняются следующие показатели:
 
-- `reference_entropy_mean_bits = (1/T) sum_t H_t`;
-- `reference_entropy_sum_bits = sum_t H_t`;
-- `entropy_utilization = B / sum_t H_t`;
-- `entropy_utilization_percent = 100 * entropy_utilization`.
+- `reference_entropy_mean_bits = (1/T) sum_t H_t` — средняя энтропия на токен;
+- `reference_entropy_sum_bits = sum_t H_t` — суммарная энтропия на всём фрагменте;
+- `entropy_utilization = B / sum_t H_t` — доля доступной энтропии, использованная для полезной нагрузки;
+- `entropy_utilization_percent = 100 * entropy_utilization` — то же значение в процентах.
 
-No clipping is applied. A value above 1, should it occur, is retained as a diagnostic rather than silently forced into `[0, 1]`.
+Значение `entropy_utilization` искусственно не ограничивается диапазоном `[0, 1]`. Если в эксперименте получится значение выше 1, оно сохраняется как диагностический результат, а не принудительно обрезается.
 
-## Distribution distortion
+## 4. Искажение распределения
 
-### Q availability
+### 4.1. Способ получения `Q_stego`
 
-`q_mode` states how `Q_stego` was obtained. The Stage-2 baselines currently expose `analytic_exact` distributions. Future methods may require another exact representation, Monte Carlo estimation, or may be unavailable.
+Поле `q_mode` показывает, как получено распределение `Q_stego`. Для трёх базовых методов Этапа 2 используется режим `analytic_exact`, то есть распределение задаётся аналитически и вычисляется без моделирования методом Монте-Карло.
 
-### Benchmark-native KL
+### 4.2. KL-дивергенция: направление `P_reference → Q_stego`
 
-Specification v0.1 defines
+Спецификация v0.1 задаёт:
 
 `D_KL(P_reference || Q_stego) = sum_x P_reference(x) log2(P_reference(x) / Q_stego(x))`.
 
-The implementation applies no epsilon smoothing. Therefore if there exists any token with
+Единица измерения — бит на токен.
 
-`P_reference(x) > 0` and `Q_stego(x) = 0`,
+Сглаживание через epsilon не применяется. Поэтому если существует хотя бы один токен, для которого
 
-the step KL is `+inf`. Run-level fields `kl_mean_bits`, `kl_median_bits`, `kl_p95_bits` and `kl_max_bits` therefore may legitimately be infinite. `kl_infinite_steps` and `kl_finite_steps` make that support behavior explicit.
+`P_reference(x) > 0`, но `Q_stego(x) = 0`,
 
-The current generic persisted `kl_*` names are v0.1 fields and mean **reference → stego**. ADR-0012 additionally requires Stage 3 reproducibility experiments to calculate the author-compatible opposite direction
+то KL на этом шаге равна `+inf`.
 
-`D_KL(Q_stego || P_reference)`
+На уровне запуска сохраняются:
 
-without replacing the benchmark-native metric. Directional field names must be used when both are first-class in the result schema.
+- `kl_mean_bits`;
+- `kl_median_bits`;
+- `kl_p95_bits`;
+- `kl_max_bits`;
+- `kl_infinite_steps`;
+- `kl_finite_steps`.
 
-### Total variation distance
+В текущей схеме полей `kl_*` всегда означает направление **от эталонного распределения к распределению стегометода**.
+
+ADR-0012 отдельно фиксирует, что на Этапе 3 для воспроизведения авторских результатов дополнительно рассчитывается противоположное направление:
+
+`D_KL(Q_stego || P_reference)`.
+
+Оно не заменяет базовую метрику, а используется параллельно с ней.
+
+### 4.3. Расстояние полной вариации
 
 `TVD(P_reference, Q_stego) = 0.5 * sum_x |P_reference(x) - Q_stego(x)|`.
 
-Unlike strict `D_KL(P_reference || Q_stego)`, TVD remains finite under support truncation and therefore provides a useful graded distortion measure for methods whose benchmark-native KL is infinite.
+В отличие от строгой `D_KL(P_reference || Q_stego)`, TVD остаётся конечной даже тогда, когда стегометод обнуляет часть области поддержки. Поэтому TVD используется как градуированная мера искажения распределения.
 
-The runner stores mean, median, nearest-rank p95 and maximum TVD across carrier steps.
+Для запуска сохраняются среднее, медиана, p95 по правилу nearest-rank и максимальное значение TVD.
 
-## Raw-LM quality
+## 5. Качество сгенерированного текста по исходной языковой модели
 
-For the actually generated carrier token `x_t`, NLL is evaluated using the **raw generating LM distribution**, before `P_reference` masking/truncation and before any stego transformation:
+Для реально выбранного токена `x_t` NLL вычисляется по **исходному распределению языковой модели** до построения `P_reference` и до преобразований стегометода:
 
-`NLL = -(1/T) sum_t ln P_LM-raw,t(x_t)`  in nats/token.
+`NLL = -(1/T) sum_t ln P_LM-raw,t(x_t)`.
+
+Единица измерения — nat на токен.
+
+Перплексия:
 
 `PPL = exp(NLL)`.
 
-These metrics answer a different question from TVD: they measure how probable the realized stegotext tokens are under the underlying LM, rather than how far the complete method distribution is from `P_reference`.
+Сохраняются поля:
 
-## Reliability
+- `nll_raw_lm_nats_per_token`;
+- `ppl_raw_lm`.
 
-### Exact round-trip
+Эти показатели отвечают на другой вопрос, чем TVD. TVD сравнивает полные распределения `P_reference` и `Q_stego`, а NLL/PPL показывает, насколько вероятными сама исходная языковая модель считала фактически сгенерированные токены.
 
-`roundtrip_exact` is true only when the recovered useful payload equals the expected payload exactly under the text-only channel.
+## 6. Надёжность восстановления
 
-`token_sequence_roundtrip_exact` is a transport diagnostic: it records whether decoding the sender IDs to text and retokenizing that text reproduces the same carrier-token sequence.
+### 6.1. Точное восстановление секрета
 
-### Bit error rate
+`roundtrip_exact = true` только тогда, когда после прохождения обычного текстового канала восстановленная полезная битовая последовательность полностью совпадает с ожидаемой.
 
-`BER = bit_errors / expected_length_bits` when the expected payload length is non-zero.
+`token_sequence_roundtrip_exact` — дополнительная диагностическая проверка: совпала ли последовательность токенов после преобразования
 
-A missing recovered bit counts as an error. Extra recovered bits do not increase the BER numerator because they have no corresponding expected payload position, but they make `roundtrip_exact = false` and are reported through the recovered-length diagnostics.
+`токены → текст → повторная токенизация`.
 
-The runner also stores expected and recovered lengths, length delta, extra recovered bits and first mismatch positions.
+### 6.2. BER
 
-## Computational efficiency
+При ненулевой длине ожидаемой полезной нагрузки:
 
-Timing excludes model loading, result persistence, text storage and post-hoc metric computation. A warm-up is performed before the measured run. CUDA measurements synchronize the device at timing boundaries.
+`BER = bit_errors / expected_length_bits`.
 
-Run-level fields include:
+Отсутствующий восстановленный бит считается ошибкой. Лишние биты не увеличивают числитель BER, потому что для них нет соответствующей позиции в ожидаемой последовательности, но при их наличии `roundtrip_exact = false`.
 
-- `encode_total_ms`, `decode_total_ms`;
-- `encode_ms_per_token`, `decode_ms_per_token`;
-- `payload_bits_per_second_encode`, `payload_bits_per_second_decode`.
+Дополнительно сохраняются:
 
-The total timed work is decomposed into:
+- ожидаемая и восстановленная длина;
+- разница длин;
+- число лишних восстановленных битов;
+- позиция первого несовпавшего бита;
+- позиция первого несовпавшего токена после текстового канала.
 
-- `lm_forward_total_ms` — LM prefill/cached-forward work;
-- `distribution_processing_total_ms` — construction of the shared `P_reference` path;
-- `stego_algorithm_total_ms` — method-specific encode/decode operations.
+## 7. Вычислительная эффективность
 
-The decomposition is intended to separate common LM cost from method overhead. Wall-clock values should be treated as environment-dependent measurements and aggregated over repeated runs in later experimental stages.
+Время загрузки модели, запись результатов на диск, сохранение текста и последующий расчёт диагностических метрик в измеряемое время не входят. Перед измерением выполняется прогрев. Для CUDA перед границами измеряемого участка выполняется синхронизация устройства.
 
-## Aggregation rule
+Основные показатели:
 
-Stage 2 currently validates the metric pipeline on individual smoke runs. A single run is **not** a scientific comparison. Later operating points must aggregate across the planned prompts, secrets/keys and repeats. Timing in particular should be summarized over repeated runs rather than interpreted from one 16-token sample.
+- `encode_total_ms` — суммарное время встраивания;
+- `decode_total_ms` — суммарное время извлечения;
+- `encode_ms_per_token` — время встраивания на один токен;
+- `decode_ms_per_token` — время извлечения на один токен;
+- `payload_bits_per_second_encode` — полезных битов в секунду при встраивании;
+- `payload_bits_per_second_decode` — полезных битов в секунду при извлечении.
+
+Общее измеряемое время дополнительно раскладывается на три составляющие:
+
+- `lm_forward_total_ms` — вычисления языковой модели, включая предварительную обработку промпта (prefill) и последующие шаги с кэшем;
+- `distribution_processing_total_ms` — построение общего `P_reference`;
+- `stego_algorithm_total_ms` — операции, специфичные для стегометода.
+
+Такое разбиение позволяет отделить стоимость общего контура языковой модели от вычислительных накладных расходов самого метода.
+
+Значения времени зависят от аппаратного и программного окружения. В итоговых экспериментах они должны агрегироваться по повторным запускам, а не интерпретироваться по одному короткому фрагменту.
+
+## 8. Правило интерпретации результатов Этапа 2
+
+Этап 2 проверяет работоспособность единого измерительного контура. Один запуск на 16 токенов не является научным сравнением методов.
+
+Полноценная экспериментальная точка в следующих этапах должна агрегировать результаты по нескольким промптам, секретам/ключам и повторным запускам. Диапазоны параметров методов и окончательный протокол основных экспериментов фиксируются позднее согласно ROADMAP.
+
+## 9. Где реализованы метрики
+
+Основные вычисления находятся в следующих модулях:
+
+- `src/vkr_benchmark/metrics/capacity_entropy.py` — ёмкость, BPT, энтропия и эффективность её использования;
+- `src/vkr_benchmark/metrics/distribution_distortion.py` — KL и TVD;
+- `src/vkr_benchmark/metrics/quality_reliability_performance.py` — NLL/PPL, BER и вычислительная эффективность;
+- `src/vkr_benchmark/runner/streaming.py` — сбор пошаговых данных во время кодирования и декодирования;
+- `src/vkr_benchmark/runner/experiment.py` — формирование итогового набора метрик запуска.
+
+Связанные архитектурные решения: ADR-0010, ADR-0011, ADR-0012 и ADR-0013 в `docs/decisions/`.

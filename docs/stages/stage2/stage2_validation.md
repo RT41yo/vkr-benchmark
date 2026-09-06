@@ -1,53 +1,107 @@
-# Stage-2 validation snapshot
+# Проверка результатов Этапа 2
 
-This file records the first end-to-end normalized smoke comparison after capacity, entropy, distortion, raw-LM quality, reliability, performance, and persistent run storage were integrated. It is a pipeline-validation snapshot, not a final benchmark result.
+Этот документ фиксирует первый сквозной проверочный запуск после объединения трёх базовых методов, расчёта метрик и сохранения результатов в общем формате. Его задача — подтвердить работоспособность экспериментального контура. Это **не итоговое научное сравнение методов**.
 
-## Conditions
+## 1. Условия проверочного запуска
 
-All three runs used the same model revision, prompt, secret id, normalized `P_reference` policy and 16-carrier-token termination target:
+Для Bins, Huffman и Arithmetic Coding использовались одинаковые внешние условия:
 
-- model: `meta-llama/Llama-3.2-3B`;
-- revision: `13afe5124825b4f3751f836b40dafda64c1ed062`;
-- prompt id: `p000001` (`The history of artificial intelligence began`);
-- secret id: `000001`;
-- common reference policy: temperature `1`, common top-k disabled, top-p `1`;
-- Bins: `block_size=2`;
-- Huffman: `bits_per_word=2`;
-- Arithmetic Coding: `precision=16`, method-internal `top_k=50000`.
+- языковая модель: `meta-llama/Llama-3.2-3B`;
+- версия (revision) модели: `13afe5124825b4f3751f836b40dafda64c1ed062`;
+- промпт: `p000001` — `The history of artificial intelligence began`;
+- секретная последовательность: `secret_id = 000001`;
+- температура: `1`;
+- общий top-k: отключён;
+- top-p: `1`;
+- длина сгенерированного фрагмента: 16 токенов-носителей.
 
-## Observed results
+Параметры методов:
 
-| Method | BPT | Entropy util. (%) | KL ref→stego | TVD mean | Raw-LM NLL | Raw-LM PPL | BER | Encode ms/token | Decode ms/token |
+- Bins: `block_size = 2`;
+- Huffman: `bits_per_word = 2`;
+- Arithmetic Coding: `precision = 16`, внутренний `top_k = 50000`.
+
+Таким образом, между запусками менялся только сам стегометод и его собственные параметры.
+
+## 2. Полученные результаты
+
+| Метод | BPT | Использование энтропии, % | KL `P_ref→Q_stego`, бит/токен | Среднее TVD | NLL исходной LM | PPL исходной LM | BER | Встраивание, мс/токен | Извлечение, мс/токен |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Arithmetic Coding | 2.4375 | 65.838 | inf | 0.053387 | 1.800315 | 6.051556 | 0.000000 | 62.551 | 62.051 |
 | Bins | 2.0000 | 64.603 | inf | 0.596192 | 2.879901 | 17.812511 | 0.000000 | 18.734 | 18.486 |
 | Huffman | 2.1875 | 52.606 | inf | 0.422220 | 2.205473 | 9.074547 | 0.000000 | 17.292 | 17.213 |
-| Arithmetic Coding | 2.4375 | 65.838 | inf | 0.053387 | 1.800315 | 6.051556 | 0.000000 | 62.551 | 62.051 |
 
-All three runs additionally passed the text-only transport checks:
+Для всех трёх методов дополнительно успешно прошли проверки полного цикла передачи:
 
 - `token_sequence_roundtrip_exact = true`;
 - `roundtrip_exact = true`;
-- decoder complete;
-- zero bit errors.
+- декодер завершил восстановление корректно;
+- число битовых ошибок равно нулю.
 
-The timing values above are the latest rerun persisted in `summary.parquet`; wall-clock timing is environment-dependent and may vary between repeated executions of the same canonical `run_id`.
+Значения времени взяты из последнего сохранённого запуска в `results/summary.parquet`. Время выполнения зависит от аппаратного и программного окружения и может немного изменяться между повторными запусками одной и той же конфигурации.
 
-## Interpretation limited to this smoke run
+## 3. Интерпретация результатов
 
-Arithmetic Coding simultaneously produced the highest payload rate, the lowest TVD and the lowest raw-LM PPL, but its encode/decode wall-clock cost was roughly three times the two simpler baselines. Huffman added very little method-specific computational overhead and provided intermediate distribution/quality behavior. Bins was the strongest distortion baseline in this particular trajectory.
+В данном коротком проверочном запуске Arithmetic Coding показал одновременно:
 
-The benchmark-native KL was infinite at every carrier step for all three methods because each exact `Q_stego` lost support relative to the broad baseline `P_reference`; no smoothing is applied. This does not make TVD or the opposite author-compatible KL redundant. Stage 3 will calculate both KL directions where required for author-result convergence.
+- наибольшую полезную нагрузку — 2.4375 бит/токен;
+- наименьшее среднее TVD — 0.053387;
+- наименьшую PPL исходной языковой модели — 6.051556.
 
-These observations must not be generalized beyond pipeline validation: this snapshot is one model × one prompt × one secret × one operating point per method × 16 carrier tokens. Later stages require repeated, aggregated experiments and parameter sweeps.
+При этом время встраивания и извлечения у Arithmetic Coding примерно в три раза выше, чем у Bins и Huffman.
 
-## Storage validation
+Huffman показал промежуточные значения искажения и качества текста при небольшой вычислительной стоимости самого стегометода. Bins в данном запуске сильнее всего изменял распределение относительно `P_reference`.
 
-The three completed normalized runs were persisted through the canonical Stage-2 storage path. `results/summary.parquet` uses one row per canonical run and contains the common identifiers, operating-point hash, metric vector and status. Re-running the same canonical configuration uses the same `run_id` and upserts rather than appending a duplicate logical run.
+Эти наблюдения относятся только к проверке экспериментального контура и не позволяют утверждать, что один метод в целом лучше другого.
 
-To regenerate a compact table from the current local Parquet file:
+## 4. Почему KL равна `inf`
+
+Для всех трёх методов базовая метрика
+
+`D_KL(P_reference || Q_stego)`
+
+оказалась бесконечной на каждом шаге. Причина состоит в том, что `P_reference` имеет широкую область поддержки, а каждый из трёх методов назначает нулевую вероятность части токенов. Сглаживание через epsilon не применяется.
+
+Это значение не является ошибкой вычислений. TVD при этом остаётся конечной и позволяет количественно сравнивать степень искажения.
+
+На Этапе 3 для воспроизведения авторских результатов дополнительно будет рассчитываться противоположное направление:
+
+`D_KL(Q_stego || P_reference)`.
+
+Оба направления будут храниться и интерпретироваться отдельно.
+
+## 5. Ограничения проверочного запуска
+
+Результаты получены при следующих ограничениях:
+
+- одна языковая модель;
+- один промпт;
+- одна секретная последовательность;
+- одна точка параметров для каждого метода;
+- 16 токенов-носителей;
+- один запуск без статистического усреднения времени.
+
+Поэтому таблица выше является примером единого формата результатов и проверкой корректности измерительного контура, а не итоговой таблицей исследования.
+
+## 6. Проверка хранения результатов
+
+Все три запуска сохранены через единый механизм хранения:
+
+- каждый запуск имеет собственный `run_id`;
+- подробные данные находятся в `results/runs/<run_id>/`;
+- общая таблица находится в `results/summary.parquet`;
+- повторный запуск той же канонической конфигурации обновляет существующую запись по `run_id`, а не создаёт логический дубликат.
+
+Компактную Markdown-таблицу можно сформировать командой:
 
 ```bash
 python scripts/summarize_results.py results/summary.parquet
 ```
 
-Optional filtering is available with `--model-id` and `--prompt-id`; `--output <file.md>` writes the same deterministic Markdown table to disk.
+Для записи результата в файл:
+
+```bash
+python scripts/summarize_results.py \
+  results/summary.parquet \
+  --output results/stage2_summary.md
+```

@@ -1,4 +1,4 @@
-| Method | BPT | Entropy util. (%) | KL ref→stego (bits/token) | TVD mean | Raw-LM NLL | Raw-LM PPL | BER | Encode ms/token | Decode ms/token | Status |
+| Метод | BPT | Использование энтропии, % | KL P_ref→Q_stego, бит/токен | Среднее TVD | NLL исходной LM | PPL исходной LM | BER | Встраивание, мс/токен | Извлечение, мс/токен | Статус |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | arithmetic_coding | 2.4375 | 65.84 | inf | 0.0534 | 1.8003 | 6.0516 | 0.000000 | 62.551 | 62.051 | ok |
 | bins | 2.0000 | 64.60 | inf | 0.5962 | 2.8799 | 17.8125 | 0.000000 | 18.734 | 18.486 | ok |

@@ -1,10 +1,4 @@
-"""Deterministic human-readable summaries for Stage-2 run tables.
-
-This module is deliberately independent of pandas/pyarrow. The CLI is responsible
-for reading Parquet and passes ordinary mapping records here. Keeping formatting
-separate makes reporting deterministic and unit-testable without the optional
-storage backend.
-"""
+"""Deterministic human-readable summaries for Stage-2 run tables."""
 
 from __future__ import annotations
 
@@ -24,17 +18,17 @@ class SummaryColumn:
 
 
 DEFAULT_COLUMNS: tuple[SummaryColumn, ...] = (
-    SummaryColumn("method_id", "Method"),
+    SummaryColumn("method_id", "Метод"),
     SummaryColumn("bits_per_token", "BPT", digits=4),
-    SummaryColumn("entropy_utilization", "Entropy util. (%)", digits=2, percent=True),
-    SummaryColumn("kl_mean_bits", "KL ref→stego (bits/token)", digits=4),
-    SummaryColumn("tvd_mean", "TVD mean", digits=4),
-    SummaryColumn("nll_raw_lm_nats_per_token", "Raw-LM NLL", digits=4),
-    SummaryColumn("ppl_raw_lm", "Raw-LM PPL", digits=4),
+    SummaryColumn("entropy_utilization", "Использование энтропии, %", digits=2, percent=True),
+    SummaryColumn("kl_mean_bits", "KL P_ref→Q_stego, бит/токен", digits=4),
+    SummaryColumn("tvd_mean", "Среднее TVD", digits=4),
+    SummaryColumn("nll_raw_lm_nats_per_token", "NLL исходной LM", digits=4),
+    SummaryColumn("ppl_raw_lm", "PPL исходной LM", digits=4),
     SummaryColumn("ber", "BER", digits=6),
-    SummaryColumn("encode_ms_per_token", "Encode ms/token", digits=3),
-    SummaryColumn("decode_ms_per_token", "Decode ms/token", digits=3),
-    SummaryColumn("status", "Status"),
+    SummaryColumn("encode_ms_per_token", "Встраивание, мс/токен", digits=3),
+    SummaryColumn("decode_ms_per_token", "Извлечение, мс/токен", digits=3),
+    SummaryColumn("status", "Статус"),
 )
 
 
@@ -70,11 +64,7 @@ def normalize_summary_records(
     model_id: str | None = None,
     prompt_id: str | None = None,
 ) -> list[dict[str, Any]]:
-    """Filter and deterministically order summary records.
-
-    Ordering is by method id, method-parameter hash, secret id and run id so the
-    same Parquet contents always produce the same Markdown table.
-    """
+    """Filter and deterministically order summary records."""
 
     normalized: list[dict[str, Any]] = []
     for record in records:
@@ -106,7 +96,7 @@ def build_markdown_table(
     """Render a compact Markdown table from normalized run records."""
 
     if not records:
-        return "_No matching runs._\n"
+        return "_Нет подходящих запусков._\n"
 
     headings = [column.heading for column in columns]
     lines = [
