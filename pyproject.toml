@@ -21,6 +21,7 @@ lm = [
   "huggingface-hub>=0.32,<0.33",
 ]
 storage = ["pyarrow>=17,<20"]
+reference = ["bitarray==3.4.2"]
 dev = ["pytest>=8.3,<9"]
 
 [tool.setuptools.packages.find]

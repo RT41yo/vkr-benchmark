@@ -16,3 +16,5 @@ venv/
 /results/steganalysis_summary.parquet
 
 environment/**/hf.txt
+# Pinned third-party repositories used only for reproducibility checks.
+/external/
