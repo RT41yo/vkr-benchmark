@@ -1,0 +1,27 @@
+{
+  "schema_version": "stage3.author_bins_smoke.v1",
+  "mode": "author-compatible",
+  "method": "bins",
+  "purpose": "Technical smoke test of the pinned Harvard Bins implementation before paper-level reproduction.",
+  "reference_repository": "https://github.com/harvardnlp/NeuralSteganography",
+  "reference_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+  "model_id": "gpt2",
+  "seed": 1234,
+  "block_size": 3,
+  "finish_sent": false,
+  "secret_bits": "000100010110001101011111",
+  "context": "Washington received his initial military training and command with the Virginia Regiment during the French and Indian War. He was later elected to the Virginia House of Burgesses and was named a delegate to the Continental Congress, where he was appointed Commanding General of the nation's Continental Army. Washington led American forces, allied with France, in the defeat of the British at Yorktown. Once victory for the United States was in hand in 1783, Washington resigned his commission.\n\n\n",
+  "notes": [
+    "The context is copied from the pinned reference run_single.py.",
+    "The 24-bit smoke secret is intentionally direct binary payload, so this step tests Bins without using Arithmetic Coding to first convert a natural-language secret into bits.",
+    "With the reference little-endian bits2int convention, the eight consecutive 3-bit chunks map to bin indices 0 through 7 exactly once each.",
+    "This is a technical smoke configuration, not a paper-level reproduction point."
+  ],
+  "compatibility_profile": "hf_4_52_legacy_api",
+  "compatibility_notes": [
+    "Force AutoTokenizer.from_pretrained(..., use_fast=False) because the pinned reference accesses GPT2Tokenizer.encoder/decoder attributes that GPT2TokenizerFast does not expose.",
+    "Translate the legacy model keyword past= to past_key_values= and request return_dict=False.",
+    "Translate the modern per-layer (key, value) cache representation to the historical stacked tensor shape [2, batch, heads, seq, head_dim] expected by the pinned decoder, and translate it back only at the modern model-call boundary.",
+    "The cache translation is representation-only: key/value tensor contents, logits, Bins partition, token selection, payload, metrics, and pinned reference files are unchanged."
+  ]
+}

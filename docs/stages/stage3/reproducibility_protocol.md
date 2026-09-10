@@ -195,3 +195,125 @@ D_KL(Q_stego || P_reference)
 10. только после фиксации исходного поведения при необходимости вводить compatibility patches/harness.
 
 Следующий шаг после этого документа — **реальный smoke-run pinned Harvard reference**, начиная с Bins.
+
+## 11. Первый исполняемый smoke: Bins на GPT-2 Small
+
+После успешного environment/provenance gate первый исполняемый author-compatible тест выполняется отдельно для Bins.
+
+Зафиксированная конфигурация находится в:
+
+```text
+configs/reproducibility/author_bins_gpt2_smoke.json
+```
+
+Запуск выполняется только через внешний pinned checkout:
+
+```text
+scripts/run_stage3_author_bins_smoke.py
+    -> external/NeuralSteganography@14e982...
+    -> utils.get_model(model_name="gpt2")
+    -> block_baseline.get_bins
+    -> block_baseline.encode_block
+    -> text transport
+    -> block_baseline.decode_block
+```
+
+Reference-файлы при этом не редактируются. Runner до и после исполнения проверяет `git status --porcelain` внешнего checkout и запрещает запись Python bytecode внутрь него.
+
+Для smoke используется `block_size = 3` и 24-битная последовательность:
+
+```text
+000 100 010 110 001 101 011 111
+```
+
+В реализации Harvard `bits2int` интерпретирует первый бит блока как младший. Поэтому эти восемь трёхбитных групп соответствуют индексам bins `0, 1, 2, 3, 4, 5, 6, 7` и за один короткий прогон упражняют все восемь bins.
+
+Секрет сразу задаётся битовой последовательностью. На этом smoke шаге намеренно не используется предварительное преобразование естественно-языкового сообщения в uniform bits через Arithmetic Coding из `run_single.py`, потому что цель — изолированно проверить исполняемость и encode/decode поведение Bins.
+
+Результаты сохраняются в:
+
+```text
+results/stage3/author_smoke/bins_gpt2/
+  result.json
+  stegotext.txt
+  token_ids.json
+```
+
+Авторский KL сохраняется только с явным направлением:
+
+```text
+kl_q_stego_to_p_lm_bits_author
+```
+
+то есть как авторская величина `D_KL(Q_stego || P_LM)` в битах. Она не подменяет benchmark-native `D_KL(P_reference || Q_stego)`.
+
+Успешный технический smoke требует одновременно:
+
+- pinned reference HEAD совпадает с `14e982...`;
+- Bins encode завершается без изменения reference code;
+- декодирование из обычного текста восстанавливает весь 24-битный payload;
+- внешний reference worktree после запуска имеет то же состояние, что до запуска.
+
+Совпадение sender token IDs с повторной токенизацией текста сохраняется как отдельная диагностика. Оно не является самостоятельным критерием ошибки, если author BPE repair корректно восстанавливает payload из текста.
+
+
+## 12. Runtime compatibility finding: GPT2TokenizerFast
+
+Первый raw author-reference запуск Bins на современном окружении завершился до encode с ошибкой:
+
+```text
+AttributeError: GPT2TokenizerFast has no attribute encoder
+```
+
+Это не изменение алгоритма Bins и не основание переходить на отдельное legacy-окружение. Причина локализована на границе API tokenizer: pinned Harvard code напрямую использует `enc.encoder` и `enc.decoder`, тогда как `AutoTokenizer.from_pretrained("gpt2")` в Transformers 4.52 по умолчанию возвращает `GPT2TokenizerFast`, не имеющий ожидаемого публичного `encoder`-атрибута.
+
+Для следующей попытки вводится внешний compatibility profile `hf_4_52_legacy_api`, реализованный только в benchmark runner. Он:
+
+- принудительно вызывает `AutoTokenizer.from_pretrained(..., use_fast=False)`, получая slow `GPT2Tokenizer` с историческими `encoder`/`decoder`;
+- адаптирует legacy-вызов модели `past=` к современному `past_key_values=`;
+- запрашивает `return_dict=False`, чтобы reference code продолжал получать `(logits, past)`;
+- не изменяет файлы `external/NeuralSteganography`;
+- не меняет logits, Bins partition, выбор токена, payload или BPE repair.
+
+Исходный raw failure сохраняется как отдельное evidence (`raw_reference_failure.json`) перед compatibility rerun. Если после API-моста возникает следующая несовместимость, она также фиксируется до расширения compatibility layer.
+
+## 13. Runtime compatibility finding: legacy GPT-2 cache shape
+
+После устранения tokenizer/API keyword mismatch второй запуск дошёл до полного Bins encode и остановился уже в `decode_block` на проверке:
+
+```text
+if past and past[0].shape[3] >= 1023:
+```
+
+с ошибкой:
+
+```text
+AttributeError: 'tuple' object has no attribute 'shape'
+```
+
+Причина — различие представления GPT-2 KV cache. Pinned Harvard decoder ожидает историческое представление каждого слоя как одного stacked tensor с первой осью `key/value`, тогда как Transformers 4.52 возвращает каждый слой как пару `(key, value)`.
+
+Compatibility profile `hf_4_52_legacy_api` поэтому расширяется representation-only мостом:
+
+```text
+reference side:
+layer cache = Tensor[2, batch, heads, seq, head_dim]
+
+          <->
+
+Transformers 4.52 side:
+layer cache = (key[batch, heads, seq, head_dim],
+               value[batch, heads, seq, head_dim])
+```
+
+Перед современным model call stacked tensor разбирается обратно в `(key, value)`. После model call пара снова складывается в historical representation. Значения key/value не пересчитываются и не изменяются; преобразуется только контейнер/форма представления на границе API.
+
+Это позволяет оставить `external/NeuralSteganography` неизменённым и, в частности, не патчить строку `past[0].shape[3]` в `decode_block`.
+
+Второй runtime failure сохраняется отдельно как:
+
+```text
+results/stage3/author_smoke/bins_gpt2/compat_cache_shape_failure.json
+```
+
+Первый tokenizer failure продолжает храниться в `raw_reference_failure.json`. Таким образом, успешный последующий run не уничтожает историю обнаруженных compatibility barriers.

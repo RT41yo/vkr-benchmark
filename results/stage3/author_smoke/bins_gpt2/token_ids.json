@@ -1,0 +1,23 @@
+{
+  "retokenized_token_ids": [
+    3886,
+    1467,
+    5999,
+    11,
+    3162,
+    550,
+    2077,
+    287
+  ],
+  "sender_token_ids": [
+    3886,
+    1467,
+    5999,
+    11,
+    3162,
+    550,
+    2077,
+    287
+  ],
+  "text_token_roundtrip_exact": true
+}

@@ -1,0 +1,46 @@
+{
+  "config": {
+    "block_size": 3,
+    "context_sha256": "658c80252c2f18dcb3b5fd44c4e0b082d1ecc9830dfe96f14cf4e3f0dc4d8fdf",
+    "finish_sent": false,
+    "model_id": "gpt2",
+    "path": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/configs/reproducibility/author_bins_gpt2_smoke.json",
+    "secret_bit_count": 24,
+    "secret_bits": "000100010110001101011111",
+    "seed": 1234,
+    "sha256": "c112e9502eea90075596321e64424cb30d1378b567ee2d8f65bfe41b4269fd9f"
+  },
+  "duration_seconds": 3.969070055987686,
+  "environment": {
+    "packages": {
+      "bitarray": "3.4.2",
+      "huggingface-hub": "0.32.5",
+      "numpy": "2.0.2",
+      "safetensors": "0.5.3",
+      "tokenizers": "0.21.1",
+      "torch": "2.7.1+cu128",
+      "transformers": "4.52.4"
+    },
+    "python": "3.12.14"
+  },
+  "error": {
+    "message": "GPT2TokenizerFast has no attribute encoder",
+    "traceback": "Traceback (most recent call last):\n  File \"/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/scripts/run_stage3_author_bins_smoke.py\", line 251, in run\n    bin2words, words2bin = block.get_bins(len(enc.encoder), block_size)\n                                              ^^^^^^^^^^^\n  File \"/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/.venv/lib/python3.12/site-packages/transformers/tokenization_utils_base.py\", line 1111, in __getattr__\n    raise AttributeError(f\"{self.__class__.__name__} has no attribute {key}\")\nAttributeError: GPT2TokenizerFast has no attribute encoder. Did you mean: 'encode'?\n",
+    "type": "AttributeError"
+  },
+  "finished_at_utc": "2026-09-10T21:22:52.309342+00:00",
+  "method": "bins",
+  "mode": "author-compatible",
+  "reference": {
+    "actual_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+    "checkout": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/external/NeuralSteganography",
+    "expected_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+    "git_status_after": "",
+    "git_status_before": "",
+    "repository": "https://github.com/harvardnlp/NeuralSteganography",
+    "worktree_unchanged": true
+  },
+  "schema_version": "stage3.author_smoke_result.v1",
+  "started_at_utc": "2026-09-10T21:22:48.341402+00:00",
+  "status": "error"
+}

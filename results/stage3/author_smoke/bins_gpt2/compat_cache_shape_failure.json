@@ -1,0 +1,58 @@
+{
+  "compatibility": {
+    "model_call_translation": "past -> past_key_values",
+    "model_class": "GPT2LMHeadModel",
+    "model_return_dict": false,
+    "profile": "hf_4_52_legacy_api",
+    "reference_files_modified": false,
+    "tokenizer_class": "GPT2Tokenizer",
+    "tokenizer_use_fast": false
+  },
+  "config": {
+    "block_size": 3,
+    "context_sha256": "658c80252c2f18dcb3b5fd44c4e0b082d1ecc9830dfe96f14cf4e3f0dc4d8fdf",
+    "finish_sent": false,
+    "model_id": "gpt2",
+    "path": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/configs/reproducibility/author_bins_gpt2_smoke.json",
+    "secret_bit_count": 24,
+    "secret_bits": "000100010110001101011111",
+    "seed": 1234,
+    "sha256": "dd3da74668f4761481597fd8ae226875021b4e8e02291ebffa63e3f9604d5f2a"
+  },
+  "duration_seconds": 3.8748953929753043,
+  "environment": {
+    "packages": {
+      "bitarray": "3.4.2",
+      "huggingface-hub": "0.32.5",
+      "numpy": "2.0.2",
+      "safetensors": "0.5.3",
+      "tokenizers": "0.21.1",
+      "torch": "2.7.1+cu128",
+      "transformers": "4.52.4"
+    },
+    "python": "3.12.14"
+  },
+  "error": {
+    "message": "'tuple' object has no attribute 'shape'",
+    "traceback": "Traceback (most recent call last):\n  File \"/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/scripts/run_stage3_author_bins_smoke.py\", line 370, in run\n    recovered_bits = block.decode_block(\n                     ^^^^^^^^^^^^^^^^^^^\n  File \"/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/external/NeuralSteganography/block_baseline.py\", line 121, in decode_block\n    if past and past[0].shape[3] >= 1023:\n                ^^^^^^^^^^^^^\nAttributeError: 'tuple' object has no attribute 'shape'\n",
+    "type": "AttributeError"
+  },
+  "evidence": {
+    "raw_reference_failure": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/results/stage3/author_smoke/bins_gpt2/raw_reference_failure.json"
+  },
+  "finished_at_utc": "2026-09-10T21:33:39.242660+00:00",
+  "method": "bins",
+  "mode": "author-compatible",
+  "reference": {
+    "actual_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+    "checkout": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/external/NeuralSteganography",
+    "expected_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+    "git_status_after": "",
+    "git_status_before": "",
+    "repository": "https://github.com/harvardnlp/NeuralSteganography",
+    "worktree_unchanged": true
+  },
+  "schema_version": "stage3.author_smoke_result.v1",
+  "started_at_utc": "2026-09-10T21:33:35.368957+00:00",
+  "status": "error"
+}
