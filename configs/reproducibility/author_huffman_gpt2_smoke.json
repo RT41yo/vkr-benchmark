@@ -1,0 +1,27 @@
+{
+  "schema_version": "stage3.author_huffman_smoke.v1",
+  "mode": "author-compatible",
+  "method": "huffman",
+  "purpose": "Technical smoke test of the pinned Harvard Huffman implementation before paper-level reproduction.",
+  "reference_repository": "https://github.com/harvardnlp/NeuralSteganography",
+  "reference_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+  "model_id": "gpt2",
+  "seed": 1234,
+  "bits_per_word": 3,
+  "finish_sent": false,
+  "secret_bits": "000100010110001101011111",
+  "context": "Washington received his initial military training and command with the Virginia Regiment during the French and Indian War. He was later elected to the Virginia House of Burgesses and was named a delegate to the Continental Congress, where he was appointed Commanding General of the nation's Continental Army. Washington led American forces, allied with France, in the defeat of the British at Yorktown. Once victory for the United States was in hand in 1783, Washington resigned his commission.\n\n\n",
+  "notes": [
+    "The context and 24-bit direct binary payload are identical to the successful Bins smoke so the author-compatible methods are exercised from the same input state.",
+    "In the pinned Harvard code, bits_per_word=3 selects the top 2^3=8 candidate tokens before constructing a fresh Huffman tree at each carrier step.",
+    "Huffman code lengths are variable, so bits_per_word is an author parameter naming the candidate-pool exponent; it is not a guarantee of exactly 3 embedded payload bits per generated token.",
+    "If the secret ends inside a Huffman codeword, the pinned encoder follows left/zero edges until a leaf. The runner therefore checks exact recovery of the original secret prefix and records any author-implied trailing zero padding separately.",
+    "This is a technical smoke configuration, not a paper-level reproduction point."
+  ],
+  "compatibility_profile": "hf_4_52_legacy_api",
+  "compatibility_notes": [
+    "Reuse the Stage-3 slow-tokenizer, past->past_key_values, return_dict=False, and cache-shape compatibility bridge already validated by the Bins smoke.",
+    "The compatibility bridge changes only API/container representation and does not alter Huffman candidate probabilities, tree construction, code assignment, token selection, KL, or BPE repair.",
+    "The pinned external reference files remain byte-for-byte untouched."
+  ]
+}

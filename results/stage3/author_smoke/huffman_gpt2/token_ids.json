@@ -1,0 +1,23 @@
+{
+  "retokenized_token_ids": [
+    6653,
+    2457,
+    2139,
+    351,
+    4881,
+    373,
+    355,
+    262
+  ],
+  "sender_token_ids": [
+    6653,
+    2457,
+    2139,
+    351,
+    4881,
+    373,
+    355,
+    262
+  ],
+  "text_token_roundtrip_exact": true
+}

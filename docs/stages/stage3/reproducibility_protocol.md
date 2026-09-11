@@ -317,3 +317,46 @@ results/stage3/author_smoke/bins_gpt2/compat_cache_shape_failure.json
 ```
 
 Первый tokenizer failure продолжает храниться в `raw_reference_failure.json`. Таким образом, успешный последующий run не уничтожает историю обнаруженных compatibility barriers.
+
+## 14. Закрытие Bins smoke и следующий smoke: Huffman
+
+Третий Bins-запуск после введения полного `hf_4_52_legacy_api` compatibility bridge завершился успешно. На GPT-2 Small при `block_size = 3` исходный 24-битный payload был встроен в 8 токенов и полностью восстановлен после обычного текстового канала. В зафиксированном запуске также совпали sender и retokenized token IDs, а внешний checkout `NeuralSteganography@14e982...` остался неизменным.
+
+Успешный Bins result и два предшествующих compatibility failure сохраняются в `results/stage3/author_smoke/bins_gpt2/`. Эти результаты означают, что отдельное legacy Python/PyTorch environment пока не требуется: для Bins достаточно representation/API bridge вокруг неизменённого reference code.
+
+Следующий технический smoke выполняется для Harvard Huffman implementation:
+
+```text
+configs/reproducibility/author_huffman_gpt2_smoke.json
+scripts/run_stage3_author_huffman_smoke.py
+    -> external/NeuralSteganography@14e982...
+    -> utils.get_model(model_name="gpt2")
+    -> huffman_baseline.encode_huffman
+    -> ordinary text transport
+    -> huffman_baseline.decode_huffman
+```
+
+Для сопоставимости используются те же GPT-2 Small, seed, Washington-context и 24-битный direct binary payload, что и в Bins smoke. Авторский параметр `bits_per_word = 3` в Huffman-коде задаёт не фиксированные 3 payload bits/token, а размер candidate pool:
+
+```text
+2^3 = 8 top-probability candidate tokens
+```
+
+После получения восьми кандидатов reference implementation строит Huffman tree заново на каждом carrier step. Длины кодов переменные, поэтому фактическое число считанных секретных битов на токен также переменное.
+
+Есть ещё одна важная особенность исходного encoder: если секрет заканчивается до достижения листа последнего Huffman codeword, reference code продолжает идти по левым (`0`) рёбрам до листа. Поэтому короткий smoke может фактически считать несколько несуществующих trailing zero bits. Runner не считает их полезным payload и отдельно сохраняет:
+
+- `author_bits_consumed` — сколько битов фактически прошло через author traversal;
+- `implicit_zero_padding_bits` — разницу между этим числом и длиной заданного payload;
+- `payload_bits_per_token_smoke` — полезные 24 бита, делённые на число carrier tokens;
+- `bits_per_word_author` — обратную величину к author `words_per_bit`, то есть исходную метрику кода, которая для короткого сообщения может включать terminal zero padding.
+
+Критерий успешного Huffman smoke — восстановление **всего исходного 24-битного payload как префикса** декодированной последовательности после текстового канала и неизменность reference worktree. Дополнительные биты после payload сохраняются диагностически и ожидаются нулевыми, если они возникли только из-за завершения последнего codeword.
+
+Как и для Bins, авторский KL сохраняется явно как:
+
+```text
+kl_q_stego_to_p_lm_bits_author
+```
+
+то есть `D_KL(Q_stego || P_LM)` в битах. Он не подменяет benchmark-native `D_KL(P_reference || Q_stego)`.
