@@ -461,3 +461,59 @@ Runner отдельно сохраняет:
 4. внешний reference worktree не изменён.
 
 Как и для двух предыдущих методов, совпадение sender token IDs с повторной токенизацией текста сохраняется отдельно. Если оно нарушится, это не автоматически означает failure при условии, что author decoder/BPE repair корректно восстановит payload.
+
+## 16. Закрытие технического smoke-gate и фиксация paper-level matrix
+
+Author-compatible Arithmetic Coding smoke на GPT-2 Small завершился успешно. При `temperature=0.9`, `precision=26`, `topk=300` исходный 24-битный payload был встроен в 17 carrier tokens и полностью восстановлен после ordinary-text transport. Sender и retokenized token IDs совпали; внешний checkout `NeuralSteganography@14e982...` остался неизменным.
+
+Arithmetic smoke дополнительно подтвердил две важные source-specific semantics:
+
+```text
+useful payload bits:          24
+author bits consumed:         48
+implicit zero lookahead:      24
+decoder final-flush extra:     1
+```
+
+Поэтому `bits_per_word_author` и benchmark payload BPT не отождествляются. Первый следует внутреннему author accounting, второй использует только полезный payload.
+
+После этого технический reference smoke gate считается закрытым:
+
+```text
+Bins        PASS
+Huffman     PASS
+Arithmetic  PASS
+```
+
+Следующий подэтап переводит работу от единичной исполняемости к paper-level воспроизводимости. До загрузки GPT-2 Medium и массовых запусков фиксируется отдельная матрица:
+
+```text
+configs/reproducibility/paper_reproduction_matrix.json
+docs/stages/stage3/paper_reproduction_matrix.md
+scripts/check_stage3_paper_matrix.py
+```
+
+Основной paper target — Figure 3 Ziegler et al. (2019): зависимость `D_KL(q || p_LM)` от bits/word на GPT-2 345M и CNN/DailyMail.
+
+Матрица заранее замораживает 23 информационно-теоретические точки:
+
+```text
+Bins:        block exponent 1..5                         = 5
+Huffman:     candidate-pool exponent 1..8                = 8
+Arithmetic:  temperature 0.4..1.2 by 0.1, topk=300       = 9
+Arithmetic:  temperature=1.0, topk=50256 special point   = 1
+                                                               --
+                                                               23
+```
+
+Primary reproduction targets:
+
+1. Arithmetic имеет меньший author-compatible KL, чем Block/Huffman, в перекрывающемся диапазоне примерно 1–5 bits/word;
+2. `temperature=1, topk=50256` даёт near-zero KL;
+3. минимум KL Arithmetic находится примерно около 4 bits/word при `temperature≈1`.
+
+Для paper-compatible KL сохраняется направление `Q_stego || P_LM`. Отдельно фиксируется unit inconsistency источника: ось Figure 3 подписана `KL (bits)`, pinned Harvard `utils.kl()` возвращает bits, но prose статьи сообщает специальную величину `4e-8 nats`. Ни одна из единиц не заменяется другой неявно.
+
+Paper-level full sweep пока **не запускается**. Перед pilot необходимо зафиксировать конкретный доступный CNN/DailyMail artifact/revision, split/checksum и deterministic sentence segmentation. Это отдельный gate, поскольку статья задаёт dataset и правило «первые три предложения», но не современный идентификатор ревизии набора данных.
+
+После pinning dataset следующий запуск — короткий GPT-2 Medium pilot на 8 contexts. Только после него запускается полная frozen matrix.

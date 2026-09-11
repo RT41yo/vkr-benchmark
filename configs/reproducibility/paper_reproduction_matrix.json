@@ -1,0 +1,220 @@
+{
+  "schema_version": "stage3.paper_reproduction_matrix.v1",
+  "status": "frozen_before_paper_runs",
+  "purpose": "Predeclare the Stage-3 paper-level reproduction targets before running GPT-2 Medium experiments.",
+  "paper": {
+    "title": "Neural Linguistic Steganography",
+    "authors": [
+      "Zachary M. Ziegler",
+      "Yuntian Deng",
+      "Alexander M. Rush"
+    ],
+    "venue": "EMNLP-IJCNLP 2019",
+    "acl_anthology_id": "D19-1115",
+    "doi": "10.18653/v1/D19-1115",
+    "primary_target": "Figure 3 information-theoretic evaluation",
+    "url": "https://aclanthology.org/D19-1115/",
+    "pdf_url": "https://aclanthology.org/D19-1115.pdf"
+  },
+  "reference": {
+    "repository": "https://github.com/harvardnlp/NeuralSteganography",
+    "commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+    "role": "author-compatible executable reference"
+  },
+  "common_paper_setup": {
+    "model_id": "gpt2-medium",
+    "paper_model_label": "GPT-2 345M",
+    "dataset_name": "CNN/DailyMail",
+    "context_rule": "first three sentences of each news article",
+    "generation_rule": "generate one entire sentence conditioned on the context",
+    "message_rule": "uniform random binary message",
+    "kl_target_direction": "Q_stego || P_LM",
+    "paper_capacity_metric": "message bits encoded / sentence length",
+    "aggregation_reported_by_paper": "mean and standard error over repeated samples at each fixed tuning parameter"
+  },
+  "information_theoretic_sweeps": [
+    {
+      "method": "bins",
+      "author_name": "Block",
+      "parameter": "block_size_bits",
+      "values": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "derived_candidate_counts": [
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "source_basis": "paper Section 4.1: block size from 2^1 to 2^5",
+      "required_reproduction_level": "trend"
+    },
+    {
+      "method": "huffman",
+      "author_name": "Huffman",
+      "parameter": "candidate_pool_exponent",
+      "values": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "derived_candidate_counts": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256
+      ],
+      "source_basis": "paper Section 4.1: truncation length from 2^1 to 2^8",
+      "required_reproduction_level": "trend"
+    },
+    {
+      "method": "arithmetic",
+      "author_name": "Arithmetic",
+      "parameter": "temperature",
+      "values": [
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        1.0,
+        1.1,
+        1.2
+      ],
+      "fixed": {
+        "topk": 300,
+        "precision": 26
+      },
+      "source_basis": "paper Section 4.1 states temperature 0.4 to 1.2 with k=300; nine 0.1-spaced points are frozen here as the benchmark reproduction grid; precision=26 comes from the pinned reference defaults",
+      "required_reproduction_level": "trend"
+    }
+  ],
+  "special_points": [
+    {
+      "id": "arithmetic_unmodulated",
+      "method": "arithmetic",
+      "temperature": 1.0,
+      "topk": 50256,
+      "precision": 26,
+      "paper_description": "unmodulated language model",
+      "paper_reported_kl_value": 4e-08,
+      "paper_reported_kl_unit": "nats",
+      "figure_axis_unit": "bits",
+      "reference_helper_unit": "bits",
+      "unit_note": "The paper prose reports 4e-8 nats while Figure 3 is labeled KL (bits), and the pinned utils.kl helper divides by approximately ln(2), returning bits. Preserve both units explicitly rather than silently reconciling them.",
+      "required_reproduction_level": "numerical_near_zero"
+    }
+  ],
+  "primary_claims": [
+    {
+      "id": "figure3_arithmetic_lowest_kl",
+      "claim": "For overlapping capacities in roughly the 1 to 5 bits/word range, Arithmetic has lower KL than Block and Huffman.",
+      "criterion": "trend_reproduction"
+    },
+    {
+      "id": "unmodulated_arithmetic_near_zero",
+      "claim": "Arithmetic at temperature=1 and topk=50256 induces a near-zero KL relative to the language model.",
+      "criterion": "numerical_near_zero"
+    },
+    {
+      "id": "arithmetic_minimum_near_four_bpw",
+      "claim": "The paper reports the Arithmetic trade-off reaching minimum KL around 4 bits/word near temperature=1.0.",
+      "criterion": "trend_reproduction"
+    }
+  ],
+  "metrics_to_store": {
+    "paper_compatible": [
+      "payload_bits",
+      "carrier_tokens",
+      "bits_per_word_author",
+      "kl_stego_to_lm_author_mean",
+      "kl_stego_to_lm_author_standard_error"
+    ],
+    "diagnostic": [
+      "avg_nll_nats_author",
+      "perplexity_author",
+      "text_token_roundtrip_exact",
+      "exact_payload_recovery",
+      "reference_worktree_unchanged"
+    ],
+    "benchmark_dual_kl_later": [
+      "kl_ref_to_stego_bits",
+      "kl_stego_to_ref_bits"
+    ]
+  },
+  "execution_plan": {
+    "phase_1_gpt2_medium_pilot": {
+      "contexts": 8,
+      "replicates": 1,
+      "purpose": "Validate model loading, CNN/DailyMail context preparation, one-sentence termination, and result schema before the full sweep."
+    },
+    "phase_2_information_theoretic_curve": {
+      "contexts_per_point": 80,
+      "replicates": 3,
+      "seed_base": 1234,
+      "purpose": "Produce stable means and standard errors for the predeclared Figure-3 parameter grid.",
+      "provenance_note": "The main paper states repeated MC samples but does not report the Figure-3 sample count. Eighty generations per source is documented for the supplementary human evaluation, not explicitly for the KL curve; using 80 contexts x 3 replicates is therefore our predeclared operationalization, not a claim of exact original sampling."
+    }
+  },
+  "human_evaluation_scope": {
+    "mandatory_for_stage3": false,
+    "reason": "Stage 3 first targets executable and information-theoretic reproduction. Exact Mechanical Turk replication is outside the mandatory gate.",
+    "paper_documented_subset": {
+      "arithmetic_temperatures": [
+        0.4,
+        0.7,
+        1.0,
+        1.2
+      ],
+      "huffman_exponents": [
+        1,
+        3,
+        5
+      ],
+      "bins_exponents": [
+        1,
+        3,
+        5
+      ],
+      "generations_per_source": 80
+    }
+  },
+  "open_source_details": [
+    {
+      "id": "cnndm_artifact_revision",
+      "status": "must_pin_before_phase_1",
+      "detail": "Pin an accessible CNN/DailyMail dataset artifact, split, revision/checksum, and sentence segmentation procedure. The paper names the dataset and context rule but does not provide a modern dataset revision identifier."
+    },
+    {
+      "id": "paper_batch_driver",
+      "status": "not_available_in_pinned_repo",
+      "detail": "The pinned repository exposes the algorithms and run_single.py but not the original Figure-3 batch/MC driver. Our Stage-3 runner must preserve author algorithm semantics while recording any orchestration choices explicitly."
+    },
+    {
+      "id": "figure3_exact_mc_count",
+      "status": "not_reported_in_main_paper",
+      "detail": "The paper reports mean and standard error over repeated samples but does not state the exact Figure-3 MC sample count in the main text."
+    }
+  ],
+  "go_no_go": {
+    "technical_smoke_gate_complete": true,
+    "matrix_frozen": true,
+    "ready_for_gpt2_medium_pilot": false,
+    "blocking_item": "Pin the CNN/DailyMail artifact/revision and deterministic context extraction in the next step before downloading/running the full paper-level workload."
+  }
+}

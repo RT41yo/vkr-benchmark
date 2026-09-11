@@ -2,7 +2,11 @@
 
 Экспериментальная инфраструктура для воспроизводимой многокритериальной оценки методов генеративной лингвистической стеганографии.
 
-Текущий этап: **Этап 2 — базовая инфраструктура и адаптация Bins, Huffman, Arithmetic Coding**.
+Текущий этап: **Этап 3 — проверка воспроизводимости и соответствия Bins, Huffman, Arithmetic Coding**.
+
+## Статус Этапа 3
+
+Технический author-compatible smoke gate пройден для Bins, Huffman и Arithmetic Coding на pinned Harvard reference. Перед paper-level GPT-2 Medium экспериментами зафиксирована матрица воспроизводимости в `configs/reproducibility/paper_reproduction_matrix.json`; следующий gate — pin CNN/DailyMail artifact/revision и deterministic extraction первых трёх предложений.
 
 ## Принципы архитектуры
 
