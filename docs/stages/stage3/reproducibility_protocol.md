@@ -360,3 +360,104 @@ kl_q_stego_to_p_lm_bits_author
 ```
 
 то есть `D_KL(Q_stego || P_LM)` в битах. Он не подменяет benchmark-native `D_KL(P_reference || Q_stego)`.
+
+## 15. Закрытие Huffman smoke и следующий smoke: Arithmetic Coding
+
+Author-compatible Huffman smoke на GPT-2 Small завершился успешно. При `bits_per_word = 3` (candidate pool из `2^3 = 8` токенов) исходный 24-битный payload был встроен в 8 carrier tokens и полностью восстановлен после обычного текстового канала. В конкретном smoke авторский encoder фактически потребил ровно 24 бита, поэтому terminal zero padding не понадобился. Sender и retokenized token IDs совпали, а внешний checkout `NeuralSteganography@14e982...` остался неизменным.
+
+Зафиксированные значения этого технического запуска:
+
+```text
+payload bits:                         24
+carrier tokens:                       8
+payload bits/token:                   3.0
+PPL_author:                           18.035587623700636
+KL_author Q_stego || P_LM [bits]:     1.0004528872668743
+```
+
+Это не означает, что Huffman имеет фиксированную скорость 3 bit/token: в исходном методе длины кодов зависят от построенного на каждом шаге дерева. Значение 3.0 относится только к данному короткому smoke.
+
+Третий исполняемый reference smoke выполняется для Harvard Arithmetic Coding:
+
+```text
+configs/reproducibility/author_arithmetic_gpt2_smoke.json
+scripts/run_stage3_author_arithmetic_smoke.py
+    -> external/NeuralSteganography@14e982...
+    -> utils.get_model(model_name="gpt2")
+    -> arithmetic.encode_arithmetic
+    -> ordinary text transport
+    -> arithmetic.decode_arithmetic
+```
+
+Для сопоставимости сохраняются те же GPT-2 Small, seed, Washington-context и 24-битный direct binary payload. Параметры Arithmetic Coding берутся из default-конфигурации pinned `run_single.py`:
+
+```text
+temperature = 0.9
+precision   = 26
+topk        = 300
+finish_sent = false
+```
+
+В отличие от Bins и Huffman, pinned `arithmetic.py` уже обновлён под современный Transformers API: он импортирует `DynamicCache` и вызывает модель через `past_key_values`. Поэтому Arithmetic smoke намеренно **не** использует `LegacyCausalLMAdapter` и **не** принуждает slow tokenizer. Модель и tokenizer загружаются через `utils.get_model` ровно так, как предусмотрено pinned reference. Это позволяет сначала проверить нативную исполняемость актуального Harvard Arithmetic-кода без дополнительного compatibility вмешательства.
+
+### 15.1. Две разные вероятностные величины внутри author Arithmetic
+
+При `temperature != 1` исходный код использует разные распределения для кодирования и для author NLL/KL:
+
+```text
+logits
+  |
+  +-- softmax(logits / temperature)
+  |      -> cutoff по 1 / текущая_ширина_интервала
+  |      -> top-k cap
+  |      -> integer rounding
+  |      -> Q_stego для Arithmetic Coding
+  |
+  +-- log_softmax(logits)
+         -> untempered P_LM
+         -> author NLL
+         -> author KL(Q_stego || P_LM)
+```
+
+Поэтому smoke сохраняет KL под максимально явным именем:
+
+```text
+kl_q_stego_to_p_lm_untempered_bits_author
+```
+
+Эта величина не является benchmark-native `D_KL(P_reference || Q_stego)` и не должна с ним смешиваться.
+
+Возвращаемая `encode_arithmetic` величина `Hq` также сохраняется отдельно как:
+
+```text
+avg_entropy_p_tau_bits_author_helper
+```
+
+поскольку reference `utils.entropy` уже переводит натуральные логарифмы в биты. На smoke-этапе сохраняется непосредственно значение, возвращённое helper, без дополнительной конверсии.
+
+### 15.2. Precision lookahead и author final flush
+
+Arithmetic encoder работает с `precision`-битным окном секрета. Если до конца payload остаётся меньше `precision` бит, окно дополняется нулями. При последнем carrier token число подтверждённых общих старших битов может оказаться больше числа оставшихся полезных payload bits. Поэтому runner разделяет:
+
+- `secret_bit_count` — полезные 24 бита;
+- `author_bits_consumed` — число битов, которое следует из author `words_per_bit` и числа carrier tokens;
+- `implicit_zero_lookahead_bits` — сколько нулей сверх полезного payload было фактически подтверждено из padded lookahead.
+
+Decoder имеет отдельную author-specific termination policy. Для всех промежуточных carrier tokens он выдаёт только уже однозначно зафиксированный prefix, но на **последнем** carrier token выполняет flush полного `precision`-битного нижнего края финального интервала. Поэтому decoded stream может быть длиннее `author_bits_consumed`.
+
+Runner отдельно сохраняет:
+
+- `recovered_lookahead_padding_bits` — часть после payload, но внутри author-consumed prefix;
+- `lookahead_padding_is_zero` — проверку ожидаемого zero padding;
+- `decoder_flush_extra_bits` — хвост, добавленный именно final flush сверх author-consumed prefix;
+- `decoder_flush_extra_bit_count`;
+- `decoder_flush_within_precision_bound` — sanity-check, что дополнительный flush не превышает `precision` бит.
+
+Критерий успешного Arithmetic smoke:
+
+1. весь исходный 24-битный payload восстановлен как точный prefix;
+2. подтверждённый encoder-ом lookahead сверх payload состоит из ожидаемых нулей;
+3. final-flush tail укладывается в `precision`-битную границу;
+4. внешний reference worktree не изменён.
+
+Как и для двух предыдущих методов, совпадение sender token IDs с повторной токенизацией текста сохраняется отдельно. Если оно нарушится, это не автоматически означает failure при условии, что author decoder/BPE repair корректно восстановит payload.

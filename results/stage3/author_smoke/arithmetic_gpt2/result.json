@@ -1,0 +1,133 @@
+{
+  "author_metrics": {
+    "avg_entropy_p_tau_bits_author_helper": 4.8862359347693225,
+    "avg_nll_nats_author": 2.531300497683392,
+    "bits_per_word_author": 2.8235294117647056,
+    "kl_q_stego_to_p_lm_untempered_bits_author": 0.7120105194242767,
+    "payload_bits_per_token_smoke": 1.411764705882353,
+    "perplexity_author": 12.569842562757085,
+    "words_per_bit_author": 0.3541666666666667
+  },
+  "compatibility": {
+    "legacy_model_adapter_used": false,
+    "model_class": "GPT2LMHeadModel",
+    "profile": "hf_4_52_arithmetic_native_dynamic_cache",
+    "reference_files_modified": false,
+    "reference_uses_dynamic_cache": true,
+    "tokenizer_class": "GPT2TokenizerFast",
+    "tokenizer_override_used": false
+  },
+  "config": {
+    "context_sha256": "658c80252c2f18dcb3b5fd44c4e0b082d1ecc9830dfe96f14cf4e3f0dc4d8fdf",
+    "finish_sent": false,
+    "model_id": "gpt2",
+    "path": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/configs/reproducibility/author_arithmetic_gpt2_smoke.json",
+    "precision": 26,
+    "secret_bit_count": 24,
+    "secret_bits": "000100010110001101011111",
+    "seed": 1234,
+    "sha256": "ff9e25c781b108ad9f8758ae9c30a9b795ae709edc48a6fbd7cb0d9b11ddaec9",
+    "temperature": 0.9,
+    "topk": 300
+  },
+  "duration_seconds": 3.900874812010443,
+  "environment": {
+    "device": "cuda:0",
+    "gpu_name": "NVIDIA GeForce RTX 5070 Ti",
+    "packages": {
+      "bitarray": "3.4.2",
+      "huggingface-hub": "0.32.5",
+      "numpy": "2.0.2",
+      "safetensors": "0.5.3",
+      "tokenizers": "0.21.1",
+      "torch": "2.7.1+cu128",
+      "transformers": "4.52.4"
+    },
+    "python": "3.12.14",
+    "torch_cuda_available": true
+  },
+  "finished_at_utc": "2026-09-11T20:39:19.618580+00:00",
+  "generation": {
+    "generated_token_count": 17,
+    "retokenized_token_ids": [
+      17402,
+      338,
+      12842,
+      16386,
+      379,
+      262,
+      5838,
+      286,
+      5882,
+      3841,
+      7663,
+      198,
+      198,
+      17402,
+      373,
+      257,
+      9298
+    ],
+    "sender_token_ids": [
+      17402,
+      338,
+      12842,
+      16386,
+      379,
+      262,
+      5838,
+      286,
+      5882,
+      3841,
+      7663,
+      198,
+      198,
+      17402,
+      373,
+      257,
+      9298
+    ],
+    "stegotext_utf8_bytes": 90,
+    "text_token_roundtrip_exact": true
+  },
+  "method": "arithmetic",
+  "metric_semantics": {
+    "coding_distribution": "temperature-softmax P_tau, probability cutoff, top-k cap, then finite-precision integer interval Q_stego",
+    "entropy_return": "mean entropy(P_tau) from reference utils.entropy, in bits",
+    "kl_direction": "Q_stego || P_LM_untempered",
+    "kl_unit": "bits/token",
+    "nll_reference_distribution": "untempered masked GPT-2 P_LM"
+  },
+  "mode": "author-compatible",
+  "recovery": {
+    "author_bits_consumed": 48,
+    "author_consumed_prefix_available": true,
+    "author_consumed_prefix_matches_zero_padded_payload": true,
+    "decoder_flush_extra_bit_count": 1,
+    "decoder_flush_extra_bits": "0",
+    "decoder_flush_within_precision_bound": true,
+    "exact_payload_recovery": true,
+    "implicit_zero_lookahead_bits": 24,
+    "lookahead_padding_is_zero": true,
+    "payload_prefix_bits": "000100010110001101011111",
+    "recovered_bit_count": 49,
+    "recovered_bits": "0001000101100011010111110000000000000000000000000",
+    "recovered_lookahead_padding_bits": "000000000000000000000000"
+  },
+  "reference": {
+    "actual_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+    "checkout": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/external/NeuralSteganography",
+    "expected_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+    "git_status_after": "",
+    "git_status_before": "",
+    "repository": "https://github.com/harvardnlp/NeuralSteganography",
+    "worktree_unchanged": true
+  },
+  "schema_version": "stage3.author_smoke_result.v1",
+  "started_at_utc": "2026-09-11T20:39:15.718822+00:00",
+  "status": "ok",
+  "termination_semantics": {
+    "decoder_final_carrier": "emit full precision-bit lower interval bound",
+    "encoder_lookahead": "precision-bit window padded with zeros beyond payload"
+  }
+}
