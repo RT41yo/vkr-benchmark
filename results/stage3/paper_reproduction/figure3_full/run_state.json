@@ -1,0 +1,124 @@
+{
+  "arithmetic_fixed_message_parity": [
+    {
+      "absolute_entropy_delta": 0.0,
+      "absolute_kl_delta": 0.0,
+      "absolute_nll_delta": 0.0,
+      "absolute_words_per_bit_delta": 0.0,
+      "exact_generated_token_ids": true,
+      "passed": true,
+      "point_id": "arithmetic_t0.9_k300"
+    },
+    {
+      "absolute_entropy_delta": 0.0,
+      "absolute_kl_delta": 0.0,
+      "absolute_nll_delta": 0.0,
+      "absolute_words_per_bit_delta": 0.0,
+      "exact_generated_token_ids": true,
+      "passed": true,
+      "point_id": "arithmetic_t1.0_k50256"
+    }
+  ],
+  "arithmetic_long_context_compatibility": {
+    "decision": "For the full-run Arithmetic compatibility path only, replace limit_past with a repository-owned shim that converts DynamicCache to legacy tuple layers and retains the last 1022 entries on the modern sequence axis [:, :, -1022:, :]. Patch the public author decoder with the same shim only while collecting the non-gating text-transport diagnostic.",
+    "diagnostics_recorded": [
+      "encode_trim_events",
+      "encode_max_seen_sequence_tokens",
+      "decode_trim_events",
+      "decode_max_seen_sequence_tokens"
+    ],
+    "if_compatibility_shim_fails": "Do not accept the shard; stop and review before Step 3.11.",
+    "max_cache_tokens": 1022,
+    "normalized_benchmark_unchanged": true,
+    "paper_sentence_core_unchanged": true,
+    "resume_compatibility": "Already completed shards remain reusable. Any accepted record that never required sequence-axis trimming is byte-for-byte behaviorally unchanged; failed long-context Arithmetic work is regenerated.",
+    "root_cause": "The pinned 2025 utils.limit_past tuple-cache branch keeps the historical slice key[:, :, :, -1022:]. Historical stacked GPT-2 caches used [2,batch,heads,seq,head_dim], where dimension 3 is sequence. Modern tuple/DynamicCache key/value tensors use [batch,heads,seq,head_dim], where that same slice trims head_dim instead of sequence. The cache can therefore grow beyond GPT-2 Medium's 1024 learned positions and trigger a CUDA embedding index assertion.",
+    "scope": "author-compatible full Figure-3 Arithmetic runner and its diagnostic decoder only",
+    "short_run_parity_expectation": "No behavior change before the cache exceeds 1022 sequence positions; existing fixed-message mirror parity remains exact.",
+    "trigger": "During the resumed Arithmetic sweep a CUDA indexSelectSmallIndex assertion occurred on a long first-boundary sample after the full-run sentence cap had been raised above the Step-3.9 pilot range."
+  },
+  "benchmark_commit_at_invocation": "1b29783d542491f2c6baf2da6d3d27c22becc9c1",
+  "config": {
+    "path": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/configs/reproducibility/figure3_full_run.json",
+    "sha256": "4e06b6fba93d137cd82a998a52d511cf960b81abcc83d758ac49f20b834f0cf0"
+  },
+  "context_manifest_sha256": "cc25b492b26e102496137bc2f8eb78320c7f7768d83ff7e10af9b2e04a14aebc",
+  "duration_seconds": 1671.394754088018,
+  "environment": {
+    "gpu_name": "NVIDIA GeForce RTX 5070 Ti",
+    "packages": {
+      "bitarray": "3.4.2",
+      "huggingface-hub": "0.32.5",
+      "numpy": "2.0.2",
+      "safetensors": "0.5.3",
+      "tokenizers": "0.21.1",
+      "torch": "2.7.1+cu128",
+      "transformers": "4.52.4"
+    },
+    "python": "3.12.14",
+    "torch_cuda_available": true
+  },
+  "expected": {
+    "point_count": 23,
+    "runs_per_point": 240,
+    "shard_count": 69,
+    "total_runs": 5520
+  },
+  "finished_at_utc": "2026-09-12T21:39:12.685042+00:00",
+  "legacy_fixed_message_parity": [
+    {
+      "absolute_entropy_delta": null,
+      "absolute_kl_delta": 0.0,
+      "absolute_nll_delta": 0.0,
+      "absolute_words_per_bit_delta": 0.0,
+      "exact_generated_token_ids": true,
+      "passed": true,
+      "point_id": "bins_b3"
+    },
+    {
+      "absolute_entropy_delta": null,
+      "absolute_kl_delta": 0.0,
+      "absolute_nll_delta": 0.0,
+      "absolute_words_per_bit_delta": 0.0,
+      "exact_generated_token_ids": true,
+      "passed": true,
+      "point_id": "huffman_e3"
+    }
+  ],
+  "matrix": {
+    "path": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/configs/reproducibility/paper_reproduction_matrix.json",
+    "sha256": "67b376590c7bb5a61dfb7565fd4699567880978c0a5b5bc4d741dafde5ff200b"
+  },
+  "model_id": "gpt2-medium",
+  "model_provenance_arithmetic": {
+    "model_class": "GPT2LMHeadModel",
+    "model_config_commit_hash": "6dcaa7a952f72f9298047fd5137cd6e4f05f41da",
+    "requested_identifier": "gpt2-medium",
+    "resolved_revision": "6dcaa7a952f72f9298047fd5137cd6e4f05f41da",
+    "tokenizer_class": "GPT2TokenizerFast",
+    "tokenizer_commit_hash": null
+  },
+  "model_provenance_legacy": {
+    "model_class": "GPT2LMHeadModel",
+    "model_config_commit_hash": "6dcaa7a952f72f9298047fd5137cd6e4f05f41da",
+    "requested_identifier": "gpt2-medium",
+    "resolved_revision": "6dcaa7a952f72f9298047fd5137cd6e4f05f41da",
+    "tokenizer_class": "GPT2Tokenizer",
+    "tokenizer_commit_hash": null
+  },
+  "model_revision_cross_phase_equal": true,
+  "reference": {
+    "actual_commit_after": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+    "actual_commit_before": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+    "checkout": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/external/NeuralSteganography",
+    "expected_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+    "git_status_after": "",
+    "git_status_before": "",
+    "repository": "https://github.com/harvardnlp/NeuralSteganography",
+    "worktree_unchanged": true
+  },
+  "resolved_model_revision": "6dcaa7a952f72f9298047fd5137cd6e4f05f41da",
+  "schema_version": "stage3.figure3_full_run_state.v1",
+  "started_at_utc": "2026-09-12T21:11:21.294734+00:00",
+  "status": "completed"
+}

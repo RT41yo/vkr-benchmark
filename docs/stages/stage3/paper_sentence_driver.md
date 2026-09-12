@@ -1,6 +1,6 @@
 # Этап 3 — paper-sentence driver перед полным Figure-3 sweep
 
-**Статус:** конфигурация Step 3.9 заморожена до первого запуска.
+**Статус:** Step 3.9 успешно валидирован; 32/32 paper-sentence pilot runs прошли hard gate.
 **Цель:** устранить второй blocker, обнаруженный GPT-2 Medium pilot: public `finish_sent=True` не означает «остановиться на первой границе предложения».
 
 ## 1. Почему понадобился отдельный driver
@@ -203,3 +203,27 @@ READY FOR FULL FIGURE-3 RUNNER IMPLEMENTATION
 ```
 
 Это означает, что sentence orchestration больше не является pre-sweep blocker. Следующим шагом можно реализовать массовый runner для frozen 23-point matrix × 80 contexts × 3 replicates.
+
+## 11. Фактический результат Step 3.9
+
+Локальный GPT-2 Medium pilot успешно прошёл hard gate:
+
+```text
+32/32 runs status=ok
+4/4 fixed-message mirror parity checks PASS
+все runs остановились на первой boundary
+Arithmetic implicit zero look-ahead отсутствует
+все confirmed payload prefixes восстановлены
+reference checkout unchanged
+```
+
+Representative averages:
+
+```text
+Bins b=3:                    BPW=3.0000   KL=2.698350 bits
+Huffman exponent=3:          BPW=2.4728   KL=1.064161 bits
+Arithmetic tau=0.9,k=300:    BPW=2.9338   KL=0.103202 bits
+Arithmetic tau=1,k=50256:    BPW=4.6773   KL=0.000605 bits
+```
+
+Таким образом, sentence orchestration больше не является pre-sweep blocker. Следующий шаг — Step 3.10 full Figure-3 runner на frozen 23-point matrix × 80 contexts × 3 replicates.

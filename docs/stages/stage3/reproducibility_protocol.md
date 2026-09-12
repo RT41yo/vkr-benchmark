@@ -711,3 +711,15 @@ Stage 3 paper-sentence pilot gate: READY FOR FULL FIGURE-3 RUNNER IMPLEMENTATION
 ```
 
 разрешается реализовывать full 23-point Figure-3 runner. Exact historical orchestration всё равно не объявляется доказанным: оригинальный Figure-3 batch driver отсутствует, а first-boundary rule является явно документированной Stage-3 operationalization на основе paper wording и публичного `is_sent_finish` predicate.
+
+## Step 3.10 — полный author-compatible Figure-3 sweep
+
+После успешного Step 3.9 full runner использует неизменённый paper-sentence mirror, pinned GPT-2 Medium reference profile и все 80 frozen CNN/DailyMail contexts. Сетка берётся только из frozen `paper_reproduction_matrix.json`: 5 Bins points, 8 Huffman points, 9 Arithmetic temperature points и 1 special Arithmetic point.
+
+Execution design: `23 points × 80 contexts × 3 replicates = 5520 scheduled runs`. Secret streams парны между всеми points для одинаковой пары `(context, replicate)`. Completed run останавливается на первой boundary по pinned `utils.is_sent_finish`; Arithmetic zero look-ahead запрещён. Если low-temperature Arithmetic исчерпывает финальный adaptive guard 8192 без boundary, scheduled outcome сохраняется как `sentence_termination_failure`, не подменяется искусственной boundary и исключается из sentence-level Figure-3 means. Результаты checkpoint'ятся 69 атомарными shards, поэтому полный запуск resumable.
+
+Step 3.10 имеет только execution/conformance gates: completeness, payload recovery, first-boundary stop, отсутствие Arithmetic zero-padding, continuity с Step 3.9 и неизменность pinned reference checkout. Совпадение Figure-3 scientific claims намеренно не является hard gate. Mean/standard error и собственно paper comparison интерпретируются в Step 3.11.
+
+### Step 3.10e: modern GPT-2 cache-axis compatibility for long Arithmetic sentences
+
+Full Figure-3 sweep выявил, что pinned `utils.limit_past` переносит historical stacked-cache slice на modern tuple cache без смены оси. Для author-compatible Arithmetic full-run разрешён узкий repository-owned compatibility shim: modern `[batch, heads, sequence, head_dim]` key/value tensors обрезаются до последних 1022 элементов по `sequence`. Это восстанавливает намерение historical sliding-cache helper, не изменяя probabilities, Arithmetic interval logic, sentence predicate, payload accounting или normalized benchmark. Step-3.9 paper-sentence core не редактируется; факт использования shim и число cache trims сохраняются в result diagnostics.

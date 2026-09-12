@@ -22,3 +22,7 @@ environment/**/hf.txt
 # Stage-3 CNN/DailyMail paper-reproduction data are regenerated from a pinned artifact.
 /data/stage3/cnndm/cache/
 /data/stage3/cnndm/generated_contexts.jsonl
+
+# Incomplete/failed Stage-3 full-sweep shard diagnostics are local only.
+/results/stage3/paper_reproduction/figure3_full/**/*.tmp
+/results/stage3/paper_reproduction/figure3_full/**/*.failed.jsonl
