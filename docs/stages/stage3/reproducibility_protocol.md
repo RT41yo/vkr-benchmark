@@ -554,3 +554,54 @@ python scripts/check_stage3_cnndm_contexts.py
 ```
 
 Только после `Stage 3 CNN/DailyMail context gate: READY` разрешается загрузка/запуск paper-level GPT-2 Medium pilot.
+
+## 18. GPT-2 Medium author-compatible pilot на 8 frozen contexts
+
+После успешного CNN/DailyMail gate разрешается первый paper-level модельный запуск. Он намеренно остаётся **pilot**, а не частью итоговой Figure-3 curve.
+
+Frozen pilot config:
+
+```text
+configs/reproducibility/gpt2_medium_pilot.json
+```
+
+Входы уже не выбираются во время запуска:
+
+```text
+model:       gpt2-medium (GPT-2 345M)
+contexts:    selection_rank 0..7 из frozen CNN/DailyMail manifest
+payload:     24 deterministic bits/context, одинаковые для всех методов
+finish_sent: true
+replicates:  1
+```
+
+Четыре predeclared points:
+
+```text
+Bins b=3
+Huffman exponent=3
+Arithmetic tau=0.9, k=300, precision=26
+Arithmetic tau=1.0, k=50256, precision=26
+```
+
+24-bit payload является только техническим pilot budget. Pinned repository не содержит оригинального Figure-3 batch driver и exact random-message length; поэтому этот budget не выдаётся за paper parameter и не переносится автоматически в full sweep.
+
+Public Harvard `finish_sent=True` завершает предложение greedy top-1 continuation **после** окончания payload. Комментарий в `run_single.py` отдельно предупреждает, что statistics относятся к non-finished/payload prefix. Поэтому runner не смешивает:
+
+```text
+bits_per_word_author_stats_prefix
+useful_payload_bits_per_total_generated_token
+```
+
+Второе поле — только pilot diagnostic. Для paper-compatible curves используется author-compatible definition после отдельной фиксации full-sweep orchestration.
+
+Bins/Huffman продолжают использовать scoped slow-tokenizer + legacy-cache compatibility bridge; reference files не редактируются. Arithmetic идёт через raw GPT-2 Medium и native DynamicCache, как в pinned source.
+
+Pilot gate требует 32/32 успешных calls, exact payload-prefix recovery, sentence-finish на финальном generated token и неизменный reference worktree. Exact sender/retokenized IDs и ранние punctuation tokens сохраняются как diagnostics и не скрываются BPE-repair логикой.
+
+Команды:
+
+```text
+python scripts/run_stage3_gpt2_medium_pilot.py
+python scripts/check_stage3_gpt2_medium_pilot.py
+```

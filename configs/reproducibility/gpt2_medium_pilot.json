@@ -1,0 +1,68 @@
+{
+  "schema_version": "stage3.gpt2_medium_pilot.v1",
+  "status": "frozen_before_run",
+  "purpose": "Run a small author-compatible GPT-2 Medium pilot on the eight frozen CNN/DailyMail contexts before the full Figure-3 sweep.",
+  "reference_repository": "https://github.com/harvardnlp/NeuralSteganography",
+  "reference_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+  "model_id": "gpt2-medium",
+  "seed": 1234,
+  "context_manifest_path": "results/stage3/paper_reproduction/cnndm_context_manifest.json",
+  "context_manifest_sha256": "cc25b492b26e102496137bc2f8eb78320c7f7768d83ff7e10af9b2e04a14aebc",
+  "local_context_text_path": "data/stage3/cnndm/generated_contexts.jsonl",
+  "pilot_context_count": 8,
+  "payload": {
+    "bit_count": 24,
+    "generator_id": "pilot_sha256_bitstream_v1",
+    "material": "stage3-gpt2-medium-pilot|seed=<seed>|selection_rank=<rank>|counter=<counter>",
+    "same_payload_per_context_across_methods": true,
+    "note": "Twenty-four bits is a technical pilot budget chosen before GPT-2 Medium execution. It is not asserted to be the undocumented message length used by the original Figure-3 batch driver and is not a frozen full-sweep sampling choice."
+  },
+  "finish_sent": true,
+  "pilot_points": [
+    {
+      "id": "bins_b3",
+      "method": "bins",
+      "block_size_bits": 3,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "huffman_e3",
+      "method": "huffman",
+      "candidate_pool_exponent": 3,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "arithmetic_t0.9_k300",
+      "method": "arithmetic",
+      "temperature": 0.9,
+      "topk": 300,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache"
+    },
+    {
+      "id": "arithmetic_t1.0_k50256",
+      "method": "arithmetic",
+      "temperature": 1.0,
+      "topk": 50256,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache"
+    }
+  ],
+  "execution": {
+    "replicates": 1,
+    "expected_run_count": 32,
+    "load_strategy": "Load GPT-2 Medium once with the slow tokenizer plus legacy cache adapter for Bins/Huffman, release it, then load the raw reference GPT-2 Medium with the default tokenizer for Arithmetic.",
+    "output_directory": "results/stage3/paper_reproduction/gpt2_medium_pilot"
+  },
+  "success_criteria": [
+    "all 32 author-compatible calls complete without exception",
+    "each decoded stream starts with the exact 24-bit useful payload",
+    "each generated sequence is non-empty and the final generated token satisfies the pinned reference sentence-finish predicate",
+    "the pinned Harvard checkout remains byte-for-byte unmodified"
+  ],
+  "diagnostics_not_hard_failures": [
+    "sender token IDs may differ from retokenized text IDs when the author BPE-repair path still recovers the payload",
+    "an earlier sentence-finish token may appear during payload embedding because the public finish_sent flag only forces greedy completion after the message is consumed",
+    "pilot metrics are technical diagnostics and must not be reported as final Figure-3 reproduction points"
+  ]
+}
