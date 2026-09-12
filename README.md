@@ -6,7 +6,7 @@
 
 ## Статус Этапа 3
 
-Технический author-compatible smoke gate пройден для Bins, Huffman и Arithmetic Coding на pinned Harvard reference. Перед paper-level GPT-2 Medium экспериментами зафиксирована матрица воспроизводимости в `configs/reproducibility/paper_reproduction_matrix.json`; следующий gate — pin CNN/DailyMail artifact/revision и deterministic extraction первых трёх предложений.
+Технический author-compatible smoke gate пройден для Bins, Huffman и Arithmetic Coding на pinned Harvard reference. Paper-level matrix заморожена в `configs/reproducibility/paper_reproduction_matrix.json`. Следующий gate оформлен отдельно: CNN/DailyMail 3.0.0 test pin, deterministic 80-context set и 8-context pilot subset задаются `configs/reproducibility/cnndm_context_source.json`; после локальной проверки artifact checksum/context manifest разрешается GPT-2 Medium pilot.
 
 ## Принципы архитектуры
 

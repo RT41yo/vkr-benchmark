@@ -517,3 +517,40 @@ Primary reproduction targets:
 Paper-level full sweep пока **не запускается**. Перед pilot необходимо зафиксировать конкретный доступный CNN/DailyMail artifact/revision, split/checksum и deterministic sentence segmentation. Это отдельный gate, поскольку статья задаёт dataset и правило «первые три предложения», но не современный идентификатор ревизии набора данных.
 
 После pinning dataset следующий запуск — короткий GPT-2 Medium pilot на 8 contexts. Только после него запускается полная frozen matrix.
+
+## 17. Pin CNN/DailyMail и deterministic context set
+
+Перед GPT-2 Medium pilot разрешается dataset blocker, заранее отмеченный в frozen paper-reproduction matrix. Первичный paper source задаёт CNN/DailyMail и правило «первые три предложения», но не фиксирует современный artifact/revision и не сообщает train/validation/test split. Поэтому exact historical input snapshot не считается известным.
+
+Stage-3 operationalization фиксируется отдельно в:
+
+```text
+configs/reproducibility/cnndm_context_source.json
+docs/stages/stage3/cnndm_context_pin.md
+```
+
+Pinned source:
+
+```text
+abisee/cnn_dailymail@3adf6249f0cc8409a97a4d38471529ef5f7dc496
+config: 3.0.0
+split: test
+artifact: 3.0.0/test-00000-of-00001.parquet
+SHA-256: 04e322d2634a96dba76bf9a6294fbbe48e0b36abeae43f13d86ba2c3bebffe4e
+rows: 11490
+```
+
+Выбор `test` является нашей доэкспериментальной operationalization, а не приписывается статье. Frozen Step-3.5 matrix при этом остаётся byte-for-byte неизменной; её SHA-256 проверяется dataset gate.
+
+Для выбора contexts используется repository-owned `sha256_rank_v1`: строки ранжируются по SHA-256 от фиксированной строки с `seed=1234`, после чего принимаются первые 80 записей, для которых splitter `stage3_news_sentence_splitter_v1` находит не менее четырёх предложений. Первые три предложения образуют context; четвёртое используется только как human-next-sentence diagnostic. Первые 8 accepted records образуют pilot subset.
+
+В Git не сохраняются Parquet и тексты новостей. Commit-able manifest содержит row/article identifiers, selection digest и hashes контекста/следующего предложения. Полные тексты регенерируются локально из pinned artifact.
+
+Go/no-go команды:
+
+```text
+python scripts/prepare_stage3_cnndm_contexts.py
+python scripts/check_stage3_cnndm_contexts.py
+```
+
+Только после `Stage 3 CNN/DailyMail context gate: READY` разрешается загрузка/запуск paper-level GPT-2 Medium pilot.

@@ -1,0 +1,67 @@
+{
+  "schema_version": "stage3.cnndm_context_source.v1",
+  "status": "pinned_before_gpt2_medium_pilot",
+  "purpose": "Pin a reproducible CNN/DailyMail source artifact and deterministic context-selection/segmentation procedure for Stage-3 paper-level reproduction.",
+  "paper_basis": {
+    "paper": "Ziegler et al. (2019), Neural Linguistic Steganography",
+    "paper_rule": "Use the first three sentences of each CNN/DailyMail news article as context and generate one sentence from a uniformly random message.",
+    "paper_split_reported": false,
+    "split_operationalization": "test",
+    "split_note": "The paper does not name a CNN/DailyMail split. Stage 3 therefore pins the standard test split as a predeclared operationalization; this choice must not be presented as the exact original split."
+  },
+  "dataset": {
+    "provider": "Hugging Face Hub",
+    "repository": "abisee/cnn_dailymail",
+    "revision": "3adf6249f0cc8409a97a4d38471529ef5f7dc496",
+    "config": "3.0.0",
+    "split": "test",
+    "split_rows": 11490,
+    "artifact_path": "3.0.0/test-00000-of-00001.parquet",
+    "artifact_size_bytes": 30000471,
+    "artifact_sha256": "04e322d2634a96dba76bf9a6294fbbe48e0b36abeae43f13d86ba2c3bebffe4e",
+    "download_url": "https://huggingface.co/datasets/abisee/cnn_dailymail/resolve/3adf6249f0cc8409a97a4d38471529ef5f7dc496/3.0.0/test-00000-of-00001.parquet?download=true",
+    "feature_names": [
+      "article",
+      "highlights",
+      "id"
+    ],
+    "version_note": "CNN/DailyMail 3.0.0 is the cased, non-anonymized summarization representation available as an immutable Parquet artifact. This is a reproducible modern artifact, not a claim that the 2019 authors used this exact Hub revision."
+  },
+  "context_extraction": {
+    "sentence_count": 3,
+    "splitter_id": "stage3_news_sentence_splitter_v1",
+    "splitter_kind": "repository-owned deterministic rule-based splitter",
+    "normalization": "strip leading/trailing whitespace; collapse internal Unicode whitespace to one ASCII space; preserve case and punctuation; no lowercasing",
+    "boundary_rule": "Split after terminal . ! ? (optionally followed by closing quotes/brackets) before whitespace and a plausible next-sentence starter, while protecting a frozen abbreviation/initial/decimal set.",
+    "minimum_sentences_required": 4,
+    "minimum_note": "At least four sentences are required so the first three can be context and a human-written next sentence remains available for later diagnostics.",
+    "context_joiner": "single ASCII space"
+  },
+  "selection": {
+    "algorithm_id": "sha256_rank_v1",
+    "seed": 1234,
+    "ranking_material": "stage3-cnndm-test-v1|seed=1234|row=<zero-based-row-index>",
+    "ranking": "ascending SHA-256 hex digest",
+    "scan_policy": "Scan ranked rows and accept the first 80 rows that satisfy the extraction validity rule.",
+    "full_context_count": 80,
+    "pilot_context_count": 8,
+    "pilot_policy": "first 8 accepted contexts in selection rank order",
+    "replacement": false
+  },
+  "local_paths": {
+    "artifact_cache": "data/stage3/cnndm/cache/test-3.0.0.parquet",
+    "generated_context_text": "data/stage3/cnndm/generated_contexts.jsonl",
+    "committed_manifest": "results/stage3/paper_reproduction/cnndm_context_manifest.json"
+  },
+  "commit_policy": {
+    "commit_dataset_parquet": false,
+    "commit_context_text": false,
+    "commit_manifest_without_article_text": true,
+    "reason": "The repository commits provenance, row/article identifiers, and hashes. Article/context text is regenerated locally from the pinned public artifact rather than copied into Git."
+  },
+  "paper_matrix": {
+    "path": "configs/reproducibility/paper_reproduction_matrix.json",
+    "sha256": "67b376590c7bb5a61dfb7565fd4699567880978c0a5b5bc4d741dafde5ff200b",
+    "note": "The frozen Stage-3 parameter matrix is not modified by this dataset-pinning step."
+  }
+}

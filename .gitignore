@@ -18,3 +18,7 @@ venv/
 environment/**/hf.txt
 # Pinned third-party repositories used only for reproducibility checks.
 /external/
+
+# Stage-3 CNN/DailyMail paper-reproduction data are regenerated from a pinned artifact.
+/data/stage3/cnndm/cache/
+/data/stage3/cnndm/generated_contexts.jsonl
