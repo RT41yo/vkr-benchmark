@@ -6,7 +6,7 @@
 
 ## Статус Этапа 3
 
-Технический author-compatible smoke gate пройден для Bins, Huffman и Arithmetic Coding на pinned Harvard reference. Paper-level matrix и CNN/DailyMail context set зафиксированы. GPT-2 Medium pilot завершён 32/32 успешно. Precision probe локализовал near-zero discrepancy: finite-precision residual уменьшается с ростом precision, а короткий finite payload создаёт сильный terminal KL из-за implicit zero look-ahead; zero-padding-free precision=40 достигает порядка `10^-8` KL. Второй blocker — paper-compatible остановка на первой границе предложения — остаётся до фиксации отдельного sentence driver.
+Технический author-compatible smoke gate пройден для Bins, Huffman и Arithmetic Coding на pinned Harvard reference. Paper-level matrix и CNN/DailyMail context set зафиксированы. GPT-2 Medium pilot завершён 32/32 успешно. Precision probe локализовал near-zero discrepancy: finite-precision residual уменьшается с ростом precision, а короткий finite payload создаёт сильный terminal KL из-за implicit zero look-ahead. Step 3.9 фиксирует отдельный paper-sentence pilot: длинный uniform-looking bitstream, немедленная остановка на первой boundary по pinned `utils.is_sent_finish`, подтверждённый payload до этой boundary и запрет Arithmetic zero-padding. После локального 32-run gate можно переходить к full Figure-3 runner.
 
 ## Принципы архитектуры
 

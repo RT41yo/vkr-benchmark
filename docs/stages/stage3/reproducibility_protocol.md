@@ -669,3 +669,45 @@ precision=48 -> 5.7836e-10 bits/token
 Paper prose anchor `4e-8 nats` всё ещё не считается численно воспроизведённым **при pinned executable precision=26**. Clean precision=40 даёт `~2.92e-8 nats/token`, то есть тот же порядок, но нет оснований утверждать, что Figure 3 использовала precision=40: original batch driver недоступен.
 
 Arithmetic precision discrepancy после этого считается локализованной. Full Figure-3 sweep остаётся заблокирован только до фиксации paper-sentence orchestration: длинный uniform bitstream и stop на первой sentence boundary.
+
+## 21. Paper-sentence orchestration pilot
+
+После Step 3.8 precision discrepancy считается локализованной. Последний pre-sweep blocker — termination semantics. Public `finish_sent=True` нельзя использовать для Figure-3 reproduction, потому что он сначала исчерпывает фиксированный message и только затем greedy-завершает предложение; Step-3.7 audit обнаружил 5/32 early boundaries.
+
+Step 3.9 фиксирует отдельный config:
+
+```text
+configs/reproducibility/paper_sentence_pilot.json
+```
+
+и repository-owned author-compatible mirrors:
+
+```text
+scripts/stage3_paper_sentence_core.py
+scripts/run_stage3_paper_sentence_pilot.py
+scripts/check_stage3_paper_sentence_pilot.py
+```
+
+Measurement rule:
+
+```text
+16384-bit deterministic uniform-looking stream
+        -> embed непрерывно
+        -> после каждого selected token применить pinned utils.is_sent_finish
+        -> STOP сразу на первой boundary
+        -> payload = author-confirmed bits к этой boundary
+```
+
+`16384` bits — implementation buffer, а не paper payload length. Stream exhaustion является hard failure. Для Arithmetic каждый измеряемый step обязан иметь полный реальный `precision`-bit look-ahead; implicit zero padding запрещён.
+
+Поскольку public encoders не имеют first-boundary stop, mirrors допускаются только после fixed-message parity с pinned executable functions. Проверяются exact token IDs и author NLL/KL/words-per-bit для Bins, Huffman и обеих representative Arithmetic points. Mirrors не входят в normalized benchmark и не изменяют external reference checkout.
+
+Pilot использует те же 8 contexts и четыре representative points Step 3.7. Успешный gate требует 4/4 parity, 32/32 first-boundary runs, положительный confirmed payload, exact confirmed-payload prefix recovery через обычный text transport, отсутствие bitstream exhaustion / safety-cap hits / Arithmetic zero padding и unchanged reference worktree.
+
+Только после:
+
+```text
+Stage 3 paper-sentence pilot gate: READY FOR FULL FIGURE-3 RUNNER IMPLEMENTATION
+```
+
+разрешается реализовывать full 23-point Figure-3 runner. Exact historical orchestration всё равно не объявляется доказанным: оригинальный Figure-3 batch driver отсутствует, а first-boundary rule является явно документированной Stage-3 operationalization на основе paper wording и публичного `is_sent_finish` predicate.
