@@ -115,3 +115,26 @@ reference worktree unchanged
 BPE token roundtrip и наличие раннего punctuation сохраняются как diagnostics. Если они возникают, результат не скрывается и разбирается перед full sweep.
 
 Только после успешного pilot фиксируется следующий шаг: full paper-level runner/aggregation policy для frozen 23-point matrix. Pilot metrics сами по себе не включаются в итоговую Figure-3 reproduction curve.
+
+## 8. Фактический результат Step 3.7
+
+Локальный запуск на RTX 5070 Ti завершился успешно:
+
+```text
+32/32 records status=ok
+exact payload-prefix recovery: 32/32
+final generated token sentence-finish: 32/32
+reference worktree unchanged: true
+```
+
+При этом pilot выполнил свою диагностическую функцию и обнаружил два pre-sweep discrepancy:
+
+```text
+Arithmetic tau=1, k=50256, precision=26:
+mean author KL = 0.459774989 bits/token
+
+Early sentence-finish before final generated token:
+5/32 runs
+```
+
+Поэтому `Stage 3 GPT-2 Medium pilot gate: READY` трактуется как **technical execution READY**, а не как разрешение full Figure-3 sweep. Следующий frozen diagnostic описан в `docs/stages/stage3/arithmetic_precision_investigation.md`.

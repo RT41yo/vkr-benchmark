@@ -605,3 +605,67 @@ Pilot gate требует 32/32 успешных calls, exact payload-prefix rec
 python scripts/run_stage3_gpt2_medium_pilot.py
 python scripts/check_stage3_gpt2_medium_pilot.py
 ```
+
+## 19. Targeted investigation после GPT-2 Medium pilot
+
+GPT-2 Medium pilot закрывает technical execution gate, но не разрешает full Figure-3 sweep автоматически. Перед full curve разбираются два наблюдения Step 3.7:
+
+```text
+Arithmetic tau=1, k=50256, precision=26 -> mean author KL ~= 0.46 bits/token,
+хотя paper описывает near-zero unmodulated point;
+
+5/32 fixed-payload runs содержат sentence-finish token раньше финального token.
+```
+
+Для Arithmetic discrepancy замораживается отдельный diagnostic config:
+
+```text
+configs/reproducibility/arithmetic_precision_probe.json
+```
+
+Он не меняет `paper_reproduction_matrix.json`. На тех же 8 contexts и `tau=1, k=50256` сравниваются precision `26, 32, 40, 48` с общим deterministic 256-bit stream/context и `finish_sent=false`. Long payload нужен, чтобы отдельно анализировать steps без implicit zero lookahead.
+
+Repository-owned instrumented mirror обязан сначала воспроизвести pinned executable `arithmetic.encode_arithmetic` на sentinel run по generated token IDs, author KL и words/bit. Только после parity разрешена instrumentation. External checkout не редактируется.
+
+На каждом step записываются current integer interval width/effective precision, threshold, retained support, rounding residual и three-way KL decomposition: exact author distribution, truncation-only distribution и terminal-fill counterfactual. Counterfactuals никогда не используются для generation и не считаются новым методом.
+
+Sentence issue фиксируется отдельным deterministic audit committed Step-3.7 result. Наличие early boundaries показывает, что public `finish_sent=True` означает «исчерпать фиксированный message, затем закончить предложение», а не «остановить embedding на первой sentence boundary». Поэтому final paper-level driver должен быть определён отдельно до full curve.
+
+Go/no-go этого шага:
+
+```text
+python scripts/analyze_stage3_pilot_sentence_shape.py
+python scripts/run_stage3_arithmetic_precision_probe.py
+python scripts/check_stage3_arithmetic_precision_probe.py
+```
+
+`READY FOR REVIEW` означает, что diagnostic достоверно выполнен; это **не** означает автоматическое разрешение full Figure-3 sweep. Разрешение даётся только после интерпретации precision probe и фиксации paper-sentence orchestration.
+
+## 20. Интерпретация Arithmetic precision probe
+
+Step 3.8 завершил диагностическую часть по near-zero special point. Instrumented mirror прошёл exact parity с pinned executable Arithmetic, поэтому выводы не объясняются modern compatibility bridge.
+
+В итоговой интерпретации обязательно различаются:
+
+```text
+mean_run_author_kl_bits
+    = весь finite-message run, включая terminal implicit-zero look-ahead;
+
+mean_zero_padding_free_author_kl_bits
+    = только coding steps с полным look-ahead из реальных secret bits.
+```
+
+Фактические clean значения:
+
+```text
+precision=26 -> 1.0654e-3 bits/token
+precision=32 -> 4.1502e-5 bits/token
+precision=40 -> 4.2183e-8 bits/token
+precision=48 -> 5.7836e-10 bits/token
+```
+
+При этом terminal padding-affected steps дают более 98% summed per-step KL при каждой исследованной precision. Step-3.7 pilot использовал `payload=24` при `precision=26`, следовательно все Arithmetic coding steps этого pilot требовали implicit zero look-ahead. Его `~0.46 bits/token` нельзя использовать как steady-state special-point estimate.
+
+Paper prose anchor `4e-8 nats` всё ещё не считается численно воспроизведённым **при pinned executable precision=26**. Clean precision=40 даёт `~2.92e-8 nats/token`, то есть тот же порядок, но нет оснований утверждать, что Figure 3 использовала precision=40: original batch driver недоступен.
+
+Arithmetic precision discrepancy после этого считается локализованной. Full Figure-3 sweep остаётся заблокирован только до фиксации paper-sentence orchestration: длинный uniform bitstream и stop на первой sentence boundary.
