@@ -38,3 +38,8 @@ Step 3.12 writes paired differential evidence to `results/stage3/matched_author_
 ## Stage 3 conformance analysis
 
 Step 3.13 adds deterministic interpretation artifacts to `results/stage3/matched_author_normalized/`: `conformance_analysis.json` and `conformance_table.csv`. They are derived only from the frozen Step-3.12 matched outputs; no new LM generation is performed and no post-hoc numerical closeness threshold is introduced.
+
+
+## Stage 3 closeout
+
+Step 3.14 materializes `results/stage3/comparison.csv` and `results/stage3/comparison.parquet` as a compact four-row matched-conformance table, plus `stage3_closeout_summary.json` and `stage3_readiness.json`. These files summarize, but do not replace, the full Figure-3 and 32-pair evidence stored in the subdirectories above. `comparison.parquet` is generated with the project `storage` extra (`pyarrow`).

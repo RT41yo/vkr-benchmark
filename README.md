@@ -2,13 +2,19 @@
 
 Экспериментальная инфраструктура для воспроизводимой многокритериальной оценки методов генеративной лингвистической стеганографии.
 
-Текущий этап: **Этап 3 — проверка воспроизводимости и соответствия Bins, Huffman, Arithmetic Coding**.
+Текущий этап: **Этап 3 завершён — воспроизводимость и соответствие Bins, Huffman, Arithmetic Coding подтверждены с документированными ограничениями**. Следующий этап ROADMAP — подключение современных методов (ADG, Discop, RRC и др.).
 
 ## Статус Этапа 3
 
-Step 3.10 full author-compatible Figure-3 sweep завершён и зафиксирован commit `01244d2`: 23 frozen points × 80 CNN/DailyMail contexts × 3 replicates = 5520 scheduled outcomes, из них 5513 завершились реальной first sentence boundary и 7 сохранены как `sentence_termination_failure`. Step 3.11 выполнил paper-level интерпретацию без новых LM-запусков: характерные кривые Bins, Huffman и Arithmetic воспроизведены по тренду; Arithmetic k=300 снова имеет минимум при `tau=1.0` около 4 bits/word и остаётся ниже Huffman/Bins на общей области capacity. Special `tau=1, k=50256` даёт near-zero KL, но точный paper prose anchor `4e-8 nats` не воспроизводится при pinned public `precision=26`; precision probe локализует finite-precision effect, при этом clean `precision=40` попадает в тот же порядок величины, что paper anchor, без основания приписывать авторам precision=40. Общая оценка Step 3.11 — `partial_reproduction`; следующий шаг — matched author-compatible vs normalized comparison.
-> Step 3.11 keeps paper-level claims separate from execution gates: curve shape/order are classified as trend reproduction, the exact unmodulated anchor is explicitly not numerically reproduced at public precision=26, and termination/transport/cache edge cases remain reported as diagnostics rather than hidden selection filters. See `docs/stages/stage3/figure3_interpretation.md`.
+Этап 3 закрыт автоматическим reproducibility gate. Author-compatible Figure-3 sweep содержит 23 точки и 5520/5520 сохранённых outcomes; 5513 runs достигли pinned first-sentence boundary, 7 сохранены как `sentence_termination_failure`. Характерные кривые Bins, Huffman и Arithmetic Coding воспроизведены по тренду, включая Arithmetic minimum при `tau=1.0` около 4 bits/word и его преимущество над Huffman/Bins на общей области capacity.
 
+Paper-level итог — `partial_reproduction`: special Arithmetic `tau=1,k=50256` сохраняет near-unmodified режим, но exact prose anchor `4e-8 nats` не воспроизводится при public `precision=26`; exact historical Figure-3 MC driver/sample count также недоступны. Эти ограничения зафиксированы, а не скрыты post-hoc настройкой.
+
+Matched author-vs-normalized analysis использует 32 пары (4 representative points × 8 contexts). Все 32 normalized runs имеют exact token-ID decode и matched carrier/secret-stream semantics. Conformance analysis подтверждает сохранение core method principle на 4/4 representative points; различия Bins/Huffman/Arithmetic локализованы к документированным normalization boundaries.
+
+Отдельный методологический результат: `D_KL(P_reference || Q_stego)=+inf` во всех 32/32 matched normalized runs из-за support mismatch. Forward KL остаётся строгим unsmoothed support diagnostic, а reverse KL и TVD сохраняются как complementary finite metrics для будущей specification v1.0.
+
+Итоговый отчёт: `docs/stages/stage3/reproducibility_report.md`. Презентация: `docs/stages/stage3/stage_3.typ`. Финальный gate: `scripts/check_stage3_readiness.py`.
 
 ## Принципы архитектуры
 

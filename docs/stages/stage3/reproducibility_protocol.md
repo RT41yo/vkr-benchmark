@@ -775,3 +775,38 @@ Arithmetic tau=1,k=50256    -> strong distributional conformance with sequence s
 Все 32 normalized runs имеют `D_KL(P_reference || Q_stego)=+inf` из-за support mismatch. Это фиксируется как строгий support diagnostic, а не numerical error. Для будущей specification v1.0 рекомендуется сохранять forward KL без smoothing вместе с finite reverse KL и TVD; frozen v0.1 контракт на этом шаге не переписывается.
 
 Подробности и attribution matrix: `docs/stages/stage3/conformance_analysis.md`. Следующий gate — Step 3.14 final reproducibility report / Stage-3 closeout.
+
+
+## Step 3.14 — Stage-3 closeout
+
+Step 3.14 не запускает LM повторно. Он собирает frozen evidence Steps 3.10–3.13 в итоговый reproducibility report, compact matched comparison table, readiness JSON и Typst-презентацию. Научные классификации не пересматриваются post-hoc.
+
+Финальный closeout должен сохранить одновременно два вывода:
+
+```text
+paper reproduction      -> partial_reproduction
+normalized conformance  -> core principle preserved at 4/4 representative matched points
+```
+
+`partial_reproduction` относится к исторической Figure-3 воспроизводимости: characteristic trends/order воспроизведены, exact `4e-8 nats` anchor при public precision=26 — нет, original MC driver/sample count неизвестны. Это не противоречит conformance result: matched analysis отвечает другому вопросу — сохраняет ли normalized adapter defining mechanism метода.
+
+Machine-readable closeout artifacts:
+
+```text
+results/stage3/comparison.csv
+results/stage3/comparison.parquet
+results/stage3/stage3_closeout_summary.json
+results/stage3/stage3_readiness.json
+```
+
+Детерминированная сборка и acceptance gate:
+
+```bash
+python scripts/finalize_stage3.py
+python scripts/check_stage3_readiness.py --run-tests \
+  --json-output results/stage3/stage3_readiness.json
+```
+
+Gate не требует exact token parity между author и normalized режимами и не вводит numerical closeness threshold задним числом. Он проверяет frozen execution counts, paper-claim classifications, provenance, matched-pair integrity, 4/4 core-principle conformance, dual-KL finding, final report/presentation and full test suite.
+
+После `Stage 3 reproducibility readiness: READY` baseline reproducibility/conformance считается закрытой и Stage 4 может подключать современные методы без переноса author-specific quirks в normalized Bins/Huffman/Arithmetic adapters.
