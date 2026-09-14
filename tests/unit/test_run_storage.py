@@ -85,12 +85,14 @@ def _execution() -> SimpleNamespace:
         q_source=QSource.ADAPTER_EXACT,
         kl_bits=math.inf,
         tvd=0.5,
+        kl_stego_to_ref_bits=0.75,
     )
     step1 = StepDistributionDistortion(
         q_mode=QMode.ANALYTIC_EXACT,
         q_source=QSource.ADAPTER_EXACT,
         kl_bits=math.inf,
         tvd=0.25,
+        kl_stego_to_ref_bits=0.25,
     )
     encode = SimpleNamespace(
         prompt_token_ids=(10, 11),
@@ -141,6 +143,12 @@ def _execution() -> SimpleNamespace:
             tvd_median=0.375,
             tvd_p95=0.5,
             tvd_max=0.5,
+            kl_stego_to_ref_mean_bits=0.5,
+            kl_stego_to_ref_median_bits=0.5,
+            kl_stego_to_ref_p95_bits=0.75,
+            kl_stego_to_ref_max_bits=0.75,
+            kl_stego_to_ref_infinite_steps=0,
+            kl_stego_to_ref_finite_steps=2,
         ),
         quality_metrics=RawLMQualityMetrics(
             nll_raw_lm_nats_per_token=2.0,
@@ -219,6 +227,20 @@ def test_result_record_retains_benchmark_native_infinite_kl_in_memory() -> None:
     assert record["kl_mean_bits"] == math.inf
     assert record["status"] == "ok"
     assert record["error"] is None
+
+
+def test_result_record_persists_both_kl_directions_explicitly() -> None:
+    record = build_result_record(_execution(), run_id="0123456789abcdef")
+    assert record["kl_ref_to_stego_mean_bits"] == math.inf
+    assert record["kl_stego_to_ref_mean_bits"] == 0.5
+    assert record["kl_stego_to_ref_max_bits"] == 0.75
+
+
+def test_trace_persists_both_per_step_kl_directions() -> None:
+    rows = list(run_store.iter_trace_records(_execution()))
+    assert rows[0]["kl_ref_to_stego_bits"] == math.inf
+    assert rows[0]["kl_stego_to_ref_bits"] == 0.75
+    assert rows[1]["kl_stego_to_ref_bits"] == 0.25
 
 
 def test_summary_row_matches_v01_required_identity_and_metrics() -> None:
@@ -374,6 +396,31 @@ def test_summary_parquet_keeps_distinct_run_ids(tmp_path: Path, monkeypatch) -> 
     update_summary_parquet(path, second)
     stored = json.loads(path.read_text(encoding="utf-8"))
     assert [row["run_id"] for row in stored] == ["run-a", "run-b"]
+
+
+def test_summary_parquet_migrates_pre_dual_kl_rows_without_inventing_reverse(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(run_store, "_import_pyarrow", lambda: (_FakePA, _FakePQ))
+    path = tmp_path / "summary.parquet"
+    old = build_summary_row(_execution(), model_config=_model(), run_id="old-run")
+    for field in (
+        "kl_ref_to_stego_mean_bits",
+        "kl_ref_to_stego_max_bits",
+        "kl_ref_to_stego_infinite_steps",
+        "kl_stego_to_ref_mean_bits",
+        "kl_stego_to_ref_max_bits",
+        "kl_stego_to_ref_infinite_steps",
+    ):
+        old.pop(field)
+    path.write_text(json.dumps([old]), encoding="utf-8")
+
+    new = build_summary_row(_execution(), model_config=_model(), run_id="new-run")
+    update_summary_parquet(path, new)
+    stored = {row["run_id"]: row for row in json.loads(path.read_text(encoding="utf-8"))}
+    assert stored["old-run"]["kl_ref_to_stego_mean_bits"] == old["kl_mean_bits"]
+    assert stored["old-run"]["kl_ref_to_stego_max_bits"] == old["kl_max_bits"]
+    assert stored["old-run"]["kl_stego_to_ref_mean_bits"] is None
+    assert stored["old-run"]["kl_stego_to_ref_max_bits"] is None
+    assert stored["new-run"]["kl_stego_to_ref_mean_bits"] == 0.5
 
 
 def test_summary_backend_error_is_explicit(monkeypatch) -> None:

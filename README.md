@@ -303,3 +303,7 @@ python scripts/run_experiment.py configs/experiments/stage2_bins.example.json
 per-run файлов без обновления общей таблицы — `--skip-summary-parquet`. Storage и
 формирование trace выполняются после измеряемых encode/decode sections и не
 входят в performance metrics.
+
+## Stage 3 Step 3.12: matched author vs normalized
+
+The reproducibility branch now includes a frozen 32-pair differential protocol for Bins, Huffman and Arithmetic Coding. It reuses committed author-compatible Figure-3 records and reruns only the normalized side with the same GPT-2 Medium revision, frozen contexts, secret streams and pairwise carrier lengths. The normalized metric/storage layer persists both ADR-0012 KL directions explicitly. See `docs/stages/stage3/matched_author_normalized.md`.

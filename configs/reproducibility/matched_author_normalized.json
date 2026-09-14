@@ -1,0 +1,79 @@
+{
+  "schema_version": "stage3.matched_author_normalized.v1",
+  "status": "frozen_before_run",
+  "purpose": "Step 3.12 paired differential comparison of author-compatible and normalized Bins/Huffman/Arithmetic under the same GPT-2 Medium contexts, secret streams, and carrier lengths.",
+  "model_id": "gpt2-medium",
+  "model_revision": "6dcaa7a952f72f9298047fd5137cd6e4f05f41da",
+  "reference_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+  "context_manifest_path": "results/stage3/paper_reproduction/cnndm_context_manifest.json",
+  "context_manifest_sha256": "cc25b492b26e102496137bc2f8eb78320c7f7768d83ff7e10af9b2e04a14aebc",
+  "local_context_text_path": "data/stage3/cnndm/generated_contexts.jsonl",
+  "figure3_summary_path": "results/stage3/paper_reproduction/figure3_full/summary.json",
+  "contexts": {
+    "selection_ranks": [0, 1, 2, 3, 4, 5, 6, 7],
+    "replicate": 0,
+    "note": "The first eight frozen CNN/DailyMail contexts and Figure-3 replicate 0 are reused exactly from Steps 3.9-3.11."
+  },
+  "secret_stream": {
+    "generator_id": "paper_sentence_sha256_bitstream_v1",
+    "seed": 1234,
+    "replicate": 0,
+    "bit_count": 16384,
+    "note": "Each normalized pair reuses the exact deterministic bit stream already recorded on the author side for the same selection rank."
+  },
+  "carrier_alignment": {
+    "rule": "normalized_fixed_tokens_equal_author_sentence_tokens",
+    "normalized_sentence_stopping": false,
+    "reason": "Carrier length is held equal within each pair so sentence-termination behavior is not conflated with method-normalization effects."
+  },
+  "normalized_policy": {
+    "top_p": 1.0,
+    "exclude_special_tokens": true,
+    "common_top_k": null,
+    "special_token_policy": "canonical normalized GPT-2 special-token exclusion; do not inject author-only token-628 masking",
+    "kl_policy": "persist both D_KL(P_reference||Q_stego) and D_KL(Q_stego||P_reference) without smoothing"
+  },
+  "points": [
+    {
+      "id": "bins_b3",
+      "method_id": "bins",
+      "author_shard": "results/stage3/paper_reproduction/figure3_full/shards/bins_b3/replicate_0.jsonl",
+      "method_config": {"block_size": 3},
+      "generation_policy": {"temperature": 1.0, "top_k": null, "top_p": 1.0, "exclude_special_tokens": true},
+      "method_random_seed": 3,
+      "normalization_note": "The normalized Bins partition is built over V_allowed with an isolated Python RNG stream. It intentionally does not copy the author's global NumPy shuffle semantics."
+    },
+    {
+      "id": "huffman_e3",
+      "method_id": "huffman",
+      "author_shard": "results/stage3/paper_reproduction/figure3_full/shards/huffman_e3/replicate_0.jsonl",
+      "method_config": {"bits_per_word": 3},
+      "generation_policy": {"temperature": 1.0, "top_k": null, "top_p": 1.0, "exclude_special_tokens": true},
+      "method_random_seed": null
+    },
+    {
+      "id": "arithmetic_t0.9_k300",
+      "method_id": "arithmetic_coding",
+      "author_shard": "results/stage3/paper_reproduction/figure3_full/shards/arithmetic_t0.9_k300/replicate_0.jsonl",
+      "method_config": {"precision": 26, "top_k": 300},
+      "generation_policy": {"temperature": 0.9, "top_k": null, "top_p": 1.0, "exclude_special_tokens": true},
+      "method_random_seed": null
+    },
+    {
+      "id": "arithmetic_t1.0_k50256",
+      "method_id": "arithmetic_coding",
+      "author_shard": "results/stage3/paper_reproduction/figure3_full/shards/arithmetic_t1.0_k50256/replicate_0.jsonl",
+      "method_config": {"precision": 26, "top_k": 50256},
+      "generation_policy": {"temperature": 1.0, "top_k": null, "top_p": 1.0, "exclude_special_tokens": true},
+      "method_random_seed": null
+    }
+  ],
+  "execution": {
+    "expected_pair_count": 32,
+    "require_normalized_exact_token_id_decode": true,
+    "metric_closeness_is_gate": false,
+    "token_sequence_parity_is_gate": false,
+    "scientific_closeness_evaluated_in_this_step": false,
+    "output_directory": "results/stage3/matched_author_normalized"
+  }
+}

@@ -182,3 +182,16 @@ ADR-0012 отдельно фиксирует, что на Этапе 3 для в
 - `src/vkr_benchmark/runner/experiment.py` — формирование итогового набора метрик запуска.
 
 Связанные архитектурные решения: ADR-0010, ADR-0011, ADR-0012 и ADR-0013 в `docs/decisions/`.
+
+## 8. Direction-qualified KL fields (Stage 3 / ADR-0012)
+
+Начиная со Step 3.12 normalized metric layer вычисляет обе KL-дивергенции на каждом шаге, если `Q_stego` доступно:
+
+```text
+kl_ref_to_stego_* = D_KL(P_reference || Q_stego)
+kl_stego_to_ref_* = D_KL(Q_stego || P_reference)
+```
+
+Обе величины считаются без epsilon smoothing. Поэтому любое направление может быть `+inf` при соответствующем support mismatch. TVD остаётся отдельной симметричной конечной метрикой.
+
+Для обратной совместимости historical generic fields `kl_mean_bits`, `kl_max_bits`, `kl_infinite_steps` и связанные агрегаты по-прежнему означают **только** `P_reference -> Q_stego`. Они не должны использоваться как синоним author-compatible KL. Новые `result.json`, trace и `summary.parquet` дополнительно записывают direction-qualified fields. При миграции старой summary row legacy KL переносится в `kl_ref_to_stego_*`, а `kl_stego_to_ref_*` остаётся `null`, если ранее не вычислялось.

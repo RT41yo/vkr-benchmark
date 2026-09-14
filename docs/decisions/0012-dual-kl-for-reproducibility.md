@@ -186,3 +186,9 @@ KL_{bits} = \frac{KL_{nats}}{\ln 2}.
 > **Author-result reproducibility:** рассчитывать также `D_KL(Q_stego || P_reference)` и сравнивать с исходной работой в авторских единицах и режиме агрегации.
 
 Оба направления должны существовать параллельно и никогда не смешиваться в одном поле `KL`.
+
+## Статус реализации в Step 3.12
+
+Перед matched author-vs-normalized сравнением ADR реализован в normalized metric/storage layer. Per-step trace и run-level storage теперь имеют direction-qualified поля для обоих направлений. Старые `kl_*` поля сохранены только как compatibility aliases для `P_reference -> Q_stego`; при чтении historical `summary.parquet` это направление может быть восстановлено из legacy fields, а отсутствующий historical `Q_stego -> P_reference` сохраняется как `null` и не выдумывается.
+
+Step 3.12 использует `kl_stego_to_ref_*` как direction-matched diagnostic рядом с author KL и одновременно сохраняет benchmark-native `kl_ref_to_stego_*`. Numerical closeness не является execution gate; соответствие и причины расхождений классифицируются в Step 3.13.
