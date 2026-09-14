@@ -1,0 +1,288 @@
+{
+  "schema_version": "stage3.conformance_analysis_result.v1",
+  "step": "3.13",
+  "input_pair_count": 32,
+  "exact_normalized_decode_count": 32,
+  "carrier_lengths_matched": true,
+  "same_secret_stream_verified": true,
+  "point_results": [
+    {
+      "point_id": "bins_b3",
+      "statistics": {
+        "pair_count": 8,
+        "capacity": {
+          "author_mean_bits_per_token": 3.0,
+          "normalized_mean_bits_per_token": 3.0,
+          "mean_delta_normalized_minus_author": 0.0,
+          "mean_absolute_pair_delta": 0.0,
+          "max_absolute_pair_delta": 0.0,
+          "relative_mean_delta": 0.0,
+          "delta_standard_error": 0.0
+        },
+        "reverse_kl": {
+          "author_mean_bits": 2.6983503759127765,
+          "normalized_mean_bits": 2.9011158730317903,
+          "mean_delta_normalized_minus_author_bits": 0.20276549711901387,
+          "mean_absolute_pair_delta_bits": 0.4631042802055509,
+          "max_absolute_pair_delta_bits": 0.7567254181537324,
+          "relative_mean_delta": 0.07514424328620553,
+          "delta_standard_error_bits": 0.1819328062353984,
+          "reference_semantics_exactly_matched": false
+        },
+        "normalized_tvd": {
+          "mean": 0.6946210418022846,
+          "median": 0.6870542517040799,
+          "max": 0.7511850486286507
+        },
+        "token_sequence": {
+          "exact_pair_count": 0,
+          "non_exact_pair_count": 8,
+          "mean_agreement_rate": 0.003205128205128205,
+          "median_agreement_rate": 0.0
+        },
+        "benchmark_native_kl": {
+          "infinite_pair_count": 8,
+          "pair_count": 8
+        },
+        "exact_sequence_subgroup": {
+          "pair_count": 0,
+          "mean_capacity_delta": null,
+          "max_absolute_capacity_delta": null,
+          "mean_reverse_kl_delta_bits": null,
+          "max_absolute_reverse_kl_delta_bits": null
+        }
+      },
+      "classification": {
+        "status": "core_principle_preserved_expected_partition_divergence",
+        "core_principle_preserved": true,
+        "token_sequence_parity_expected": false,
+        "primary_evidence": [
+          "capacity is exactly 3 bits/token in all 8 matched pairs",
+          "normalized token-ID decode is exact in all 8 pairs",
+          "0/8 exact token sequences and near-zero token agreement are expected because the normalized partition is intentionally different"
+        ],
+        "attribution": [
+          "different partition domain: normalized V_allowed vs author full vocabulary",
+          "different partition RNG ownership: MethodRandomSource vs author global NumPy shuffle",
+          "canonical P_reference/special-token policy changes representative selection"
+        ],
+        "unresolved": []
+      }
+    },
+    {
+      "point_id": "huffman_e3",
+      "statistics": {
+        "pair_count": 8,
+        "capacity": {
+          "author_mean_bits_per_token": 2.4727715831022654,
+          "normalized_mean_bits_per_token": 2.5138060658608863,
+          "mean_delta_normalized_minus_author": 0.04103448275862076,
+          "mean_absolute_pair_delta": 0.07103448275862068,
+          "max_absolute_pair_delta": 0.44827586206896575,
+          "relative_mean_delta": 0.016594530218250178,
+          "delta_standard_error": 0.06004174415585703
+        },
+        "reverse_kl": {
+          "author_mean_bits": 1.0641614050423798,
+          "normalized_mean_bits": 1.1043868033467699,
+          "mean_delta_normalized_minus_author_bits": 0.040225398304389995,
+          "mean_absolute_pair_delta_bits": 0.040418274531620654,
+          "max_absolute_pair_delta_bits": 0.26403133883943974,
+          "relative_mean_delta": 0.03780009133369024,
+          "delta_standard_error_bits": 0.03267901786487,
+          "reference_semantics_exactly_matched": false
+        },
+        "normalized_tvd": {
+          "mean": 0.39699737120375567,
+          "median": 0.3972898032984612,
+          "max": 0.46488586590893216
+        },
+        "token_sequence": {
+          "exact_pair_count": 6,
+          "non_exact_pair_count": 2,
+          "mean_agreement_rate": 0.7593103448275862,
+          "median_agreement_rate": 1.0
+        },
+        "benchmark_native_kl": {
+          "infinite_pair_count": 8,
+          "pair_count": 8
+        },
+        "exact_sequence_subgroup": {
+          "pair_count": 6,
+          "mean_capacity_delta": 0.0,
+          "max_absolute_capacity_delta": 0.0,
+          "mean_reverse_kl_delta_bits": 0.000453626590836161,
+          "max_absolute_reverse_kl_delta_bits": 0.0014941489277222608
+        }
+      },
+      "classification": {
+        "status": "strong_conformance_with_localized_candidate_tree_divergence",
+        "core_principle_preserved": true,
+        "token_sequence_parity_expected": false,
+        "primary_evidence": [
+          "6/8 pairs are exact token-for-token",
+          "all exact-sequence pairs have identical capacity",
+          "exact-sequence reverse-KL differences are tiny and arise from reference-policy/numerical bookkeeping rather than different emitted tokens",
+          "normalized token-ID decode is exact in all 8 pairs"
+        ],
+        "attribution": [
+          "the two divergent pairs differ from the first token, localizing the discrepancy to initial candidate/tree construction rather than accumulated decoder drift",
+          "normalized candidate support does not inject the author-only token-628 mask",
+          "normalized Huffman specifies deterministic exact-tie ordering absent from the author heap contract"
+        ],
+        "unresolved": [
+          "stored Step-3.12 artifacts do not contain per-step candidate lists, so the two divergent initial trees cannot be attributed uniquely to token-628 candidate membership versus an exact-tie/numerical ordering event"
+        ]
+      }
+    },
+    {
+      "point_id": "arithmetic_t0.9_k300",
+      "statistics": {
+        "pair_count": 8,
+        "capacity": {
+          "author_mean_bits_per_token": 2.9338099763608483,
+          "normalized_mean_bits_per_token": 3.0579965819064654,
+          "mean_delta_normalized_minus_author": 0.12418660554561711,
+          "mean_absolute_pair_delta": 0.3898116055456171,
+          "max_absolute_pair_delta": 1.25,
+          "relative_mean_delta": 0.04232946460276901,
+          "delta_standard_error": 0.20052719983333156
+        },
+        "reverse_kl": {
+          "author_mean_bits": 0.10320195514758104,
+          "normalized_mean_bits": 0.04781966245974401,
+          "mean_delta_normalized_minus_author_bits": -0.05538229268783704,
+          "mean_absolute_pair_delta_bits": 0.05538229268783704,
+          "max_absolute_pair_delta_bits": 0.09034360379748674,
+          "relative_mean_delta": -0.5366399561775661,
+          "delta_standard_error_bits": 0.010508184906528491,
+          "reference_semantics_exactly_matched": false
+        },
+        "normalized_tvd": {
+          "mean": 0.03146033077469861,
+          "median": 0.03396541440784859,
+          "max": 0.055371087629396444
+        },
+        "token_sequence": {
+          "exact_pair_count": 0,
+          "non_exact_pair_count": 8,
+          "mean_agreement_rate": 0.151602031689241,
+          "median_agreement_rate": 0.15192307692307694
+        },
+        "benchmark_native_kl": {
+          "infinite_pair_count": 8,
+          "pair_count": 8
+        },
+        "exact_sequence_subgroup": {
+          "pair_count": 0,
+          "mean_capacity_delta": null,
+          "max_absolute_capacity_delta": null,
+          "mean_reverse_kl_delta_bits": null,
+          "max_absolute_reverse_kl_delta_bits": null
+        }
+      },
+      "classification": {
+        "status": "core_principle_preserved_with_expected_reference_and_numeric_divergence",
+        "core_principle_preserved": true,
+        "token_sequence_parity_expected": false,
+        "primary_evidence": [
+          "normalized token-ID decode is exact in all 8 pairs",
+          "mean capacity remains in the same operating region despite pairwise divergence",
+          "all runs use the same precision=26 finite-interval mechanism and method top-k=300",
+          "short common prefixes followed by divergence are consistent with Arithmetic Coding sensitivity to small probability-boundary changes"
+        ],
+        "attribution": [
+          "normalized canonical P_reference applies temperature before the method and stores FP32 probabilities",
+          "author Arithmetic promotes sorted logits to FP64 before temperature softmax",
+          "normalized special-token policy does not inject the author-only token-628 mask",
+          "the compared reverse-KL directions match, but the references do not: author KL is against untempered LM probabilities while normalized reverse KL is against canonical temperature=0.9 P_reference"
+        ],
+        "unresolved": [
+          "the observed reverse-KL delta at tau=0.9 is not a pure implementation-error signal because its reference distributions are intentionally different"
+        ]
+      }
+    },
+    {
+      "point_id": "arithmetic_t1.0_k50256",
+      "statistics": {
+        "pair_count": 8,
+        "capacity": {
+          "author_mean_bits_per_token": 4.677326293044934,
+          "normalized_mean_bits_per_token": 4.59381327586467,
+          "mean_delta_normalized_minus_author": -0.08351301718026449,
+          "mean_absolute_pair_delta": 0.852958844291597,
+          "max_absolute_pair_delta": 1.6428571428571432,
+          "relative_mean_delta": -0.01785486236109848,
+          "delta_standard_error": 0.3704988068382266
+        },
+        "reverse_kl": {
+          "author_mean_bits": 0.0006054808828769408,
+          "normalized_mean_bits": 0.0005416945021433429,
+          "mean_delta_normalized_minus_author_bits": -6.378638073359788e-05,
+          "mean_absolute_pair_delta_bits": 0.00020345433228376056,
+          "max_absolute_pair_delta_bits": 0.000537440007838611,
+          "relative_mean_delta": -0.10534829841450498,
+          "delta_standard_error_bits": 9.437278838386459e-05,
+          "reference_semantics_exactly_matched": false
+        },
+        "normalized_tvd": {
+          "mean": 0.00047962984044275865,
+          "median": 0.00047243132700574626,
+          "max": 0.0008133924274092092
+        },
+        "token_sequence": {
+          "exact_pair_count": 0,
+          "non_exact_pair_count": 8,
+          "mean_agreement_rate": 0.07967679533010544,
+          "median_agreement_rate": 0.0757142857142857
+        },
+        "benchmark_native_kl": {
+          "infinite_pair_count": 8,
+          "pair_count": 8
+        },
+        "exact_sequence_subgroup": {
+          "pair_count": 0,
+          "mean_capacity_delta": null,
+          "max_absolute_capacity_delta": null,
+          "mean_reverse_kl_delta_bits": null,
+          "max_absolute_reverse_kl_delta_bits": null
+        }
+      },
+      "classification": {
+        "status": "strong_distributional_conformance_with_sequence_sensitivity",
+        "core_principle_preserved": true,
+        "token_sequence_parity_expected": false,
+        "primary_evidence": [
+          "normalized token-ID decode is exact in all 8 pairs",
+          "mean capacity differs only modestly in aggregate",
+          "direction-matched reverse KL remains near zero on both sides",
+          "normalized TVD is near zero, supporting preservation of the near-unmodified distributional regime"
+        ],
+        "attribution": [
+          "finite-precision Arithmetic Coding is highly sequence-sensitive to small probability and support differences",
+          "normalized canonical probabilities are FP32 before integer-width construction, whereas the author temperature softmax is evaluated after FP64 promotion",
+          "normalized special-token policy does not inject the author-only token-628 mask"
+        ],
+        "unresolved": [
+          "low token parity is not evidence of algorithmic non-conformance because tiny interval-boundary changes can alter subsequent Arithmetic states while preserving aggregate distributional behavior"
+        ]
+      }
+    }
+  ],
+  "cross_method_findings": {
+    "core_principle_preserved_for_all_representative_points": true,
+    "exact_token_sequence_parity_is_not_a_valid_cross_method_conformance_requirement": true,
+    "benchmark_native_kl_infinite_pairs": 32,
+    "benchmark_native_kl_pair_count": 32,
+    "benchmark_native_kl_interpretation": "D_KL(P_reference || Q_stego) is a strict support-mismatch diagnostic. For these sparse induced Q distributions it is +inf in every matched run, so it must not be used alone as a finite ranking scalar across these methods.",
+    "recommended_v1_metric_reading": "retain kl_ref_to_stego and its infinite-step count without smoothing; report finite kl_stego_to_ref and TVD alongside it for comparative distortion"
+  },
+  "overall_classification": "normalized_adaptations_preserve_core_method_behavior_with_documented_normalization_divergences",
+  "scientific_limitations": [
+    "only four representative points and eight contexts per point are used in this matched diagnostic",
+    "no post-hoc numerical closeness threshold is introduced",
+    "Huffman divergent initial trees cannot be uniquely attributed without per-step candidate-list traces",
+    "tau=0.9 author and normalized reverse KL use different reference-policy semantics despite matching KL direction"
+  ],
+  "ready_for_step_3_14_finalization": true
+}

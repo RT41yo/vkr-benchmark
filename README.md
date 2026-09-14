@@ -307,3 +307,7 @@ per-run файлов без обновления общей таблицы — `
 ## Stage 3 Step 3.12: matched author vs normalized
 
 The reproducibility branch now includes a frozen 32-pair differential protocol for Bins, Huffman and Arithmetic Coding. It reuses committed author-compatible Figure-3 records and reruns only the normalized side with the same GPT-2 Medium revision, frozen contexts, secret streams and pairwise carrier lengths. The normalized metric/storage layer persists both ADR-0012 KL directions explicitly. See `docs/stages/stage3/matched_author_normalized.md`.
+
+## Stage 3 Step 3.13: conformance/discrepancy analysis
+
+The frozen 32-pair matched evidence is now interpreted without rerunning the LM. All four representative points preserve the defining method mechanism, while token-level divergence is attributed to documented normalization boundaries (Bins partition/RNG, canonical candidate/support policy, deterministic Huffman ties, and Arithmetic probability/numerical pipeline). Benchmark-native `D_KL(P_reference || Q_stego)` is `+inf` in 32/32 normalized matched runs and is therefore retained as a strict support diagnostic rather than used alone as a finite ranking scalar. See `docs/stages/stage3/conformance_analysis.md`.

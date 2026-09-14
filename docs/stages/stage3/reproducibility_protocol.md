@@ -758,3 +758,20 @@ The normalized side retains its own semantics. Canonical `P_reference` is built 
 ADR-0012 is implemented as a hard measurement requirement before this comparison: normalized runs persist both `D_KL(P_reference || Q_stego)` (`kl_ref_to_stego_*`) and `D_KL(Q_stego || P_reference)` (`kl_stego_to_ref_*`). The latter is direction-matched to the author KL and is the primary paired distortion diagnostic; the benchmark-native direction remains first-class and may legitimately be `+inf`. For `tau != 1`, the author paper metric and normalized reverse KL still differ in their exact reference-policy semantics because normalized `P_reference` includes the canonical temperature policy. That residual is intentional and belongs to Step 3.13 discrepancy attribution, not to a hidden compatibility patch.
 
 Step-3.12 hard gates are execution/conformance only: 32/32 pairs present, exact secret-stream pairing, equal carrier lengths, exact normalized token-ID decoder recovery, pinned model revision, and explicit accounting for both KL directions. Exact token-sequence parity and numerical closeness are diagnostics, not gates. Step 3.12 records the paired evidence; Step 3.13 decides what differences mean.
+
+## Step 3.13 — conformance/discrepancy analysis
+
+Step 3.13 интерпретирует frozen 32-pair output Step 3.12 без нового LM run и без post-hoc numerical pass/fail tolerance. Conformance определяется как сохранение defining embedding/decoding mechanism; exact token parity не является общей целью normalized benchmark, поскольку normalization намеренно меняет policy/RNG/masking/numerical boundaries.
+
+Результат representative matched analysis:
+
+```text
+Bins b=3                    -> core principle preserved; partition identity diverges by design
+Huffman e=3                 -> strong conformance; 6/8 exact token sequences, 2 localized initial-tree divergences
+Arithmetic tau=.9,k=300     -> core principle preserved with expected reference/numerical sensitivity
+Arithmetic tau=1,k=50256    -> strong distributional conformance with sequence sensitivity
+```
+
+Все 32 normalized runs имеют `D_KL(P_reference || Q_stego)=+inf` из-за support mismatch. Это фиксируется как строгий support diagnostic, а не numerical error. Для будущей specification v1.0 рекомендуется сохранять forward KL без smoothing вместе с finite reverse KL и TVD; frozen v0.1 контракт на этом шаге не переписывается.
+
+Подробности и attribution matrix: `docs/stages/stage3/conformance_analysis.md`. Следующий gate — Step 3.14 final reproducibility report / Stage-3 closeout.

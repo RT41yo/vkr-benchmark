@@ -1,0 +1,51 @@
+{
+  "schema_version": "stage3.conformance_analysis.v1",
+  "step": "3.13",
+  "inputs": {
+    "matched_summary": "results/stage3/matched_author_normalized/summary.json",
+    "paired_comparison": "results/stage3/matched_author_normalized/paired_comparison.csv",
+    "matched_records": "results/stage3/matched_author_normalized/records.jsonl",
+    "figure3_interpretation": "results/stage3/paper_reproduction/figure3_full/interpretation.json"
+  },
+  "expected": {
+    "pair_count": 32,
+    "pairs_per_point": 8,
+    "point_ids": [
+      "bins_b3",
+      "huffman_e3",
+      "arithmetic_t0.9_k300",
+      "arithmetic_t1.0_k50256"
+    ]
+  },
+  "classification_policy": {
+    "numeric_thresholds_are_gates": false,
+    "token_parity_is_required_for_core_conformance": false,
+    "exact_decode_is_required": true,
+    "carrier_alignment_is_required": true,
+    "same_secret_stream_is_required": true,
+    "principle_conformance_definition": "The normalized adapter preserves the method's defining embedding/decoding mechanism while benchmark-owned policy, RNG, masking, numerical pipeline, transport and metrics may differ by design.",
+    "note": "Step 3.13 is an evidence-based discrepancy attribution over the frozen Step-3.12 pairs. It does not introduce post-hoc numerical pass/fail tolerances."
+  },
+  "known_normalization_differences": {
+    "common": [
+      "canonical P_reference and deterministic token ordering",
+      "normalized special-token policy excludes GPT-2 EOT but does not inject the author-only token-628 mask",
+      "token-ID decode is evaluated without author BPE-repair heuristics",
+      "fixed matched carrier length replaces historical sentence termination for this differential experiment"
+    ],
+    "bins": [
+      "partition is built over normalized V_allowed rather than the full author vocabulary",
+      "partition shuffle uses benchmark-owned MethodRandomSource instead of author global NumPy RNG"
+    ],
+    "huffman": [
+      "candidate set comes from canonical P_reference",
+      "exact tree-weight ties use deterministic (weight, min_token_id_in_subtree) ordering rather than author heap behavior"
+    ],
+    "arithmetic": [
+      "temperature is applied by the canonical P_reference builder rather than inside the method",
+      "canonical probabilities are FP32 before the Arithmetic adapter copies them to FP64 for integer-width construction",
+      "author arithmetic computes its temperature softmax after promoting sorted logits to FP64",
+      "normalized special-token policy does not reproduce the author-only token-628 mask"
+    ]
+  }
+}

@@ -192,3 +192,9 @@ KL_{bits} = \frac{KL_{nats}}{\ln 2}.
 Перед matched author-vs-normalized сравнением ADR реализован в normalized metric/storage layer. Per-step trace и run-level storage теперь имеют direction-qualified поля для обоих направлений. Старые `kl_*` поля сохранены только как compatibility aliases для `P_reference -> Q_stego`; при чтении historical `summary.parquet` это направление может быть восстановлено из legacy fields, а отсутствующий historical `Q_stego -> P_reference` сохраняется как `null` и не выдумывается.
 
 Step 3.12 использует `kl_stego_to_ref_*` как direction-matched diagnostic рядом с author KL и одновременно сохраняет benchmark-native `kl_ref_to_stego_*`. Numerical closeness не является execution gate; соответствие и причины расхождений классифицируются в Step 3.13.
+
+## Наблюдение Step 3.13
+
+Matched author-vs-normalized experiment дал `D_KL(P_reference || Q_stego)=+inf` во всех 32/32 normalized runs Bins/Huffman/Arithmetic representative points. Это подтверждает исходную мотивацию ADR: forward direction является строгим support-mismatch diagnostic и для sparse `Q_stego` может насыщаться бесконечностью, не предоставляя конечного ранжирования между runs.
+
+Решение ADR не меняется и smoothing не добавляется. Для specification v1.0 рекомендуется рассматривать вместе три complementary сигнала: `kl_ref_to_stego` + infinite-step count как support diagnostic, конечный `kl_stego_to_ref` как author-compatible/comparative direction и TVD как конечную companion metric. Формальное изменение benchmark specification выполняется только отдельным решением после завершения Stage 3.
