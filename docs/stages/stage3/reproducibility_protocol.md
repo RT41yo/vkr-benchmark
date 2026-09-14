@@ -723,3 +723,26 @@ Step 3.10 имеет только execution/conformance gates: completeness, pay
 ### Step 3.10e: modern GPT-2 cache-axis compatibility for long Arithmetic sentences
 
 Full Figure-3 sweep выявил, что pinned `utils.limit_past` переносит historical stacked-cache slice на modern tuple cache без смены оси. Для author-compatible Arithmetic full-run разрешён узкий repository-owned compatibility shim: modern `[batch, heads, sequence, head_dim]` key/value tensors обрезаются до последних 1022 элементов по `sequence`. Это восстанавливает намерение historical sliding-cache helper, не изменяя probabilities, Arithmetic interval logic, sentence predicate, payload accounting или normalized benchmark. Step-3.9 paper-sentence core не редактируется; факт использования shim и число cache trims сохраняются в result diagnostics.
+
+
+## Step 3.11 — paper-level Figure-3 interpretation
+
+После завершения Step 3.10 scientific claims статьи оцениваются отдельно от execution gate. Интерпретация читает только committed `figure3_points.csv`, `summary.json` и frozen precision-probe interpretation; LM повторно не запускается. Paper Figure 3 не оцифровывается постфактум: поскольку публикация не предоставляет machine-readable координаты, exact Figure-3 sample count или original MC driver, curve-level выводы классифицируются по форме/порядку без придуманного numerical tolerance.
+
+Фактический результат Step 3.11:
+
+```text
+Bins high-KL trade-off                         -> trend_reproduction
+Huffman decreasing-KL trade-off               -> trend_reproduction
+Arithmetic minimum near 4 bpw at tau=1.0      -> trend_reproduction
+Arithmetic below Huffman/Bins on common range -> trend_reproduction
+unmodulated near-zero behavior                 -> partial_reproduction
+exact 4e-8-nat paper anchor at public p=26     -> not_reproducible
+exact historical Figure-3 orchestration        -> partial_reproduction
+```
+
+Special `tau=1, k=50256, precision=26` full-sentence sweep gives `KL=0.000665525 bits = 0.000461307 nats`, approximately `11532.7x` the paper prose anchor `4e-8 nats`. Precision probe remains the localized explanation: clean p26 steps stay far above the anchor, while clean p40 reaches `~2.92e-8 nats`; this is evidence of finite-precision sensitivity, **not** evidence that the authors used p40.
+
+Overall Step-3.11 classification is `partial_reproduction`: the characteristic Figure-3 curves and comparative ordering are reproduced, while the exact special-point anchor and exact historical MC orchestration are not. Detailed evidence is in `docs/stages/stage3/figure3_interpretation.md` and machine-readable outputs under `results/stage3/paper_reproduction/figure3_full/`.
+
+Next gate: Step 3.12 matched author-compatible vs normalized comparison. Before running it, verify that the normalized metric layer persists both KL directions from ADR-0012 rather than comparing author `D_KL(Q_stego || P_reference)` to benchmark-native `D_KL(P_reference || Q_stego)` as if they were the same metric.

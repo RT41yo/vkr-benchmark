@@ -1,6 +1,6 @@
 # Этап 3 — Step 3.10: полный author-compatible Figure-3 sweep
 
-**Статус:** runner и протокол заморожены до первого полного запуска.  
+**Статус:** полный sweep завершён; execution baseline зафиксирован commit `01244d2`.  
 **Предусловие:** Step 3.9 прошёл локальный gate `READY FOR FULL FIGURE-3 RUNNER IMPLEMENTATION`.
 
 ## 1. Зачем нужен этот шаг
@@ -360,3 +360,8 @@ Bins/Huffman уже завершены и не пересчитываются. �
 Для каждой точки summary обязан хранить `scheduled_run_count`, `terminated_sentence_run_count`, `termination_failure_count`, `termination_success_rate`. Если failures существуют, Figure-3 mean/SE являются **conditional estimates over successfully terminated sentences**; это условие обязательно переносится в Step 3.11 и итоговый reproducibility report.
 
 Эта поправка не меняет frozen 23-point matrix, GPT-2 Medium, contexts, replicates, secret streams, Arithmetic token selection, boundary predicate, KL semantics или normalized benchmark. Она фиксирует недокументированный крайний случай публичной author-compatible orchestration вместо попытки скрыть его более высоким лимитом.
+
+
+## 14. Completion note
+
+Step 3.10 завершён: `5520/5520` scheduled outcomes сохранены, `23/23` points агрегированы, Step-3.9 continuity пройдена, pinned reference worktree остался неизменным. Из 5520 outcomes 5513 завершились sentence boundary; 7 Arithmetic outcomes классифицированы как `sentence_termination_failure`. Научная интерпретация этих результатов вынесена в отдельный Step 3.11 и находится в `docs/stages/stage3/figure3_interpretation.md`.

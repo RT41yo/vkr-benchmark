@@ -1,0 +1,40 @@
+{
+  "schema_version": "stage3.figure3_interpretation_config.v1",
+  "baseline_commit": "01244d2",
+  "paper": {
+    "citation": "Ziegler, Deng, Rush (2019), Neural Linguistic Steganography, EMNLP-IJCNLP 2019, pp. 1210-1215",
+    "doi": "10.18653/v1/D19-1115",
+    "url": "https://aclanthology.org/D19-1115/",
+    "figure": 3,
+    "reported_unmodulated_kl_nats": 4e-8,
+    "reported_arithmetic_minimum_description": "minimum KL around 4 bits/word with temperature=1.0",
+    "figure3_caption_semantics": "mean and standard error for repeated samples with a fixed tuning parameter"
+  },
+  "inputs": {
+    "figure3_points_csv": "results/stage3/paper_reproduction/figure3_full/figure3_points.csv",
+    "figure3_summary_json": "results/stage3/paper_reproduction/figure3_full/summary.json",
+    "precision_interpretation_json": "results/stage3/paper_reproduction/arithmetic_precision_probe/interpretation.json"
+  },
+  "outputs": {
+    "interpretation_json": "results/stage3/paper_reproduction/figure3_full/interpretation.json",
+    "claim_assessment_csv": "results/stage3/paper_reproduction/figure3_full/claim_assessment.csv",
+    "figure_svg": "results/stage3/paper_reproduction/figure3_full/figure3_reproduction.svg"
+  },
+  "policy": {
+    "allowed_reproduction_statuses": [
+      "exact_implementation_reproduction",
+      "numerical_reproduction",
+      "trend_reproduction",
+      "partial_reproduction",
+      "not_reproducible"
+    ],
+    "paper_curve_coordinates_are_not_digitized": true,
+    "reason_no_curve_numerical_tolerance": "The paper does not publish a machine-readable Figure-3 point table or the original Monte-Carlo driver/sample count. Step 3.11 therefore classifies curve-level claims by trend and ordering rather than inventing a post-hoc numerical tolerance.",
+    "special_point_anchor_is_exact_paper_text_claim": true,
+    "dominance_check": {
+      "kind": "piecewise_linear_mean_curve",
+      "grid_points": 1001,
+      "note": "Diagnostic only: compare reproduced mean curves on their common bits/word interval; no paper coordinates are inferred."
+    }
+  }
+}

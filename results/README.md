@@ -29,4 +29,4 @@ README and `runs/.gitkeep` remain tracked.
 
 ## Stage 3 Figure-3 full reproduction
 
-`results/stage3/paper_reproduction/figure3_full/` is reserved for the Step-3.10 author-compatible sweep. Successful execution produces 69 point/replicate JSONL shards (23 points × 3 replicates, 80 contexts each), plus `run_state.json`, `summary.json`, and `figure3_points.csv`. Incomplete `*.tmp` and failed diagnostic shards are not successful benchmark artifacts.
+`results/stage3/paper_reproduction/figure3_full/` contains the completed Step-3.10 author-compatible sweep: 69 point/replicate JSONL shards (23 points × 3 replicates, 80 contexts each), `run_state.json`, `summary.json`, and `figure3_points.csv`. Step 3.11 adds `interpretation.json`, `claim_assessment.csv`, and `figure3_reproduction.svg`; these are deterministic analysis artifacts generated from the completed sweep and the frozen precision-probe interpretation. Incomplete `*.tmp` and failed diagnostic shards are not successful benchmark artifacts.
