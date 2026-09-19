@@ -1,812 +1,244 @@
-# Этап 3: протокол проверки воспроизводимости базовых методов
+# Этап 3 — протокол проверки воспроизводимости базовых методов
 
-**Статус:** рабочий протокол Этапа 3.  
-**Исходная точка:** benchmark v0.2, commit `967cc597f07aa7f575e4e08b75da0ba9b8dc1995`.  
-**Рабочая ветка:** `stage3-reproducibility` (создаётся локально пользователем).
+## 1. Назначение протокола
 
-Назначение документа — до начала численных экспериментов зафиксировать, что именно считается авторским эталоном, какие режимы сравнения используются и какие сведения необходимо сохранять для объяснения расхождений. Этап 3 не заменяет нормализованные реализации Этапа 2 авторским кодом.
+Цель этапа 3 — проверить воспроизводимость базовых методов Bins, Huffman и Arithmetic Coding и убедиться, что их адаптация к архитектуре нашего бенчмарка не изменила основную логику работы.
 
-## 1. Цель Этапа 3
+Этап 3 не заменяет normalized-реализации авторским кодом. Авторская реализация используется только как эталон для проверки воспроизводимости и соответствия.
 
-Для Bins, Huffman и Arithmetic Coding необходимо:
+---
 
-1. запустить исходную или максимально близкую к авторской реализацию;
-2. воспроизвести характерные результаты публикаций или, если точная цифра недостижима, характерные зависимости;
-3. проверить, что перенос методов в общую инфраструктуру не изменил их принципиальное поведение;
-4. локализовать и документировать причины расхождений.
+## 2. Что именно проверяется
 
-Результат Этапа 3 — не новое ранжирование методов, а **проверка воспроизводимости и соответствия адаптаций**.
+Для каждого базового метода необходимо ответить на четыре вопроса:
 
-## 2. Зафиксированный executable reference
+1. Запускается ли исходная или максимально близкая к авторской реализация.
+2. Воспроизводятся ли характерные результаты публикации.
+3. Сохраняется ли основная логика метода после адаптации к normalized-архитектуре.
+4. Если результаты различаются, можно ли объяснить причину расхождения.
 
-Для всех трёх базовых методов используется один программный эталон:
+Итог этапа — не новое ранжирование методов, а проверка корректности их воспроизведения и адаптации.
 
-```text
-repository: https://github.com/harvardnlp/NeuralSteganography
-commit: 14e982564aeaf9a33f7b4de440deda2184d17f12
-role: algorithm_reference
-```
+---
 
-Эта ссылка уже зафиксирована в `reference/reference_sources.json`.
+## 3. Авторский эталон
 
-Файлы reference implementation:
+Для всех трёх методов используется зафиксированный репозиторий Harvard NLP:
 
-- Bins: `block_baseline.py`;
-- Huffman: `huffman_baseline.py` + `huffman.py`;
-- Arithmetic Coding: `arithmetic.py`;
-- общая загрузка модели и метрики: `utils.py`;
-- минимальный ручной запуск: `run_single.py`.
+`harvardnlp/NeuralSteganography`
 
-Историческое происхождение методов при этом различается:
+Commit:
 
-- Bins — Fang et al.;
-- Huffman — Yang et al. / RNN-Stega;
-- Arithmetic Coding — Ziegler et al.
+`14e982564aeaf9a33f7b4de440deda2184d17f12`
 
-Для численного сравнения трёх методов в общей GPT-2 среде основным executable reference является именно код Harvard NLP, использованный Ziegler et al. как общая реализационная база.
+Основные файлы:
 
-## 3. Два экспериментальных режима
+- Bins — `block_baseline.py`;
+- Huffman — `huffman_baseline.py` и `huffman.py`;
+- Arithmetic Coding — `arithmetic.py`;
+- общие вспомогательные функции — `utils.py`;
+- одиночный пример запуска — `run_single.py`.
 
-### 3.1. `normalized`
+Исходный код хранится во внешнем каталоге и не изменяется. При необходимости совместимости с современными версиями библиотек изменения выполняются только во внешнем compatibility-слое нашего проекта.
 
-Это существующий контур benchmark v0.2:
+---
 
-```text
-LM -> canonical P_reference -> normalized method adapter -> common metrics/storage
-```
-
-Здесь сохраняются все решения Этапа 2: единое допустимое пространство токенов, общий `P_reference`, единый текстовый transport, общая семантика payload и общий metric layer.
-
-### 3.2. `author-compatible`
-
-Этот контур нужен только для воспроизведения reference implementation / paper result. В нём допускаются особенности исходного Harvard-кода, если они являются частью воспроизводимого результата, например:
-
-- GPT-2-специфичная обработка токенов;
-- авторские `temperature` и `top-k`;
-- исходное разбиение Bins;
-- исходное построение Huffman tree;
-- конечная точность Arithmetic Coding и его rounding logic;
-- author-specific final flush;
-- BPE repair;
-- авторское направление и агрегирование KL.
-
-Эти особенности **не должны незаметно переноситься** в `src/vkr_benchmark/methods/*` и изменять семантику normalized benchmark.
-
-## 4. Роли языковых моделей
-
-### 4.1. `gpt2` — технический smoke-test
-
-Первый запуск pinned reference code выполняется на GPT-2 Small (`gpt2`). Это лёгкая техническая проверка того, что Harvard-код запускается в нашем современном окружении. Она сама по себе не считается воспроизведением чисел статьи.
-
-### 4.2. `gpt2-medium` — paper-compatible исторический профиль
-
-Для воспроизведения характерных результатов Ziegler et al. используется GPT-2 Medium (345M), поскольку именно medium-модель использовалась в экспериментах статьи.
-
-### 4.3. Llama/Qwen — normalized benchmark
-
-Модели Этапа 2 остаются без изменения:
-
-- Llama-3.2-3B — основная современная модель;
-- Qwen3-4B-Base — резервная.
-
-GPT-2 не заменяет их в основном benchmark: она добавляется только как историческая модель author-compatible контура.
-
-## 5. Политика окружения
-
-На первом проходе отдельное legacy-окружение не создаётся. Pinned Harvard reference сначала проверяется в текущем окружении benchmark v0.2:
-
-```text
-Python 3.12.x
-PyTorch 2.7.1
-Transformers 4.52.4
-Tokenizers 0.21.x
-NumPy 2.0.x
-```
-
-Reference commit Harvard NLP уже адаптирован к современному стеку. Для него дополнительно требуется `bitarray==3.4.2`; эта зависимость оформляется отдельным optional extra `reference`, чтобы не смешивать её с обязательными зависимостями normalized benchmark.
-
-Отдельное legacy environment создаётся только если будет показано, что современный стек не позволяет воспроизвести существенное поведение reference code. В таком случае точные версии и причина перехода фиксируются как отдельный источник расхождения.
-
-## 6. Внешний checkout reference code
-
-Исходный Harvard repository не копируется в `src/vkr_benchmark` и не коммитится внутрь нашего репозитория. Рекомендуемое локальное размещение:
-
-```text
-vkr-benchmark/
-  external/
-    NeuralSteganography/
-```
-
-Каталог `external/` игнорируется Git. Проверяемый checkout обязан находиться на commit:
-
-```text
-14e982564aeaf9a33f7b4de440deda2184d17f12
-```
-
-До первого smoke-run не вносятся исправления в reference algorithm: сначала необходимо сохранить исходный факт запуска или ошибку.
-
-## 7. KL на Этапе 3
-
-Согласно ADR-0012 параллельно используются два направления.
-
-### Benchmark-native
-
-```text
-D_KL(P_reference || Q_stego)
-```
-
-Правила benchmark v0.2 сохраняются: единицы — bits/token, epsilon smoothing отсутствует, support mismatch может законно давать `+inf`.
+## 4. Два режима работы
 
 ### Author-compatible
 
-```text
-D_KL(Q_stego || P_reference)
-```
+Используется для воспроизведения поведения исходного кода и результатов статьи.
 
-Именно это направление необходимо для сопоставления с Harvard implementation / Ziegler. Направление, единицы и способ агрегирования всегда записываются явно. Не допускается неоднозначное поле просто `KL` после введения Stage-3 result schema.
+В этом режиме сохраняются особенности авторской реализации, например:
+
+- авторские параметры `temperature`, `top-k` и `precision`;
+- исходное разбиение Bins;
+- исходное построение дерева Huffman;
+- finite-precision логика Arithmetic Coding;
+- авторские правила завершения и декодирования;
+- направление KL, использованное авторами.
+
+### Normalized
+
+Используется основной контур нашего бенчмарка:
+
+`LM -> P_reference -> normalized method -> common metrics/storage`
+
+Здесь действуют решения этапа 2:
+
+- единое допустимое пространство токенов;
+- единый `P_reference`;
+- общая политика генерации;
+- общий текстовый канал;
+- единый расчёт метрик;
+- единый формат хранения результатов.
+
+Авторские особенности не должны незаметно переноситься в normalized-реализации.
+
+---
+
+## 5. Языковые модели
+
+Для технической проверки исходного кода используется GPT-2 Small.
+
+Для воспроизведения Figure 3 используется **GPT-2 Medium (345M)**, поскольку именно эта модель указана в статье Ziegler et al.
+
+Llama-3.2-3B и Qwen3-4B-Base остаются моделями основного normalized-бенчмарка и не заменяются GPT-2.
+
+---
+
+## 6. Общая последовательность проверки
+
+Проверка выполняется поэтапно.
+
+### Шаг 1. Технический запуск исходного кода
+
+Сначала для Bins, Huffman и Arithmetic Coding выполняются короткие smoke-тесты на GPT-2 Small.
+
+Задача этих запусков — убедиться, что:
+
+- зафиксированный авторский код работает в современном окружении;
+- секрет корректно встраивается и восстанавливается;
+- исходный внешний репозиторий остаётся неизменным;
+- все compatibility-проблемы фиксируются отдельно.
+
+### Шаг 2. Подготовка условий для Figure 3
+
+Для paper-level эксперимента фиксируются:
+
+- GPT-2 Medium и её revision;
+- CNN/DailyMail;
+- правило формирования контекста;
+- набор экспериментальных точек;
+- способ формирования секретной последовательности;
+- правило остановки на первой границе предложения.
+
+Поскольку статья не публикует точный batch driver, dataset split и число Monte-Carlo повторов, эти решения явно документируются как наша репликация, а не как известные параметры исходного эксперимента.
+
+### Шаг 3. Полный Figure 3 sweep
+
+Проверяются 23 экспериментальные точки:
+
+- Bins: `b = 1..5`;
+- Huffman: `2^1..2^8` кандидатов;
+- Arithmetic Coding: `temperature = 0.4..1.2`, `top-k = 300`;
+- специальная точка Arithmetic Coding: `temperature = 1.0`, `top-k = 50256`.
+
+Используется 80 контекстов и 3 повтора на каждую точку.
+
+Итого:
+
+`23 × 80 × 3 = 5520 запусков`
+
+Основная задача — воспроизвести форму кривых Figure 3 и сравнительный порядок методов.
+
+### Шаг 4. Анализ расхождений
+
+Отдельно проверяются причины расхождений с публикацией.
+
+Особое внимание уделяется специальной точке Arithmetic Coding, для которой значение KL сильно зависит от `precision`.
+
+Такие расхождения не исправляются постфактум подбором параметров. Они фиксируются как отдельный результат анализа.
+
+### Шаг 5. Сравнение author-compatible и normalized
+
+Для проверки адаптации выбираются четыре контрольные точки:
+
+- Bins `b=3`;
+- Huffman `e=3`;
+- Arithmetic Coding `temperature=0.9`, `top-k=300`;
+- Arithmetic Coding `temperature=1.0`, `top-k=50256`.
+
+Для каждой точки выполняется по 8 сопоставленных запусков.
+
+В каждой паре должны совпадать:
+
+- модель;
+- контекст;
+- секретная последовательность;
+- длина стеготекста.
+
+Точное совпадение token IDs между author-compatible и normalized версиями не является обязательным. Основной критерий — сохранение принципа встраивания и корректное восстановление секрета.
+
+---
+
+## 7. KL на этапе 3
+
+Используются два направления KL.
+
+### Benchmark-native
+
+`D_KL(P_reference || Q_stego)`
+
+Эта метрика сохраняется как строгая диагностика потери support. Для некоторых методов она может законно принимать значение `+inf`.
+
+### Author-compatible
+
+`D_KL(Q_stego || P_reference)`
+
+Это направление используется для сопоставления с авторской реализацией и Figure 3.
+
+Оба направления хранятся отдельно и не смешиваются в одном поле `KL`.
+
+Дополнительно используется TVD как конечная мера различия распределений.
+
+---
 
 ## 8. Уровни воспроизводимости
 
-Для каждого проверяемого результата фиксируется один из статусов:
+Для каждого результата используется одна из следующих оценок:
 
-1. **exact implementation reproduction** — совпадают дискретные внутренние решения/токены при одинаковом входе;
-2. **numerical reproduction** — метрика совпадает с reference/paper в заранее обоснованной погрешности;
-3. **trend reproduction** — точная цифра недоступна, но воспроизводится опубликованная зависимость или относительный порядок;
-4. **partial reproduction** — воспроизведена часть результата, оставшееся расхождение локализовано;
-5. **not reproducible** — результат не воспроизведён, причина или ограничение явно зафиксированы.
+- **точное воспроизведение** — совпадают внутренние решения или токены;
+- **численное воспроизведение** — совпадает значение метрики в обоснованной погрешности;
+- **воспроизведение тенденции** — совпадает форма зависимости или порядок методов;
+- **частичное воспроизведение** — основная часть результата подтверждена, но остаются объяснимые расхождения;
+- **не воспроизведено** — результат не удалось подтвердить.
 
-Настройки нельзя подбирать постфактум только ради совпадения с опубликованной цифрой без основания в paper/code.
+Параметры нельзя изменять постфактум только ради совпадения с опубликованным числом.
 
-## 9. Что фиксируется для author-compatible запуска
+---
 
-Минимальный provenance:
+## 9. Что обязательно сохраняется
 
-- reference repository и commit;
-- benchmark commit;
-- Python/PyTorch/Transformers/Tokenizers/NumPy/bitarray versions;
-- CUDA и GPU;
-- model ID и revision, если она доступна;
-- dataset/context/preprocessing;
-- способ получения секретной последовательности;
+Для author-compatible запусков фиксируются:
+
+- repository и commit исходной реализации;
+- версия нашего benchmark;
+- версии Python, PyTorch, Transformers и других ключевых библиотек;
+- GPU и CUDA;
+- model ID и revision;
+- источник контекста;
 - параметры метода;
-- `temperature`, `top-k`, `top-p` и candidate truncation;
-- precision/rounding для Arithmetic Coding;
-- BPE repair и termination/final-flush policy;
+- `temperature`, `top-k`, `top-p`;
+- `precision` для Arithmetic Coding;
 - направление и единицы KL;
-- способ агрегации;
-- target из reference code / paper;
-- фактический результат;
-- абсолютное/относительное расхождение;
-- классификация причины расхождения.
+- результат запуска;
+- расхождение с целевым значением;
+- причина расхождения, если она известна.
 
-## 10. Первый технический gate
+Это необходимо, чтобы любой существенный результат можно было объяснить и повторить.
 
-До paper-level воспроизведения необходимо пройти reference smoke gate:
+---
 
-1. checkout `harvardnlp/NeuralSteganography@14e982...`;
-2. использовать текущее Stage-2 environment;
-3. установить optional dependency `reference`;
-4. проверить окружение скриптом `scripts/check_stage3_reference_env.py`;
-5. загрузить `gpt2`;
-6. выполнить короткий encode/decode smoke для Bins;
-7. выполнить короткий encode/decode smoke для Huffman;
-8. выполнить короткий encode/decode smoke для Arithmetic Coding;
-9. сохранить версии окружения, stdout/stderr и все предупреждения;
-10. только после фиксации исходного поведения при необходимости вводить compatibility patches/harness.
+## 10. Критерий завершения этапа
 
-Следующий шаг после этого документа — **реальный smoke-run pinned Harvard reference**, начиная с Bins.
+Этап 3 считается завершённым, если:
 
-## 11. Первый исполняемый smoke: Bins на GPT-2 Small
+- технические smoke-тесты Bins, Huffman и Arithmetic Coding пройдены;
+- полный Figure 3 sweep выполнен;
+- основные тенденции публикации проанализированы;
+- расхождения зафиксированы, а не скрыты;
+- выполнено matched-сравнение author-compatible и normalized версий;
+- подтверждено сохранение основного принципа работы всех трёх методов;
+- итоговый отчёт и машиночитаемые результаты сформированы;
+- автоматическая проверка готовности проходит успешно.
 
-После успешного environment/provenance gate первый исполняемый author-compatible тест выполняется отдельно для Bins.
+Итоговая проверка:
 
-Зафиксированная конфигурация находится в:
+`python scripts/check_stage3_readiness.py --run-tests`
 
-```text
-configs/reproducibility/author_bins_gpt2_smoke.json
-```
+Ожидаемый результат:
 
-Запуск выполняется только через внешний pinned checkout:
+`Stage 3 reproducibility readiness: READY`
 
-```text
-scripts/run_stage3_author_bins_smoke.py
-    -> external/NeuralSteganography@14e982...
-    -> utils.get_model(model_name="gpt2")
-    -> block_baseline.get_bins
-    -> block_baseline.encode_block
-    -> text transport
-    -> block_baseline.decode_block
-```
-
-Reference-файлы при этом не редактируются. Runner до и после исполнения проверяет `git status --porcelain` внешнего checkout и запрещает запись Python bytecode внутрь него.
-
-Для smoke используется `block_size = 3` и 24-битная последовательность:
-
-```text
-000 100 010 110 001 101 011 111
-```
-
-В реализации Harvard `bits2int` интерпретирует первый бит блока как младший. Поэтому эти восемь трёхбитных групп соответствуют индексам bins `0, 1, 2, 3, 4, 5, 6, 7` и за один короткий прогон упражняют все восемь bins.
-
-Секрет сразу задаётся битовой последовательностью. На этом smoke шаге намеренно не используется предварительное преобразование естественно-языкового сообщения в uniform bits через Arithmetic Coding из `run_single.py`, потому что цель — изолированно проверить исполняемость и encode/decode поведение Bins.
-
-Результаты сохраняются в:
-
-```text
-results/stage3/author_smoke/bins_gpt2/
-  result.json
-  stegotext.txt
-  token_ids.json
-```
-
-Авторский KL сохраняется только с явным направлением:
-
-```text
-kl_q_stego_to_p_lm_bits_author
-```
-
-то есть как авторская величина `D_KL(Q_stego || P_LM)` в битах. Она не подменяет benchmark-native `D_KL(P_reference || Q_stego)`.
-
-Успешный технический smoke требует одновременно:
-
-- pinned reference HEAD совпадает с `14e982...`;
-- Bins encode завершается без изменения reference code;
-- декодирование из обычного текста восстанавливает весь 24-битный payload;
-- внешний reference worktree после запуска имеет то же состояние, что до запуска.
-
-Совпадение sender token IDs с повторной токенизацией текста сохраняется как отдельная диагностика. Оно не является самостоятельным критерием ошибки, если author BPE repair корректно восстанавливает payload из текста.
-
-
-## 12. Runtime compatibility finding: GPT2TokenizerFast
-
-Первый raw author-reference запуск Bins на современном окружении завершился до encode с ошибкой:
-
-```text
-AttributeError: GPT2TokenizerFast has no attribute encoder
-```
-
-Это не изменение алгоритма Bins и не основание переходить на отдельное legacy-окружение. Причина локализована на границе API tokenizer: pinned Harvard code напрямую использует `enc.encoder` и `enc.decoder`, тогда как `AutoTokenizer.from_pretrained("gpt2")` в Transformers 4.52 по умолчанию возвращает `GPT2TokenizerFast`, не имеющий ожидаемого публичного `encoder`-атрибута.
-
-Для следующей попытки вводится внешний compatibility profile `hf_4_52_legacy_api`, реализованный только в benchmark runner. Он:
-
-- принудительно вызывает `AutoTokenizer.from_pretrained(..., use_fast=False)`, получая slow `GPT2Tokenizer` с историческими `encoder`/`decoder`;
-- адаптирует legacy-вызов модели `past=` к современному `past_key_values=`;
-- запрашивает `return_dict=False`, чтобы reference code продолжал получать `(logits, past)`;
-- не изменяет файлы `external/NeuralSteganography`;
-- не меняет logits, Bins partition, выбор токена, payload или BPE repair.
-
-Исходный raw failure сохраняется как отдельное evidence (`raw_reference_failure.json`) перед compatibility rerun. Если после API-моста возникает следующая несовместимость, она также фиксируется до расширения compatibility layer.
-
-## 13. Runtime compatibility finding: legacy GPT-2 cache shape
-
-После устранения tokenizer/API keyword mismatch второй запуск дошёл до полного Bins encode и остановился уже в `decode_block` на проверке:
-
-```text
-if past and past[0].shape[3] >= 1023:
-```
-
-с ошибкой:
-
-```text
-AttributeError: 'tuple' object has no attribute 'shape'
-```
-
-Причина — различие представления GPT-2 KV cache. Pinned Harvard decoder ожидает историческое представление каждого слоя как одного stacked tensor с первой осью `key/value`, тогда как Transformers 4.52 возвращает каждый слой как пару `(key, value)`.
-
-Compatibility profile `hf_4_52_legacy_api` поэтому расширяется representation-only мостом:
-
-```text
-reference side:
-layer cache = Tensor[2, batch, heads, seq, head_dim]
-
-          <->
-
-Transformers 4.52 side:
-layer cache = (key[batch, heads, seq, head_dim],
-               value[batch, heads, seq, head_dim])
-```
-
-Перед современным model call stacked tensor разбирается обратно в `(key, value)`. После model call пара снова складывается в historical representation. Значения key/value не пересчитываются и не изменяются; преобразуется только контейнер/форма представления на границе API.
-
-Это позволяет оставить `external/NeuralSteganography` неизменённым и, в частности, не патчить строку `past[0].shape[3]` в `decode_block`.
-
-Второй runtime failure сохраняется отдельно как:
-
-```text
-results/stage3/author_smoke/bins_gpt2/compat_cache_shape_failure.json
-```
-
-Первый tokenizer failure продолжает храниться в `raw_reference_failure.json`. Таким образом, успешный последующий run не уничтожает историю обнаруженных compatibility barriers.
-
-## 14. Закрытие Bins smoke и следующий smoke: Huffman
-
-Третий Bins-запуск после введения полного `hf_4_52_legacy_api` compatibility bridge завершился успешно. На GPT-2 Small при `block_size = 3` исходный 24-битный payload был встроен в 8 токенов и полностью восстановлен после обычного текстового канала. В зафиксированном запуске также совпали sender и retokenized token IDs, а внешний checkout `NeuralSteganography@14e982...` остался неизменным.
-
-Успешный Bins result и два предшествующих compatibility failure сохраняются в `results/stage3/author_smoke/bins_gpt2/`. Эти результаты означают, что отдельное legacy Python/PyTorch environment пока не требуется: для Bins достаточно representation/API bridge вокруг неизменённого reference code.
-
-Следующий технический smoke выполняется для Harvard Huffman implementation:
-
-```text
-configs/reproducibility/author_huffman_gpt2_smoke.json
-scripts/run_stage3_author_huffman_smoke.py
-    -> external/NeuralSteganography@14e982...
-    -> utils.get_model(model_name="gpt2")
-    -> huffman_baseline.encode_huffman
-    -> ordinary text transport
-    -> huffman_baseline.decode_huffman
-```
-
-Для сопоставимости используются те же GPT-2 Small, seed, Washington-context и 24-битный direct binary payload, что и в Bins smoke. Авторский параметр `bits_per_word = 3` в Huffman-коде задаёт не фиксированные 3 payload bits/token, а размер candidate pool:
-
-```text
-2^3 = 8 top-probability candidate tokens
-```
-
-После получения восьми кандидатов reference implementation строит Huffman tree заново на каждом carrier step. Длины кодов переменные, поэтому фактическое число считанных секретных битов на токен также переменное.
-
-Есть ещё одна важная особенность исходного encoder: если секрет заканчивается до достижения листа последнего Huffman codeword, reference code продолжает идти по левым (`0`) рёбрам до листа. Поэтому короткий smoke может фактически считать несколько несуществующих trailing zero bits. Runner не считает их полезным payload и отдельно сохраняет:
-
-- `author_bits_consumed` — сколько битов фактически прошло через author traversal;
-- `implicit_zero_padding_bits` — разницу между этим числом и длиной заданного payload;
-- `payload_bits_per_token_smoke` — полезные 24 бита, делённые на число carrier tokens;
-- `bits_per_word_author` — обратную величину к author `words_per_bit`, то есть исходную метрику кода, которая для короткого сообщения может включать terminal zero padding.
-
-Критерий успешного Huffman smoke — восстановление **всего исходного 24-битного payload как префикса** декодированной последовательности после текстового канала и неизменность reference worktree. Дополнительные биты после payload сохраняются диагностически и ожидаются нулевыми, если они возникли только из-за завершения последнего codeword.
-
-Как и для Bins, авторский KL сохраняется явно как:
-
-```text
-kl_q_stego_to_p_lm_bits_author
-```
-
-то есть `D_KL(Q_stego || P_LM)` в битах. Он не подменяет benchmark-native `D_KL(P_reference || Q_stego)`.
-
-## 15. Закрытие Huffman smoke и следующий smoke: Arithmetic Coding
-
-Author-compatible Huffman smoke на GPT-2 Small завершился успешно. При `bits_per_word = 3` (candidate pool из `2^3 = 8` токенов) исходный 24-битный payload был встроен в 8 carrier tokens и полностью восстановлен после обычного текстового канала. В конкретном smoke авторский encoder фактически потребил ровно 24 бита, поэтому terminal zero padding не понадобился. Sender и retokenized token IDs совпали, а внешний checkout `NeuralSteganography@14e982...` остался неизменным.
-
-Зафиксированные значения этого технического запуска:
-
-```text
-payload bits:                         24
-carrier tokens:                       8
-payload bits/token:                   3.0
-PPL_author:                           18.035587623700636
-KL_author Q_stego || P_LM [bits]:     1.0004528872668743
-```
-
-Это не означает, что Huffman имеет фиксированную скорость 3 bit/token: в исходном методе длины кодов зависят от построенного на каждом шаге дерева. Значение 3.0 относится только к данному короткому smoke.
-
-Третий исполняемый reference smoke выполняется для Harvard Arithmetic Coding:
-
-```text
-configs/reproducibility/author_arithmetic_gpt2_smoke.json
-scripts/run_stage3_author_arithmetic_smoke.py
-    -> external/NeuralSteganography@14e982...
-    -> utils.get_model(model_name="gpt2")
-    -> arithmetic.encode_arithmetic
-    -> ordinary text transport
-    -> arithmetic.decode_arithmetic
-```
-
-Для сопоставимости сохраняются те же GPT-2 Small, seed, Washington-context и 24-битный direct binary payload. Параметры Arithmetic Coding берутся из default-конфигурации pinned `run_single.py`:
-
-```text
-temperature = 0.9
-precision   = 26
-topk        = 300
-finish_sent = false
-```
-
-В отличие от Bins и Huffman, pinned `arithmetic.py` уже обновлён под современный Transformers API: он импортирует `DynamicCache` и вызывает модель через `past_key_values`. Поэтому Arithmetic smoke намеренно **не** использует `LegacyCausalLMAdapter` и **не** принуждает slow tokenizer. Модель и tokenizer загружаются через `utils.get_model` ровно так, как предусмотрено pinned reference. Это позволяет сначала проверить нативную исполняемость актуального Harvard Arithmetic-кода без дополнительного compatibility вмешательства.
-
-### 15.1. Две разные вероятностные величины внутри author Arithmetic
-
-При `temperature != 1` исходный код использует разные распределения для кодирования и для author NLL/KL:
-
-```text
-logits
-  |
-  +-- softmax(logits / temperature)
-  |      -> cutoff по 1 / текущая_ширина_интервала
-  |      -> top-k cap
-  |      -> integer rounding
-  |      -> Q_stego для Arithmetic Coding
-  |
-  +-- log_softmax(logits)
-         -> untempered P_LM
-         -> author NLL
-         -> author KL(Q_stego || P_LM)
-```
-
-Поэтому smoke сохраняет KL под максимально явным именем:
-
-```text
-kl_q_stego_to_p_lm_untempered_bits_author
-```
-
-Эта величина не является benchmark-native `D_KL(P_reference || Q_stego)` и не должна с ним смешиваться.
-
-Возвращаемая `encode_arithmetic` величина `Hq` также сохраняется отдельно как:
-
-```text
-avg_entropy_p_tau_bits_author_helper
-```
-
-поскольку reference `utils.entropy` уже переводит натуральные логарифмы в биты. На smoke-этапе сохраняется непосредственно значение, возвращённое helper, без дополнительной конверсии.
-
-### 15.2. Precision lookahead и author final flush
-
-Arithmetic encoder работает с `precision`-битным окном секрета. Если до конца payload остаётся меньше `precision` бит, окно дополняется нулями. При последнем carrier token число подтверждённых общих старших битов может оказаться больше числа оставшихся полезных payload bits. Поэтому runner разделяет:
-
-- `secret_bit_count` — полезные 24 бита;
-- `author_bits_consumed` — число битов, которое следует из author `words_per_bit` и числа carrier tokens;
-- `implicit_zero_lookahead_bits` — сколько нулей сверх полезного payload было фактически подтверждено из padded lookahead.
-
-Decoder имеет отдельную author-specific termination policy. Для всех промежуточных carrier tokens он выдаёт только уже однозначно зафиксированный prefix, но на **последнем** carrier token выполняет flush полного `precision`-битного нижнего края финального интервала. Поэтому decoded stream может быть длиннее `author_bits_consumed`.
-
-Runner отдельно сохраняет:
-
-- `recovered_lookahead_padding_bits` — часть после payload, но внутри author-consumed prefix;
-- `lookahead_padding_is_zero` — проверку ожидаемого zero padding;
-- `decoder_flush_extra_bits` — хвост, добавленный именно final flush сверх author-consumed prefix;
-- `decoder_flush_extra_bit_count`;
-- `decoder_flush_within_precision_bound` — sanity-check, что дополнительный flush не превышает `precision` бит.
-
-Критерий успешного Arithmetic smoke:
-
-1. весь исходный 24-битный payload восстановлен как точный prefix;
-2. подтверждённый encoder-ом lookahead сверх payload состоит из ожидаемых нулей;
-3. final-flush tail укладывается в `precision`-битную границу;
-4. внешний reference worktree не изменён.
-
-Как и для двух предыдущих методов, совпадение sender token IDs с повторной токенизацией текста сохраняется отдельно. Если оно нарушится, это не автоматически означает failure при условии, что author decoder/BPE repair корректно восстановит payload.
-
-## 16. Закрытие технического smoke-gate и фиксация paper-level matrix
-
-Author-compatible Arithmetic Coding smoke на GPT-2 Small завершился успешно. При `temperature=0.9`, `precision=26`, `topk=300` исходный 24-битный payload был встроен в 17 carrier tokens и полностью восстановлен после ordinary-text transport. Sender и retokenized token IDs совпали; внешний checkout `NeuralSteganography@14e982...` остался неизменным.
-
-Arithmetic smoke дополнительно подтвердил две важные source-specific semantics:
-
-```text
-useful payload bits:          24
-author bits consumed:         48
-implicit zero lookahead:      24
-decoder final-flush extra:     1
-```
-
-Поэтому `bits_per_word_author` и benchmark payload BPT не отождествляются. Первый следует внутреннему author accounting, второй использует только полезный payload.
-
-После этого технический reference smoke gate считается закрытым:
-
-```text
-Bins        PASS
-Huffman     PASS
-Arithmetic  PASS
-```
-
-Следующий подэтап переводит работу от единичной исполняемости к paper-level воспроизводимости. До загрузки GPT-2 Medium и массовых запусков фиксируется отдельная матрица:
-
-```text
-configs/reproducibility/paper_reproduction_matrix.json
-docs/stages/stage3/paper_reproduction_matrix.md
-scripts/check_stage3_paper_matrix.py
-```
-
-Основной paper target — Figure 3 Ziegler et al. (2019): зависимость `D_KL(q || p_LM)` от bits/word на GPT-2 345M и CNN/DailyMail.
-
-Матрица заранее замораживает 23 информационно-теоретические точки:
-
-```text
-Bins:        block exponent 1..5                         = 5
-Huffman:     candidate-pool exponent 1..8                = 8
-Arithmetic:  temperature 0.4..1.2 by 0.1, topk=300       = 9
-Arithmetic:  temperature=1.0, topk=50256 special point   = 1
-                                                               --
-                                                               23
-```
-
-Primary reproduction targets:
-
-1. Arithmetic имеет меньший author-compatible KL, чем Block/Huffman, в перекрывающемся диапазоне примерно 1–5 bits/word;
-2. `temperature=1, topk=50256` даёт near-zero KL;
-3. минимум KL Arithmetic находится примерно около 4 bits/word при `temperature≈1`.
-
-Для paper-compatible KL сохраняется направление `Q_stego || P_LM`. Отдельно фиксируется unit inconsistency источника: ось Figure 3 подписана `KL (bits)`, pinned Harvard `utils.kl()` возвращает bits, но prose статьи сообщает специальную величину `4e-8 nats`. Ни одна из единиц не заменяется другой неявно.
-
-Paper-level full sweep пока **не запускается**. Перед pilot необходимо зафиксировать конкретный доступный CNN/DailyMail artifact/revision, split/checksum и deterministic sentence segmentation. Это отдельный gate, поскольку статья задаёт dataset и правило «первые три предложения», но не современный идентификатор ревизии набора данных.
-
-После pinning dataset следующий запуск — короткий GPT-2 Medium pilot на 8 contexts. Только после него запускается полная frozen matrix.
-
-## 17. Pin CNN/DailyMail и deterministic context set
-
-Перед GPT-2 Medium pilot разрешается dataset blocker, заранее отмеченный в frozen paper-reproduction matrix. Первичный paper source задаёт CNN/DailyMail и правило «первые три предложения», но не фиксирует современный artifact/revision и не сообщает train/validation/test split. Поэтому exact historical input snapshot не считается известным.
-
-Stage-3 operationalization фиксируется отдельно в:
-
-```text
-configs/reproducibility/cnndm_context_source.json
-docs/stages/stage3/cnndm_context_pin.md
-```
-
-Pinned source:
-
-```text
-abisee/cnn_dailymail@3adf6249f0cc8409a97a4d38471529ef5f7dc496
-config: 3.0.0
-split: test
-artifact: 3.0.0/test-00000-of-00001.parquet
-SHA-256: 04e322d2634a96dba76bf9a6294fbbe48e0b36abeae43f13d86ba2c3bebffe4e
-rows: 11490
-```
-
-Выбор `test` является нашей доэкспериментальной operationalization, а не приписывается статье. Frozen Step-3.5 matrix при этом остаётся byte-for-byte неизменной; её SHA-256 проверяется dataset gate.
-
-Для выбора contexts используется repository-owned `sha256_rank_v1`: строки ранжируются по SHA-256 от фиксированной строки с `seed=1234`, после чего принимаются первые 80 записей, для которых splitter `stage3_news_sentence_splitter_v1` находит не менее четырёх предложений. Первые три предложения образуют context; четвёртое используется только как human-next-sentence diagnostic. Первые 8 accepted records образуют pilot subset.
-
-В Git не сохраняются Parquet и тексты новостей. Commit-able manifest содержит row/article identifiers, selection digest и hashes контекста/следующего предложения. Полные тексты регенерируются локально из pinned artifact.
-
-Go/no-go команды:
-
-```text
-python scripts/prepare_stage3_cnndm_contexts.py
-python scripts/check_stage3_cnndm_contexts.py
-```
-
-Только после `Stage 3 CNN/DailyMail context gate: READY` разрешается загрузка/запуск paper-level GPT-2 Medium pilot.
-
-## 18. GPT-2 Medium author-compatible pilot на 8 frozen contexts
-
-После успешного CNN/DailyMail gate разрешается первый paper-level модельный запуск. Он намеренно остаётся **pilot**, а не частью итоговой Figure-3 curve.
-
-Frozen pilot config:
-
-```text
-configs/reproducibility/gpt2_medium_pilot.json
-```
-
-Входы уже не выбираются во время запуска:
-
-```text
-model:       gpt2-medium (GPT-2 345M)
-contexts:    selection_rank 0..7 из frozen CNN/DailyMail manifest
-payload:     24 deterministic bits/context, одинаковые для всех методов
-finish_sent: true
-replicates:  1
-```
-
-Четыре predeclared points:
-
-```text
-Bins b=3
-Huffman exponent=3
-Arithmetic tau=0.9, k=300, precision=26
-Arithmetic tau=1.0, k=50256, precision=26
-```
-
-24-bit payload является только техническим pilot budget. Pinned repository не содержит оригинального Figure-3 batch driver и exact random-message length; поэтому этот budget не выдаётся за paper parameter и не переносится автоматически в full sweep.
-
-Public Harvard `finish_sent=True` завершает предложение greedy top-1 continuation **после** окончания payload. Комментарий в `run_single.py` отдельно предупреждает, что statistics относятся к non-finished/payload prefix. Поэтому runner не смешивает:
-
-```text
-bits_per_word_author_stats_prefix
-useful_payload_bits_per_total_generated_token
-```
-
-Второе поле — только pilot diagnostic. Для paper-compatible curves используется author-compatible definition после отдельной фиксации full-sweep orchestration.
-
-Bins/Huffman продолжают использовать scoped slow-tokenizer + legacy-cache compatibility bridge; reference files не редактируются. Arithmetic идёт через raw GPT-2 Medium и native DynamicCache, как в pinned source.
-
-Pilot gate требует 32/32 успешных calls, exact payload-prefix recovery, sentence-finish на финальном generated token и неизменный reference worktree. Exact sender/retokenized IDs и ранние punctuation tokens сохраняются как diagnostics и не скрываются BPE-repair логикой.
-
-Команды:
-
-```text
-python scripts/run_stage3_gpt2_medium_pilot.py
-python scripts/check_stage3_gpt2_medium_pilot.py
-```
-
-## 19. Targeted investigation после GPT-2 Medium pilot
-
-GPT-2 Medium pilot закрывает technical execution gate, но не разрешает full Figure-3 sweep автоматически. Перед full curve разбираются два наблюдения Step 3.7:
-
-```text
-Arithmetic tau=1, k=50256, precision=26 -> mean author KL ~= 0.46 bits/token,
-хотя paper описывает near-zero unmodulated point;
-
-5/32 fixed-payload runs содержат sentence-finish token раньше финального token.
-```
-
-Для Arithmetic discrepancy замораживается отдельный diagnostic config:
-
-```text
-configs/reproducibility/arithmetic_precision_probe.json
-```
-
-Он не меняет `paper_reproduction_matrix.json`. На тех же 8 contexts и `tau=1, k=50256` сравниваются precision `26, 32, 40, 48` с общим deterministic 256-bit stream/context и `finish_sent=false`. Long payload нужен, чтобы отдельно анализировать steps без implicit zero lookahead.
-
-Repository-owned instrumented mirror обязан сначала воспроизвести pinned executable `arithmetic.encode_arithmetic` на sentinel run по generated token IDs, author KL и words/bit. Только после parity разрешена instrumentation. External checkout не редактируется.
-
-На каждом step записываются current integer interval width/effective precision, threshold, retained support, rounding residual и three-way KL decomposition: exact author distribution, truncation-only distribution и terminal-fill counterfactual. Counterfactuals никогда не используются для generation и не считаются новым методом.
-
-Sentence issue фиксируется отдельным deterministic audit committed Step-3.7 result. Наличие early boundaries показывает, что public `finish_sent=True` означает «исчерпать фиксированный message, затем закончить предложение», а не «остановить embedding на первой sentence boundary». Поэтому final paper-level driver должен быть определён отдельно до full curve.
-
-Go/no-go этого шага:
-
-```text
-python scripts/analyze_stage3_pilot_sentence_shape.py
-python scripts/run_stage3_arithmetic_precision_probe.py
-python scripts/check_stage3_arithmetic_precision_probe.py
-```
-
-`READY FOR REVIEW` означает, что diagnostic достоверно выполнен; это **не** означает автоматическое разрешение full Figure-3 sweep. Разрешение даётся только после интерпретации precision probe и фиксации paper-sentence orchestration.
-
-## 20. Интерпретация Arithmetic precision probe
-
-Step 3.8 завершил диагностическую часть по near-zero special point. Instrumented mirror прошёл exact parity с pinned executable Arithmetic, поэтому выводы не объясняются modern compatibility bridge.
-
-В итоговой интерпретации обязательно различаются:
-
-```text
-mean_run_author_kl_bits
-    = весь finite-message run, включая terminal implicit-zero look-ahead;
-
-mean_zero_padding_free_author_kl_bits
-    = только coding steps с полным look-ahead из реальных secret bits.
-```
-
-Фактические clean значения:
-
-```text
-precision=26 -> 1.0654e-3 bits/token
-precision=32 -> 4.1502e-5 bits/token
-precision=40 -> 4.2183e-8 bits/token
-precision=48 -> 5.7836e-10 bits/token
-```
-
-При этом terminal padding-affected steps дают более 98% summed per-step KL при каждой исследованной precision. Step-3.7 pilot использовал `payload=24` при `precision=26`, следовательно все Arithmetic coding steps этого pilot требовали implicit zero look-ahead. Его `~0.46 bits/token` нельзя использовать как steady-state special-point estimate.
-
-Paper prose anchor `4e-8 nats` всё ещё не считается численно воспроизведённым **при pinned executable precision=26**. Clean precision=40 даёт `~2.92e-8 nats/token`, то есть тот же порядок, но нет оснований утверждать, что Figure 3 использовала precision=40: original batch driver недоступен.
-
-Arithmetic precision discrepancy после этого считается локализованной. Full Figure-3 sweep остаётся заблокирован только до фиксации paper-sentence orchestration: длинный uniform bitstream и stop на первой sentence boundary.
-
-## 21. Paper-sentence orchestration pilot
-
-После Step 3.8 precision discrepancy считается локализованной. Последний pre-sweep blocker — termination semantics. Public `finish_sent=True` нельзя использовать для Figure-3 reproduction, потому что он сначала исчерпывает фиксированный message и только затем greedy-завершает предложение; Step-3.7 audit обнаружил 5/32 early boundaries.
-
-Step 3.9 фиксирует отдельный config:
-
-```text
-configs/reproducibility/paper_sentence_pilot.json
-```
-
-и repository-owned author-compatible mirrors:
-
-```text
-scripts/stage3_paper_sentence_core.py
-scripts/run_stage3_paper_sentence_pilot.py
-scripts/check_stage3_paper_sentence_pilot.py
-```
-
-Measurement rule:
-
-```text
-16384-bit deterministic uniform-looking stream
-        -> embed непрерывно
-        -> после каждого selected token применить pinned utils.is_sent_finish
-        -> STOP сразу на первой boundary
-        -> payload = author-confirmed bits к этой boundary
-```
-
-`16384` bits — implementation buffer, а не paper payload length. Stream exhaustion является hard failure. Для Arithmetic каждый измеряемый step обязан иметь полный реальный `precision`-bit look-ahead; implicit zero padding запрещён.
-
-Поскольку public encoders не имеют first-boundary stop, mirrors допускаются только после fixed-message parity с pinned executable functions. Проверяются exact token IDs и author NLL/KL/words-per-bit для Bins, Huffman и обеих representative Arithmetic points. Mirrors не входят в normalized benchmark и не изменяют external reference checkout.
-
-Pilot использует те же 8 contexts и четыре representative points Step 3.7. Успешный gate требует 4/4 parity, 32/32 first-boundary runs, положительный confirmed payload, exact confirmed-payload prefix recovery через обычный text transport, отсутствие bitstream exhaustion / safety-cap hits / Arithmetic zero padding и unchanged reference worktree.
-
-Только после:
-
-```text
-Stage 3 paper-sentence pilot gate: READY FOR FULL FIGURE-3 RUNNER IMPLEMENTATION
-```
-
-разрешается реализовывать full 23-point Figure-3 runner. Exact historical orchestration всё равно не объявляется доказанным: оригинальный Figure-3 batch driver отсутствует, а first-boundary rule является явно документированной Stage-3 operationalization на основе paper wording и публичного `is_sent_finish` predicate.
-
-## Step 3.10 — полный author-compatible Figure-3 sweep
-
-После успешного Step 3.9 full runner использует неизменённый paper-sentence mirror, pinned GPT-2 Medium reference profile и все 80 frozen CNN/DailyMail contexts. Сетка берётся только из frozen `paper_reproduction_matrix.json`: 5 Bins points, 8 Huffman points, 9 Arithmetic temperature points и 1 special Arithmetic point.
-
-Execution design: `23 points × 80 contexts × 3 replicates = 5520 scheduled runs`. Secret streams парны между всеми points для одинаковой пары `(context, replicate)`. Completed run останавливается на первой boundary по pinned `utils.is_sent_finish`; Arithmetic zero look-ahead запрещён. Если low-temperature Arithmetic исчерпывает финальный adaptive guard 8192 без boundary, scheduled outcome сохраняется как `sentence_termination_failure`, не подменяется искусственной boundary и исключается из sentence-level Figure-3 means. Результаты checkpoint'ятся 69 атомарными shards, поэтому полный запуск resumable.
-
-Step 3.10 имеет только execution/conformance gates: completeness, payload recovery, first-boundary stop, отсутствие Arithmetic zero-padding, continuity с Step 3.9 и неизменность pinned reference checkout. Совпадение Figure-3 scientific claims намеренно не является hard gate. Mean/standard error и собственно paper comparison интерпретируются в Step 3.11.
-
-### Step 3.10e: modern GPT-2 cache-axis compatibility for long Arithmetic sentences
-
-Full Figure-3 sweep выявил, что pinned `utils.limit_past` переносит historical stacked-cache slice на modern tuple cache без смены оси. Для author-compatible Arithmetic full-run разрешён узкий repository-owned compatibility shim: modern `[batch, heads, sequence, head_dim]` key/value tensors обрезаются до последних 1022 элементов по `sequence`. Это восстанавливает намерение historical sliding-cache helper, не изменяя probabilities, Arithmetic interval logic, sentence predicate, payload accounting или normalized benchmark. Step-3.9 paper-sentence core не редактируется; факт использования shim и число cache trims сохраняются в result diagnostics.
-
-
-## Step 3.11 — paper-level Figure-3 interpretation
-
-После завершения Step 3.10 scientific claims статьи оцениваются отдельно от execution gate. Интерпретация читает только committed `figure3_points.csv`, `summary.json` и frozen precision-probe interpretation; LM повторно не запускается. Paper Figure 3 не оцифровывается постфактум: поскольку публикация не предоставляет machine-readable координаты, exact Figure-3 sample count или original MC driver, curve-level выводы классифицируются по форме/порядку без придуманного numerical tolerance.
-
-Фактический результат Step 3.11:
-
-```text
-Bins high-KL trade-off                         -> trend_reproduction
-Huffman decreasing-KL trade-off               -> trend_reproduction
-Arithmetic minimum near 4 bpw at tau=1.0      -> trend_reproduction
-Arithmetic below Huffman/Bins on common range -> trend_reproduction
-unmodulated near-zero behavior                 -> partial_reproduction
-exact 4e-8-nat paper anchor at public p=26     -> not_reproducible
-exact historical Figure-3 orchestration        -> partial_reproduction
-```
-
-Special `tau=1, k=50256, precision=26` full-sentence sweep gives `KL=0.000665525 bits = 0.000461307 nats`, approximately `11532.7x` the paper prose anchor `4e-8 nats`. Precision probe remains the localized explanation: clean p26 steps stay far above the anchor, while clean p40 reaches `~2.92e-8 nats`; this is evidence of finite-precision sensitivity, **not** evidence that the authors used p40.
-
-Overall Step-3.11 classification is `partial_reproduction`: the characteristic Figure-3 curves and comparative ordering are reproduced, while the exact special-point anchor and exact historical MC orchestration are not. Detailed evidence is in `docs/stages/stage3/figure3_interpretation.md` and machine-readable outputs under `results/stage3/paper_reproduction/figure3_full/`.
-
-Next gate: Step 3.12 matched author-compatible vs normalized comparison. Before running it, verify that the normalized metric layer persists both KL directions from ADR-0012 rather than comparing author `D_KL(Q_stego || P_reference)` to benchmark-native `D_KL(P_reference || Q_stego)` as if they were the same metric.
-
-## Step 3.12 — matched author-compatible vs normalized comparison
-
-Step 3.12 separates method-normalization effects from the paper-level reproduction uncertainties found in Steps 3.9–3.11. It does **not** rerun the author side. The author member of each pair is read from the committed Step-3.10 Figure-3 replicate-0 shard, while the normalized member is generated with the Stage-2 method adapters on the same GPT-2 Medium revision, the same frozen CNN/DailyMail context, and the same deterministic paper-sentence secret stream.
-
-The paired grid is deliberately small and frozen before execution: 8 pilot contexts × 4 representative points = 32 pairs (`Bins b=3`, `Huffman e=3`, `Arithmetic tau=0.9,k=300`, and special `Arithmetic tau=1,k=50256`, all Arithmetic precision 26). For each pair, the normalized carrier length is fixed to the number of tokens in the corresponding successfully terminated author sentence. Normalized sentence stopping is disabled. This keeps carrier length equal by construction and avoids reintroducing the undocumented historical sentence-orchestration problem into the differential comparison.
-
-The normalized side retains its own semantics. Canonical `P_reference` is built by the common normalized pipeline; GPT-2 EOT is excluded as a special token, but the author-only token-628 mask is **not** injected. Bins uses the benchmark-owned isolated `MethodRandomSource`; the author NumPy global-shuffle implementation is not copied into the normalized adapter. Arithmetic keeps its normalized finite-precision implementation and method-internal top-k.
-
-ADR-0012 is implemented as a hard measurement requirement before this comparison: normalized runs persist both `D_KL(P_reference || Q_stego)` (`kl_ref_to_stego_*`) and `D_KL(Q_stego || P_reference)` (`kl_stego_to_ref_*`). The latter is direction-matched to the author KL and is the primary paired distortion diagnostic; the benchmark-native direction remains first-class and may legitimately be `+inf`. For `tau != 1`, the author paper metric and normalized reverse KL still differ in their exact reference-policy semantics because normalized `P_reference` includes the canonical temperature policy. That residual is intentional and belongs to Step 3.13 discrepancy attribution, not to a hidden compatibility patch.
-
-Step-3.12 hard gates are execution/conformance only: 32/32 pairs present, exact secret-stream pairing, equal carrier lengths, exact normalized token-ID decoder recovery, pinned model revision, and explicit accounting for both KL directions. Exact token-sequence parity and numerical closeness are diagnostics, not gates. Step 3.12 records the paired evidence; Step 3.13 decides what differences mean.
-
-## Step 3.13 — conformance/discrepancy analysis
-
-Step 3.13 интерпретирует frozen 32-pair output Step 3.12 без нового LM run и без post-hoc numerical pass/fail tolerance. Conformance определяется как сохранение defining embedding/decoding mechanism; exact token parity не является общей целью normalized benchmark, поскольку normalization намеренно меняет policy/RNG/masking/numerical boundaries.
-
-Результат representative matched analysis:
-
-```text
-Bins b=3                    -> core principle preserved; partition identity diverges by design
-Huffman e=3                 -> strong conformance; 6/8 exact token sequences, 2 localized initial-tree divergences
-Arithmetic tau=.9,k=300     -> core principle preserved with expected reference/numerical sensitivity
-Arithmetic tau=1,k=50256    -> strong distributional conformance with sequence sensitivity
-```
-
-Все 32 normalized runs имеют `D_KL(P_reference || Q_stego)=+inf` из-за support mismatch. Это фиксируется как строгий support diagnostic, а не numerical error. Для будущей specification v1.0 рекомендуется сохранять forward KL без smoothing вместе с finite reverse KL и TVD; frozen v0.1 контракт на этом шаге не переписывается.
-
-Подробности и attribution matrix: `docs/stages/stage3/conformance_analysis.md`. Следующий gate — Step 3.14 final reproducibility report / Stage-3 closeout.
-
-
-## Step 3.14 — Stage-3 closeout
-
-Step 3.14 не запускает LM повторно. Он собирает frozen evidence Steps 3.10–3.13 в итоговый reproducibility report, compact matched comparison table, readiness JSON и Typst-презентацию. Научные классификации не пересматриваются post-hoc.
-
-Финальный closeout должен сохранить одновременно два вывода:
-
-```text
-paper reproduction      -> partial_reproduction
-normalized conformance  -> core principle preserved at 4/4 representative matched points
-```
-
-`partial_reproduction` относится к исторической Figure-3 воспроизводимости: characteristic trends/order воспроизведены, exact `4e-8 nats` anchor при public precision=26 — нет, original MC driver/sample count неизвестны. Это не противоречит conformance result: matched analysis отвечает другому вопросу — сохраняет ли normalized adapter defining mechanism метода.
-
-Machine-readable closeout artifacts:
-
-```text
-results/stage3/comparison.csv
-results/stage3/comparison.parquet
-results/stage3/stage3_closeout_summary.json
-results/stage3/stage3_readiness.json
-```
-
-Детерминированная сборка и acceptance gate:
-
-```bash
-python scripts/finalize_stage3.py
-python scripts/check_stage3_readiness.py --run-tests \
-  --json-output results/stage3/stage3_readiness.json
-```
-
-Gate не требует exact token parity между author и normalized режимами и не вводит numerical closeness threshold задним числом. Он проверяет frozen execution counts, paper-claim classifications, provenance, matched-pair integrity, 4/4 core-principle conformance, dual-KL finding, final report/presentation and full test suite.
-
-После `Stage 3 reproducibility readiness: READY` baseline reproducibility/conformance считается закрытой и Stage 4 может подключать современные методы без переноса author-specific quirks в normalized Bins/Huffman/Arithmetic adapters.
+После этого базовая проверка воспроизводимости считается закрытой, и проект может переходить к этапу 4 — подключению современных стегометодов.

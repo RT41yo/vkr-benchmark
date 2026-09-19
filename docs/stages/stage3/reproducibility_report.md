@@ -1,273 +1,202 @@
-# Этап 3 — итоговый отчёт по воспроизводимости Bins, Huffman и Arithmetic Coding
-
-Статус: **Этап 3 завершён.** Характерное поведение исходных методов воспроизведено, normalized adapters сохраняют принципиальный механизм Bins, Huffman и Arithmetic Coding на matched representative points, а оставшиеся расхождения документированы и отделены от ошибок реализации.
+# Этап 3 — итоговый отчёт по воспроизводимости
 
 ## 1. Цель этапа
 
-Этап 3 проверял два независимых вопроса:
+На этапе 3 проверялись два вопроса:
 
-1. можно ли воспроизвести опубликованное поведение базовых методов в максимально author-compatible режиме;
-2. не изменила ли нормализация Stage 2 принципиальную механику методов при переносе в единый benchmark-контур.
+1. Можно ли воспроизвести основные результаты базовых методов Bins, Huffman и Arithmetic Coding в условиях, максимально близких к авторской реализации.
+2. Сохранилась ли основная логика этих методов после их адаптации к единой архитектуре нашего бенчмарка.
 
-Поэтому использовались три режима анализа:
+Для этого использовались два режима работы:
 
-```text
-author-compatible reproduction
-        -> сравнение с публикацией / reference code
+- **author-compatible** — максимально близкий к авторскому коду и условиям статьи;
+- **normalized** — реализация методов в общей архитектуре бенчмарка с единым `P_reference`, общими правилами запуска, метриками и хранением результатов.
 
-normalized benchmark mode
-        -> единый P_reference, policy, RNG, transport и storage
+Дополнительно были выполнены сопоставленные запуски, где для author-compatible и normalized версий использовались одинаковые модель, контекст, секретная последовательность и длина стеготекста.
 
-matched author vs normalized
-        -> одинаковые модель, контекст, секретный поток и carrier length
-           для локализации эффекта нормализации
-```
+---
 
-## 2. Зафиксированное окружение
+## 2. Условия воспроизведения
 
-Reference implementation:
+В качестве исходной реализации использован репозиторий:
 
-```text
-repository: harvardnlp/NeuralSteganography
-commit:     14e982564aeaf9a33f7b4de440deda2184d17f12
-```
+`harvardnlp/NeuralSteganography`
 
-Publication reproduction:
+Зафиксированный commit:
 
-```text
-model:     GPT-2 Medium (345M)
-revision:  6dcaa7a952f72f9298047fd5137cd6e4f05f41da
-context:   CNN/DailyMail, первые три предложения статьи
-manifest:  cc25b492b26e102496137bc2f8eb78320c7f7768d83ff7e10af9b2e04a14aebc
-```
+`14e982564aeaf9a33f7b4de440deda2184d17f12`
 
-Выбор `test` split и operational Monte-Carlo design `80 contexts × 3 replicates` являются явными решениями нашей репликации: исходная статья не публикует точный Figure-3 split, batch driver и число Monte-Carlo samples.
+Для воспроизведения Figure 3 использовалась модель **GPT-2 Medium (345M)** с зафиксированной revision:
 
-## 3. Author-compatible Figure 3 reproduction
+`6dcaa7a952f72f9298047fd5137cd6e4f05f41da`
 
-Полный sweep включал 23 operating points:
+Контексты брались из CNN/DailyMail.
+
+В статье не опубликованы точный набор данных для Figure 3, исходный batch-скрипт и точное число Monte-Carlo повторов. Поэтому для нашей репликации был явно зафиксирован собственный протокол: **80 контекстов × 3 повтора для каждой экспериментальной точки**.
+
+---
+
+## 3. Воспроизведение Figure 3
+
+Было проверено 23 экспериментальные точки:
 
 - Bins: `b = 1..5`;
-- Huffman: candidate pool `2^1..2^8`;
-- Arithmetic: `temperature = 0.4..1.2`, `top-k = 300`;
-- special Arithmetic: `temperature = 1.0`, `top-k = 50256`.
+- Huffman: `2^1..2^8` кандидатов;
+- Arithmetic Coding: `temperature = 0.4..1.2`, `top-k = 300`;
+- специальная точка Arithmetic Coding: `temperature = 1.0`, `top-k = 50256`.
 
-Всего было запланировано и сохранено **5520 outcomes**. Из них **5513** достигли реальной first-sentence boundary, а **7** были сохранены как `sentence_termination_failure`, а не скрыты фильтрацией. Общая termination success rate — `0.9987318841`.
+Всего было выполнено **5520 запусков**. Из них **5513 завершились успешно**, а **7 завершились ошибкой остановки предложения**. Эти случаи не удалялись из результатов.
 
-### 3.1. Воспроизведённые тренды
+### Основные результаты
 
-| Метод / утверждение | Наш результат | Статус |
-| --- | --- | --- |
-| Bins остаётся в области высокого KL при росте capacity | `1 -> 5 bits/word`, KL `2.223 -> 3.293 bits` | `trend_reproduction` |
-| Huffman уменьшает KL при росте candidate pool/capacity | KL `1.925 -> 0.525 bits` | `trend_reproduction` |
-| Arithmetic имеет минимум около 4 bits/word при `tau=1` | `3.752 bits/word`, KL `0.100844 bits` | `trend_reproduction` |
-| Arithmetic лучше Huffman/Bins по KL-capacity trade-off | ниже обеих baseline-кривых на общей области | `trend_reproduction` |
-| special Arithmetic близок к unmodified LM | KL `0.000665525 bits` | `partial_reproduction` |
-| exact prose anchor `4e-8 nats` | `0.000461307 nats` при public `precision=26` | `not_reproducible` |
-| exact historical Figure-3 MC orchestration | original driver/sample count не опубликованы | `partial_reproduction` |
+| Наблюдение | Результат |
+|---|---|
+| Bins сохраняет высокий KL при росте пропускной способности | Воспроизведено |
+| Huffman уменьшает KL при увеличении числа кандидатов | Воспроизведено |
+| Arithmetic Coding имеет минимум KL примерно около 4 bits/word | Воспроизведено |
+| Arithmetic Coding показывает меньший KL, чем Bins и Huffman, в общей области сравнения | Воспроизведено |
+| Специальная точка Arithmetic Coding близка к распределению исходной LM | Воспроизведено частично |
+| Точное значение `4e-8 nats`, указанное в статье | Не воспроизведено при `precision=26` |
+| Точная историческая схема Monte-Carlo эксперимента авторов | Не может быть восстановлена по опубликованным материалам |
 
-Итоговая paper-level классификация: **`partial_reproduction`**. Это означает, что основные сравнительные выводы Figure 3 воспроизводятся, но два исторических численных/оркестрационных аспекта не могут быть подтверждены точно.
+Итоговая оценка: **частичное воспроизведение (`partial_reproduction`)**.
 
-### 3.2. Сравнительный порядок методов
+Это означает, что основные зависимости и сравнительные выводы Figure 3 подтверждаются, но отдельные численные детали исходного эксперимента воспроизвести точно не удалось.
 
-Piecewise-linear diagnostic по воспроизведённым средним показывает:
+---
 
-- Arithmetic ниже Huffman на всех 1001 grid points общей области `1.001–4.294 bits/word`; минимальный запас по KL ≈ `0.381 bits`;
-- Arithmetic ниже Bins на всех 1001 grid points общей области `1.001–4.712 bits/word`; минимальный запас ≈ `1.351 bits`.
+## 4. Расхождение по специальной точке Arithmetic Coding
 
-То есть главный сравнительный вывод публикации — преимущество Arithmetic по KL-capacity trade-off — воспроизведён устойчиво.
+В опубликованном `run_single.py` для Arithmetic Coding используется:
 
-## 4. Расхождение special Arithmetic point
+`precision = 26`
 
-В public Harvard executable `run_single.py` для Arithmetic используется конечная precision `26`. При этом special point `tau=1, k=50256` в full sentence sweep даёт:
+При этих условиях специальная точка `temperature = 1.0`, `top-k = 50256` в нашем полном эксперименте дала примерно:
 
-```text
-4.651269 bits/word
-0.000665525 bits KL
-0.000461307 nats KL
-```
+- `4.65 bits/word`;
+- `0.0006655 bits` KL;
+- `0.0004613 nats` KL.
 
-Это примерно в `11532.7×` выше paper prose anchor `4e-8 nats`.
+В статье для этой точки указано значение порядка:
 
-Отдельный zero-padding-free precision probe локализовал чувствительность:
+`4e-8 nats`
 
-```text
-precision 26 -> 7.38468e-4 nats/token
-precision 32 -> 2.87668e-5 nats/token
-precision 40 -> 2.92390e-8 nats/token
-precision 48 -> 4.00890e-10 nats/token
-```
+Чтобы понять причину расхождения, отдельно проверялось влияние параметра `precision`.
 
-`precision=40` попадает в тот же порядок, что paper anchor, но это **не является доказательством**, что авторы использовали precision 40. Публичный single-run script задаёт 26, а исторический Figure-3 batch driver недоступен. Поэтому расхождение фиксируется как finite-precision / undocumented orchestration discrepancy, а не исправляется post-hoc.
+Результат показал сильную зависимость KL от точности Arithmetic Coding:
 
-## 5. Надёжность author-compatible reproduction
+| precision | KL, nats/token |
+|---:|---:|
+| 26 | `7.38e-4` |
+| 32 | `2.88e-5` |
+| 40 | `2.92e-8` |
+| 48 | `4.01e-10` |
 
-Редкие edge cases не скрывались:
+При `precision=40` результат уже находится в том же порядке величины, что и значение из статьи.
 
-- `7/5520` sentence termination failures;
-- `23` завершённых Arithmetic runs с нулевым confirmed payload — они корректно входят в capacity mean как `0`;
-- text-transport prefix recovery: `5343/5490 = 97.32%` для positive-payload samples;
-- transport recovery не использовался как Figure-3 selection gate, чтобы не создавать selection bias;
-- modern-cache compatibility shim применялся только для восстановления historical 1022-token sliding-cache semantics и логировался отдельно.
+Однако это **не доказывает**, что авторы использовали `precision=40`. В статье точное значение precision для Figure 3 не указано, а опубликованный одиночный пример использует `precision=26`.
 
-Эти diagnostics не меняют paper-level curve means, но являются частью воспроизводимой отчётности.
+Поэтому расхождение фиксируется как следствие чувствительности finite-precision Arithmetic Coding и неполной документированности исходного эксперимента.
 
-## 6. Matched author-compatible vs normalized comparison
+---
 
-Для проверки нормализации был зафиксирован небольшой differential grid:
+## 5. Сравнение author-compatible и normalized реализаций
 
-```text
-4 representative points × 8 identical contexts = 32 pairs
-Bins b=3
-Huffman e=3
-Arithmetic tau=0.9, k=300, precision=26
-Arithmetic tau=1.0, k=50256, precision=26
-```
+Чтобы проверить, не изменила ли нормализация сам принцип работы методов, были выбраны четыре контрольные точки:
 
-В каждой паре одинаковы GPT-2 Medium revision, context hash, secret stream и carrier length. Normalized decoder восстановил полезную нагрузку точно по token IDs в **32/32** случаях.
+- Bins `b=3`;
+- Huffman `e=3`;
+- Arithmetic Coding `temperature=0.9`, `top-k=300`, `precision=26`;
+- Arithmetic Coding `temperature=1.0`, `top-k=50256`, `precision=26`.
 
-| Точка | Author BPT | Normalized BPT | Δ BPT | Author `KL(Q||P)` | Normalized `KL(Q||P_ref)` | Exact sequence |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Bins b=3 | 3.0000 | 3.0000 | 0.0000 | 2.69835 | 2.90112 | 0/8 |
-| Huffman e=3 | 2.47277 | 2.51381 | +0.04103 | 1.06416 | 1.10439 | 6/8 |
-| Arithmetic `tau=.9,k=300` | 2.93381 | 3.05800 | +0.12419 | 0.10320 | 0.04782 | 0/8 |
-| Arithmetic `tau=1,k=50256` | 4.67733 | 4.59381 | −0.08351 | 0.000605 | 0.000542 | 0/8 |
+Для каждой точки выполнено по 8 сопоставленных запусков, всего **32 пары**.
 
-Exact token parity намеренно не является универсальным conformance criterion: normalized benchmark меняет общую policy, RNG ownership, masking и numerical boundaries.
+Во всех парах использовались одинаковые:
 
-## 7. Conformance по методам
+- модель;
+- контекст;
+- секретная последовательность;
+- длина стеготекста.
 
-### Bins
+Normalized decoder корректно восстановил полезную нагрузку во всех **32 из 32** запусков.
 
-Ключевой инвариант сохранён **точно 8/8**: `b=3` даёт `3 bits/token` и у author, и у normalized реализации. Почти полное расхождение token sequences ожидаемо, потому что normalized adapter использует `V_allowed` и benchmark-owned RNG вместо author full-vocabulary NumPy partition.
+### Краткий итог сравнения
 
-Классификация:
+**Bins.** Пропускная способность полностью совпала: при `b=3` обе реализации передают 3 бита на токен. Конкретные последовательности токенов различаются, потому что normalized-версия использует `V_allowed` и общую систему случайности бенчмарка.
 
-`core_principle_preserved_expected_partition_divergence`.
+**Huffman.** Показал наиболее близкое совпадение с авторской реализацией: в 6 из 8 пар последовательности токенов совпали полностью. Небольшие различия в оставшихся двух случаях связаны с построением набора кандидатов и дерева Хаффмана.
 
-### Huffman
+**Arithmetic Coding.** Сохраняет тот же механизм конечных интервалов и корректное декодирование, но чувствителен к небольшим изменениям вероятностей и численных границ. Поэтому конкретные токены могут отличаться даже при очень близких распределениях.
 
-Huffman показывает наиболее сильную token-level conformance: **6/8** matched pairs совпали token-for-token. Для этих шести пар capacity идентична, а максимальное |Δ reverse KL| < `0.002 bits`.
+Общий вывод: **normalized-реализации сохраняют основной принцип работы всех трёх методов**.
 
-Две divergent пары расходятся уже на первом token, что локализует различие к initial candidate/tree construction. Без per-step candidate traces нельзя уникально разделить влияние author-only token-628 mask, exact-tie ordering и numerical ordering.
+---
 
-Классификация:
+## 6. Два направления KL-дивергенции
 
-`strong_conformance_with_localized_candidate_tree_divergence`.
+На этапе 3 подтвердилось, что одна KL-метрика не решает все задачи.
 
-### Arithmetic Coding
+В normalized-запусках для всех 32 сопоставленных экспериментов:
 
-Arithmetic сохраняет finite-precision interval mechanism и exact decode, но ожидаемо чувствителен к малым изменениям probability boundaries.
+`D_KL(P_reference || Q_stego) = +inf`
 
-Для `tau=.9,k=300` normalized и author reverse KL используют одинаковое направление, но **не одну и ту же reference semantics**: author сравнивает с untempered LM, normalized — с canonical `P_reference` после temperature policy. Поэтому численную разницу KL нельзя читать как чистую implementation error.
+Это происходит потому, что Bins, Huffman и некоторые конфигурации Arithmetic Coding назначают нулевую вероятность части токенов, которым `P_reference` оставляет ненулевую вероятность.
 
-Для near-unmodified `tau=1,k=50256` distributional conformance особенно сильна:
+Поэтому в дальнейшем целесообразно использовать вместе:
 
-```text
-author reverse KL      = 0.000605481 bits
-normalized reverse KL  = 0.000541695 bits
-normalized mean TVD    = 0.000479630
-```
+- `D_KL(P_reference || Q_stego)` — как строгую диагностику потери support;
+- `D_KL(Q_stego || P_reference)` — как конечную сравнительную метрику и для сопоставления с авторскими результатами;
+- TVD — как конечную симметричную меру различия распределений.
 
-Низкая token parity при этом допустима: finite-precision interval state быстро расходится от малых boundary differences даже при почти одинаковом агрегированном распределении.
+Спецификация v0.1 на этапе 3 не изменялась. Эти выводы сохраняются как рекомендации для будущей версии спецификации.
 
-Классификации:
+---
 
-- `core_principle_preserved_with_expected_reference_and_numeric_divergence`;
-- `strong_distributional_conformance_with_sequence_sensitivity`.
+## 7. Ограничения
 
-## 8. Главный методологический результат: два направления KL
+На результаты этапа 3 влияют несколько ограничений:
 
-Во всех **32/32** normalized matched runs:
+- в статье не опубликован точный Figure 3 batch driver;
+- не указано точное число Monte-Carlo повторов и однозначный dataset split;
+- matched comparison выполнен только для четырёх контрольных точек;
+- точное значение `4e-8 nats` не воспроизводится при публичном `precision=26`;
+- для отдельных различий Huffman нельзя однозначно выделить единственную причину без дополнительной пошаговой трассировки;
+- повторная токенизация текста в author-compatible режиме иногда изменяет последовательность token IDs, и такие случаи сохранены как диагностические данные.
 
-```text
-D_KL(P_reference || Q_stego) = +inf
-```
+---
 
-Это математически ожидаемо для sparse `Q_stego`: метод назначает нулевую вероятность части токенов, которым `P_reference` оставляет положительную массу.
+## 8. Итог этапа 3
 
-Поэтому итоговая рекомендация для будущей specification v1.0:
+Этап 3 подтвердил два основных положения.
 
-```text
-kl_ref_to_stego + infinite_steps
-    -> строгий support-mismatch diagnostic, без epsilon smoothing
+Во-первых, основные зависимости Figure 3 воспроизводятся: Bins, Huffman и Arithmetic Coding ведут себя качественно так же, как в исходной работе, а Arithmetic Coding сохраняет преимущество по соотношению пропускной способности и KL.
 
-kl_stego_to_ref
-    -> конечная complementary / author-comparable distortion metric
+Во-вторых, адаптация методов к нашей normalized-архитектуре не изменила их принципиальную механику. Bins, Huffman и Arithmetic Coding сохраняют свой основной способ встраивания и извлечения секрета.
 
-TVD
-    -> конечная companion metric, не насыщаемая support mismatch так же, как forward KL
-```
+При этом точная историческая репликация Figure 3 не заявляется. Отдельные численные детали исходного эксперимента, прежде всего значение `4e-8 nats`, не воспроизведены при публично доступной конфигурации `precision=26`.
 
-Specification v0.1 на Этапе 3 не переписывается задним числом; рекомендация переносится в notes для будущей v1.0.
+Итоговый статус этапа:
 
-## 9. Итоговый ответ на вопрос Этапа 3
+**Stage 3 — завершён. Результат воспроизводимости: частичное воспроизведение (`partial_reproduction`).**
 
-**Да, нормализованные реализации Bins, Huffman и Arithmetic Coding сохраняют принципиальное поведение исходных методов на проверенных representative matched points.**
+---
 
-Доказательная цепочка:
+## 9. Основные результирующие материалы
 
-```text
-pinned author code
-    -> author-compatible smoke parity
-    -> paper-sentence protocol
-    -> full Figure-3 sweep
-    -> publication-level trend reproduction
-    -> matched author/normalized runs
-    -> discrepancy attribution
-    -> core principle preserved for 4/4 representative points
-```
+Для подробного анализа результатов используются:
 
-При этом воспроизводимость исходной публикации не объявляется абсолютной. Exact `4e-8 nats` anchor и exact historical Monte-Carlo orchestration не воспроизведены/недоступны и явно остаются ограничениями.
+- `results/stage3/paper_reproduction/figure3_full/summary.json`;
+- `results/stage3/paper_reproduction/figure3_full/figure3_points.csv`;
+- `results/stage3/paper_reproduction/figure3_full/claim_assessment.csv`;
+- `results/stage3/matched_author_normalized/paired_comparison.csv`;
+- `results/stage3/matched_author_normalized/conformance_table.csv`;
+- `results/stage3/comparison.csv`;
+- `results/stage3/stage3_closeout_summary.json`.
 
-## 10. Ограничения Этапа 3
+Автоматическая проверка завершения этапа выполняется скриптом:
 
-1. Публикация не содержит exact Figure-3 batch driver, sample count и однозначного dataset split.
-2. Matched diagnostic использует только 4 representative points × 8 contexts, а не полный Figure-3 grid в normalized mode.
-3. Для двух divergent Huffman pairs отсутствуют per-step candidate-list traces, поэтому непосредственный источник первого tree divergence не идентифицирован уникально.
-4. При `tau=.9` author и normalized reverse KL имеют разные reference-policy semantics.
-5. Public precision=26 не воспроизводит exact `4e-8 nats` special-point anchor.
-6. Text transport recovery в historical implementation не является идеальным; такие случаи сохранены как diagnostics, а не исключены из основной выборки.
+`python scripts/check_stage3_readiness.py --run-tests`
 
-## 11. Артефакты воспроизводимости
+Критерий успешного закрытия:
 
-Основные документы:
-
-```text
-docs/stages/stage3/reproducibility_protocol.md
-docs/stages/stage3/figure3_full_run.md
-docs/stages/stage3/figure3_interpretation.md
-docs/stages/stage3/matched_author_normalized.md
-docs/stages/stage3/conformance_analysis.md
-docs/stages/stage3/reproducibility_report.md
-docs/stages/stage3/stage_3.typ
-```
-
-Machine-readable evidence:
-
-```text
-results/stage3/paper_reproduction/figure3_full/summary.json
-results/stage3/paper_reproduction/figure3_full/interpretation.json
-results/stage3/matched_author_normalized/summary.json
-results/stage3/matched_author_normalized/conformance_analysis.json
-results/stage3/comparison.csv
-results/stage3/comparison.parquet
-results/stage3/stage3_closeout_summary.json
-results/stage3/stage3_readiness.json
-```
-
-Итоговая автоматическая проверка:
-
-```bash
-python scripts/finalize_stage3.py
-python scripts/check_stage3_readiness.py --run-tests \
-  --json-output results/stage3/stage3_readiness.json
-```
-
-Критерий закрытия:
-
-```text
-Stage 3 reproducibility readiness: READY
-```
-
-После прохождения gate репозиторий готов к **Этапу 4 — подключению современных методов (ADG, Discop, RRC и последующих методов ROADMAP)** без изменения frozen conclusions Stage 3.
+`Stage 3 reproducibility readiness: READY`
