@@ -62,9 +62,7 @@
 #align(center)[
   #text(size: 23pt, weight: "bold", fill: accent)[Этап 3 ВКР] \
   #v(5pt)
-  #text(size: 16pt, weight: "bold")[Проверка воспроизводимости Bins, Huffman и Arithmetic Coding] \
-  #v(12pt)
-  #text(size: 12pt)[Author-compatible reproduction → matched comparison → conformance analysis] \
+  #text(size: 16pt, weight: "bold")[Проверка воспроизводимости Bins, Huffman и Arithmetic Coding]
   #v(22pt)
   #text(size: 10.5pt, fill: muted)[Р.В. Тетеревлев · #datetime.today().display("[day].[month].[year]")]
 ]
@@ -74,101 +72,172 @@
 // ===================================
 // 1
 // ===================================
-#slide-title[Как проверялась воспроизводимость]
+#slide-title[Пайплайн экспериментов этапа 3]
 
-#grid(columns: (1fr, 1fr, 1fr), gutter: 10pt,
-  card("1. Author-compatible")[
-    Зафиксирован Harvard `NeuralSteganography` commit. \
-    Воспроизведены Bins, Huffman и Arithmetic Coding на GPT-2 Medium.
+#let arrow = align(center + horizon)[#text(size: 22pt, weight: "bold")[→]]
+#let down = align(center + horizon)[#text(size: 20pt, weight: "bold")[↓]]
+#let left = align(center + horizon)[#text(size: 22pt, weight: "bold")[←]]
+
+#grid(columns: (1fr, 22pt, 1fr, 22pt, 1fr), gutter: 8pt,
+  card("1. Авторский код")[
+    Harvard `NeuralSteganography` \
+    commit `14e982…`
   ],
-  card("2. Figure 3")[
-    23 operating points, 80 CNN/DailyMail contexts, 3 repeats. \
-    Проверялись форма кривых, порядок методов и special Arithmetic point.
+  arrow,
+  card("2. Smoke-тесты")[
+    GPT-2 Small \
+    Bins / Huffman / Arithmetic \
+    Проверка исполняемости кода
   ],
-  card("3. Matched comparison")[
-    Один контекст, один secret stream и одинаковая carrier length для author и normalized. \
-    Цель — отделить эффект нормализации от paper-level неопределённостей.
+  arrow,
+  card("3. Условия статьи")[
+    GPT-2 Medium \
+    CNN/DailyMail \
+    80 контекстов × 3 повтора
+  ],
+
+  [], [], [], [], down,
+
+  card("6. Matched comparison")[
+    4 representative points × 8 контекстов \
+    Author-compatible vs normalized \
+    32 matched-пары
+  ],
+  left,
+  card("5. Интерпретация")[
+    Тренды Figure 3 воспроизведены \
+    `4e-8 nats` при `precision=26` - нет \
+    Итог: `partial_reproduction`
+  ],
+  left,
+  card("4. Figure 3 reproduction")[
+    23 экспериментальные точки \
+    Bins: 5, Huffman: 8, AC: 9 + 1 \
+    `23 × 80 × 3 = 5520`
   ],
 )
 
 #v(12pt)
 #note[
   #small[
-  Главный критерий: normalized adapter должен сохранять *принцип метода*, а не обязательно генерировать тот же самый token sequence. Нормализация намеренно меняет общую policy, RNG ownership, masking и numerical boundaries.
+  Сначала воспроизводим author-compatible эксперимент Figure 3 (Ziegler et al.),
+  затем отдельно проверяем, что normalized-адаптеры в benchmark сохраняют принцип
+  исходных методов.
   ]
 ]
-
-#v(12pt)
-#grid(columns: (1fr, 1fr), gutter: 12pt,
-  card("Зафиксированная author-база")[
-    Harvard commit: `14e9825…` \
-    GPT-2 Medium revision: `6dcaa7a…`
-  ],
-  card("Контекст")[
-    CNN/DailyMail, первые три предложения статьи. \
-    Manifest hash зафиксирован и одинаков для всех Stage-3 runs.
-  ],
-)
 #pagebreak()
 
 // ===================================
 // 2
 // ===================================
-#slide-title[Полный Figure-3 sweep: 5520 запусков]
+#slide-title[Как формировались запуски на этапе 3]
 
-#grid(columns: (0.45fr, 0.55fr), gutter: 12pt,
-  [
-    #card("Матрица")[
-      Bins: `b=1..5` \
-      Huffman: `2^1..2^8` кандидатов \
-      Arithmetic: `tau=0.4..1.2`, `k=300` \
-      Special: `tau=1`, `k=50256`
-    ]
+#grid(columns: (1fr, 1fr), gutter: 14pt,
+  card("(А) Воспроизведение Figure 3 (Ziegler et al.)")[
+    #text(weight: "bold")[Цель:] воспроизвести author-compatible режим (график Figure 3).
+
+    #v(6pt)
+    23 экспериментальные точки: \
+    Bins - 5 точек: `b = 1, 2, 3, 4, 5` \
+    Huffman - 8 точек: `e = 1..8` (`2^e = 2, 4, 8, ..., 256` кандидатов) \
+    Arithmetic - 9 точек: `tau = 0.4, 0.5, ..., 1.2`; `k = 300`; `precision = 26` \
+    Special Arithmetic - 1 точка: `tau = 1.0`; `k = 50256`; `precision = 26`
+
+    #v(8pt)
+    Для каждой точки: \
+    `80 контекстов (CNN/DailyMail) × 3 Monte-Carlo повтора = 240 запусков`
+
     #v(8pt)
     #goodbox[
-      #text(weight: "bold", fill: good)[Execution result] \
-      #small[5520/5520 outcomes сохранены. \
-      5513 достигли first sentence boundary. \
-      7 сохранены как `sentence_termination_failure`.]
+      #text(weight: "bold", fill: good)[Итого:] \
+      `23 × 80 × 3 = 5520 запусков`
     ]
-    #v(8pt)
-    #tiny[Termination failures не отбрасывались скрыто и не заменялись искусственной границей предложения.]
+
+    #v(6pt)
+    #small[
+      5513 запусков успешно завершились формированием первого предложения; \ 7 - не достигли условия завершения (не встретились токены `.` или `!` или `?`, которые удовлетворяют правилу остановки генерации предложения).
+    ]
   ],
-  [
-    #align(center)[
-      #image("../../../results/stage3/paper_reproduction/figure3_full/figure3_reproduction.svg", width: 95%)
+
+  card("(Б) Сравнение author-compatible и normalized режимов")[
+    #text(weight: "bold")[Цель:] проверить normalized-адаптацию базовых стегометодов.
+
+    #v(6pt)
+    4 экспериментальные точки: \
+    Bins `b = 3` \
+    Huffman `e = 3` \
+    Arithmetic `tau = 0.9, k = 300` \
+    Arithmetic `tau = 1.0, k = 50256`
+
+    #v(8pt)
+    Для каждой точки: \
+    `8 контекстов = 8 matched-пар`
+
+    #v(8pt)
+    #goodbox[
+      #text(weight: "bold", fill: good)[Итого:] \
+      `4 × 8 = 32 matched-пары`
+    ]
+
+    #v(6pt)
+    #small[
+      В каждой паре фиксировались одна модель, один контекст,
+      один поток секретных битов и одинаковая длина стеготекста в токенах.
     ]
   ],
 )
+
+#v(10pt)
+#note[
+  #small[
+  Эксперимент A отвечает на вопрос «воспроизводится ли Figure 3?». \
+  Эксперимент Б отвечает на вопрос «сохраняют ли normalized-реализации принцип исходных методов?».
+  ]
+]
 #pagebreak()
 
 // ===================================
 // 3
 // ===================================
-#slide-title[Что воспроизвелось из Figure 3]
+#slide-title[Результаты воспроизведения авторской реализации]
 
-#text(size: 9.4pt)[
+#grid(columns: (1fr, 1fr), gutter: 12pt,
+  [
+    #align(center)[
+      #image("Figure_3_author.png", width: 75%)
+    ]
+    #align(center)[#small[Авторская реализация Figure 3 (Ziegler et al.)]]
+  ],
+  [
+    #align(center)[
+      #image("Figure_3_reprod.png", width: 70%)
+    ]
+    #align(center)[#small[Воспроизведение авторской реализации]]
+  ],
+)
+
+#text(size: 8.2pt)[
 #table(
-  columns: (0.38fr, 0.30fr, 0.32fr),
-  stroke: 0.3pt, inset: 4pt,
-  table.header([*Проверяемое утверждение*], [*Наш результат*], [*Статус*]),
-  [Bins остаётся в high-KL области], [`KL 2.223 → 3.293 bits`], [`trend_reproduction`],
-  [Huffman уменьшает KL при росте capacity], [`1.925 → 0.525 bits`], [`trend_reproduction`],
-  [Arithmetic minimum около 4 bits/word при `tau=1`], [`3.752 bpw`, `KL=0.100844`], [`trend_reproduction`],
-  [Arithmetic ниже Huffman/Bins], [ниже на всей общей области], [`trend_reproduction`],
-  [Special Arithmetic почти не искажает LM], [`KL=0.0006655 bits`], [`partial_reproduction`],
-  [Exact paper anchor `4e-8 nats`], [`0.0004613 nats` при p=26], [`not_reproducible`],
+  columns: (0.42fr, 0.31fr, 0.27fr),
+  stroke: 0.3pt, inset: 3pt,
+  table.header([*Утверждение*], [*Наш результат*], [*Статус*]),
+  [Bins остается в high-KL области], [`KL 2.223 → 3.293`], [`trend`],
+  [Huffman уменьшает KL], [`1.925 → 0.525`], [`trend`],
+  [AC minimum около 4 bits/word], [`3.752 bpw`, `KL=0.100844`], [`trend`],
+  [AC ниже Huffman/Bins], [ниже на общей области], [`trend`],
+  [Special AC почти не искажает LM], [`KL=0.0006655`], [`partial`],
+  [`4e-8 nats` из статьи], [`0.0004613 nats` при `p=26`], [`not reproduced`],
 )
 ]
 
-#v(9pt)
 #goodbox[
-  #text(weight: "bold", fill: good)[Основной научный вывод публикации воспроизведён:] \
-  #small[Arithmetic показывает лучший KL-capacity trade-off, минимум находится около 4 bits/word при `tau=1.0`.]
+  #small[Основной вывод воспроизведен: *Arithmetic показывает лучший KL-capacity trade-off; минимум находится около 4 bits/word при `tau=1.0`*]
 ]
 
-#v(6pt)
-#tiny[Общая paper-level оценка Stage 3: `partial_reproduction`, потому что exact special-point anchor и exact historical MC orchestration подтвердить нельзя.]
+#tiny[
+  Общая оценка этапа 3: частичное воспроизведение, так как точное значение `4e-8 nats` и исходную схему Monte-Carlo эксперимента авторов подтвердить нельзя. \ 
+  
+]
 #pagebreak()
 
 // ===================================
@@ -177,60 +246,87 @@
 #slide-title[Почему не совпало значение `4e-8 nats`]
 
 #grid(columns: (1fr, 1fr), gutter: 12pt,
-  card("Public executable")[
-    Arithmetic Coding использует finite precision. \
-    В public `run_single.py` зафиксировано `precision=26`. \
-    Full sentence special point: \
-    *`KL = 4.61e-4 nats`*.
+  card("Опубликованный код")[
+    Arithmetic Coding использует конечную точность вычислений. \
+    В публичном `run_single.py` указано `precision=26`. \
+    Для специальной точки полного эксперимента получено: \
+    *`KL = 4.61e-4 nats`* (а не `4e-8 nats`, как в статье).
   ],
-  card("Precision probe без zero-padding")[
-    p26 → `7.38e-4` nats \
-    p32 → `2.88e-5` nats \
-    p40 → `2.92e-8` nats \
-    p48 → `4.01e-10` nats
+  card("Проверка влияния precision")[
+    `p = 26` → `7.38e-4` nats \
+    `p = 32` → `2.88e-5` nats \
+    `p = 40` → `2.92e-8` nats \
+    `p = 48` → `4.01e-10` nats
   ],
 )
 
 #v(10pt)
 #warnbox[
   #text(weight: "bold", fill: warn)[Интерпретация] \
-  #small[`precision=40` попадает в тот же порядок, что paper anchor, но это не доказывает, что авторы использовали p=40. Исторический Figure-3 batch driver не опубликован, поэтому мы не подгоняем реализацию post-hoc.]
+  #small[
+    При `precision = 40` значение KL получается того же порядка, что и `4e-8 nats`. \
+    Но это не доказывает, что авторы использовали `precision = 40` (полный скрипт запуска для получения данных для Figure 3 не опубликован).
+  ]
 ]
 
 #v(10pt)
-#note[
-  #small[*Результат:* discrepancy локализована к finite precision / undocumented historical orchestration, а не к принципу Arithmetic Coding.]
+#warnbox[
+  #text(weight: "bold", fill: warn)[Результат] \
+  #small[
+    Расхождение связано с конечной точностью Arithmetic Coding
+    и неполной документированностью исходного эксперимента, а не с нарушением принципа метода.
+  ]
 ]
 #pagebreak()
 
 // ===================================
 // 5
 // ===================================
-#slide-title[Author vs normalized: сохранился ли принцип методов?]
+#slide-title[Сравнение author-compatible и normalized режимов]
 
-#text(size: 8.7pt)[
-#table(
-  columns: (0.20fr, 0.15fr, 0.15fr, 0.16fr, 0.18fr, 0.16fr),
-  align: center + horizon,
-  stroke: 0.3pt, inset: 3.2pt,
-  table.header([*Точка*], [*Author BPT*], [*Norm. BPT*], [*Δ BPT*], [*Δ reverse KL*], [*Exact seq.*]),
-  [Bins b=3], [3.000], [3.000], [0.000], [+0.203], [0/8],
-  [Huffman e=3], [2.473], [2.514], [+0.041], [+0.040], [*6/8*],
-  [Arithmetic `.9/300`], [2.934], [3.058], [+0.124], [−0.055], [0/8],
-  [Arithmetic `1/50256`], [4.677], [4.594], [−0.084], [−0.000064], [0/8],
-)
+#align(center)[
+  #image("Author-Norm_comparison.png", width: 78%)
+]
+#align(center)[
+  #small[Сопоставленное сравнение по 4 контрольным конфигурациям: одинаковые модель, контекст, secret stream и длина стеготекста в токенах.]
 ]
 
-#v(9pt)
-#grid(columns: (1fr, 1fr), gutter: 10pt,
-  goodbox[
-    #text(weight: "bold", fill: good)[32/32 normalized decodes exact] \
-    #small[Одинаковые secret streams и carrier lengths. Core principle сохранён на 4/4 representative points.]
+#v(7pt)
+
+#grid(columns: (0.62fr, 0.38fr), gutter: 10pt,
+  [
+    #text(size: 7.4pt)[
+    #table(
+      columns: (0.30fr, 0.18fr, 0.18fr, 0.17fr, 0.17fr),
+      stroke: 0.3pt,
+      inset: 2.6pt,
+      table.header(
+        [*Точка*],
+        [*BPT author*],
+        [*BPT norm*],
+        [*KL author*],
+        [*KL norm*],
+      ),
+      [Bins `b=3`], [`3.000`], [`3.000`], [`2.698`], [`2.901`],
+      [Huffman `e=3`], [`2.473`], [`2.514`], [`1.064`], [`1.104`],
+      [AC `tau=0.9, k=300`], [`2.934`], [`3.058`], [`0.103`], [`0.048`],
+      [AC `tau=1.0, k=50256`], [`4.677`], [`4.594`], [`0.000605`], [`0.000542`],
+    )
+    ]
+
+    #tiny[
+      KL указана в направлении `D_KL(Q_stego || P_reference)`, чтобы сопоставлять normalized-результаты с author-compatible метрикой.
+    ]
   ],
-  card("Почему token sequences могут отличаться")[
-    Bins: другое partition identity. \
-    Huffman: candidate/tree policy. \
-    Arithmetic: высокая чувствительность finite-precision interval к малым boundary differences.
+
+  [
+    #goodbox[
+      #small[
+        Bins сохраняет точную пропускную способность. \
+        Huffman дает самое близкое совпадение: 6/8 одинаковых последовательностей токенов. \
+        Arithmetic Coding сохраняет интервальную механику, но чувствителен к малым численным отличиям.
+      ]
+    ]
   ],
 )
 #pagebreak()
@@ -238,63 +334,104 @@
 // ===================================
 // 6
 // ===================================
-#slide-title[Два направления KL — практический результат Этапа 3]
+#slide-title[Почему нужны два направления KL]
 
 #grid(columns: (1fr, 1fr), gutter: 12pt,
-  card("Benchmark-native")[
-    #text(size: 12.5pt, weight: "bold")[$D_"KL"(P_"reference" || Q_"stego")$] \
-    #v(4pt)
-    Во всех *32/32* matched runs результат `+inf`. \
-    Причина: sparse `Q_stego` теряет часть support `P_reference`.
+  card("1. Строгое направление benchmark")[
+    #text(size: 12.5pt, weight: "bold")[$D_"KL"(P_"reference" || Q_"stego")$]
+
+    #v(5pt)
+    #small[
+      Вопрос метрики: \
+      *Не потерял ли стегометод часть токенов, которым P_reference назначает ненулевую вероятность?*
+
+      #v(5pt)
+      Именно это направление ближе к информационно-теоретической модели Кашена.
+
+      #v(5pt)
+      На практике для Bins, Huffman и части AC часто получается `+inf`, если:
+    ]
+
+    #v(3pt)
+    #align(center)[
+      #text(size: 11pt)[$P_"reference"(x) > 0$, но $Q_"stego"(x) = 0$]
+    ]
+
+    #v(3pt)
+    #small[
+      То есть LM считает токен возможным, а стегометод никогда его не выбирает.
+    ]
   ],
-  card("Author-comparable")[
-    #text(size: 12.5pt, weight: "bold")[$D_"KL"(Q_"stego" || P_"reference")$] \
-    #v(4pt)
-    Остаётся конечной и позволяет сравнивать distortion с author-compatible направлением.
+
+  card("2. Обратное направление для сравнения")[
+    #text(size: 12.5pt, weight: "bold")[$D_"KL"(Q_"stego" || P_"reference")$]
+
+    #v(5pt)
+    #small[
+      Вопрос метрики: \
+      *насколько события, которые реально производит стегометод, выглядят вероятными для LM?*
+
+      #v(5pt)
+      Это направление обычно остается конечным, потому что токены с
+      $Q_"stego"(x)=0$ не дают вклада в сумму.
+
+      #v(5pt)
+      Именно это направление используется для сопоставления с author-compatible результатами Figure 3.
+    ]
   ],
 )
 
-#v(10pt)
 #note[
   #small[
-  Рекомендация для specification v1.0: \
-  `KL(P_ref || Q)` оставить строгим support diagnostic *без smoothing*; \
-  `KL(Q || P_ref)` хранить как finite comparative metric; \
-  TVD хранить как дополнительную конечную metric.
+    Результат этапа 3: при сравнении строгое направление дало `+inf` во всех `32/32` normalized-запусках.
+    Поэтому одну KL нельзя использовать как единственную численную меру отличия.
   ]
 ]
 
-#v(8pt)
-#tiny[Specification v0.1 не переписывалась задним числом. Изменение относится только к будущей v1.0.]
+#goodbox[
+  #text(weight: "bold", fill: good)[Итог для будущей спецификации] \
+  #small[
+    Оставить $D_"KL"(P_"reference" || Q_"stego")$ как строгую диагностику потери support; \
+    хранить $D_"KL"(Q_"stego" || P_"reference")$ как конечную сравнительную метрику; \
+    дополнительно использовать TVD как конечную меру различия распределений.
+  ]
+]
 #pagebreak()
 
 // ===================================
 // 7
 // ===================================
-#slide-title[Итог Этапа 3]
+#slide-title[Итог этапа 3]
 
 #goodbox[
-  #text(size: 14pt, weight: "bold", fill: good)[Normalized adapters сохраняют принципиальное поведение Bins, Huffman и Arithmetic Coding] \
+  #text(size: 14pt, weight: "bold", fill: good)[
+    Нормализованные реализации сохраняют принцип работы Bins, Huffman и Arithmetic Coding
+  ] \
   #v(4pt)
-  #small[Это подтверждено author-compatible reproduction, Figure-3 trend reproduction и matched author-vs-normalized analysis.]
+  #small[
+    Это подтверждено воспроизведением авторского эксперимента, анализом трендов Figure 3
+    и сопоставленным сравнением author-compatible и normalized режимов.
+  ]
 ]
 
 #v(10pt)
 #grid(columns: (1fr, 1fr), gutter: 12pt,
-  card("Подтверждено")[
-    1. Figure-3 trends и method ordering. \
-    2. Arithmetic minimum при `tau=1`. \
-    3. Core method principle 4/4 matched points. \
-    4. Dual-KL interpretation для benchmark.
+  card("Что подтверждено")[
+    1. Основные тренды Figure 3 и порядок методов. \
+    2. Минимум Arithmetic Coding при `tau=1.0`. \
+    3. Сохранение принципа методов в 4/4 контрольных точках. \
+    4. Необходимость двух направлений KL для бенчмарка.
   ],
   card("Ограничения")[
-    1. Exact `4e-8 nats` anchor не воспроизведён при p=26. \
-    2. Historical MC driver/sample count неизвестны. \
-    3. Matched grid — 4 точки × 8 contexts, а не полный normalized sweep.
+    1. Точное значение `4e-8 nats` не воспроизведено при `precision=26`. \
+    2. Исходная схема Monte-Carlo эксперимента авторов неизвестна. \
+    3. Сопоставленное сравнение выполнено для 4 точек × 8 контекстов, а не для полного normalized sweep.
   ],
 )
 
 #v(12pt)
 #note[
-  #text(size: 12pt, weight: "bold", fill: accent)[Следующий этап: подключение современных методов — ADG, Discop, RRC и других методов ROADMAP.]
+  #text(size: 12pt, weight: "bold", fill: accent)[
+    Следующий этап: подключение современных методов - ADG, Discop, RRC и других методов из roadmap.
+  ]
 ]
