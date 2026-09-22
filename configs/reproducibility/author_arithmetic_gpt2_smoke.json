@@ -1,0 +1,30 @@
+{
+  "schema_version": "stage3.author_arithmetic_smoke.v1",
+  "mode": "author-compatible",
+  "method": "arithmetic",
+  "purpose": "Technical smoke test of the pinned Harvard Arithmetic Coding implementation before paper-level reproduction.",
+  "reference_repository": "https://github.com/harvardnlp/NeuralSteganography",
+  "reference_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+  "model_id": "gpt2",
+  "seed": 1234,
+  "temperature": 0.9,
+  "precision": 26,
+  "topk": 300,
+  "finish_sent": false,
+  "secret_bits": "000100010110001101011111",
+  "context": "Washington received his initial military training and command with the Virginia Regiment during the French and Indian War. He was later elected to the Virginia House of Burgesses and was named a delegate to the Continental Congress, where he was appointed Commanding General of the nation's Continental Army. Washington led American forces, allied with France, in the defeat of the British at Yorktown. Once victory for the United States was in hand in 1783, Washington resigned his commission.\n\n\n",
+  "notes": [
+    "The model, seed, context, and 24-bit direct binary payload are identical to the successful Bins and Huffman smokes.",
+    "temperature=0.9, precision=26, and topk=300 match the default Arithmetic Coding settings in the pinned Harvard run_single.py.",
+    "The pinned arithmetic.py already uses Transformers DynamicCache and past_key_values directly, so this smoke executes it with the raw model returned by reference utils.get_model rather than the legacy Bins/Huffman model adapter.",
+    "The Arithmetic encoder may inspect zero-padded precision-bit lookahead beyond the useful payload and may confirm more bits than the 24 useful payload bits on its final carrier.",
+    "The Arithmetic decoder has an author-specific final-carrier flush: on the final carrier it emits the full precision-bit lower interval bound. Recovered bits after the author-consumed prefix are therefore diagnostic flush bits, not additional useful payload.",
+    "This is a technical smoke configuration, not a paper-level reproduction point."
+  ],
+  "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache",
+  "compatibility_notes": [
+    "No reference file is edited.",
+    "No LegacyCausalLMAdapter is used for Arithmetic Coding because the pinned arithmetic.py is already written against DynamicCache/past_key_values.",
+    "No tokenizer override is applied; utils.get_model is called exactly as provided by the pinned reference for this method."
+  ]
+}

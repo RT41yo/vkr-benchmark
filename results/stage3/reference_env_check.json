@@ -1,0 +1,72 @@
+{
+  "checks": [
+    {
+      "detail": "pinned to https://github.com/harvardnlp/NeuralSteganography@14e982564aeaf9a33f7b4de440deda2184d17f12",
+      "name": "reference_sources",
+      "status": "PASS"
+    },
+    {
+      "detail": "3.12.14 (benchmark requires Python 3.12.x)",
+      "name": "python",
+      "status": "PASS"
+    },
+    {
+      "detail": "2.0.2 (expected 2.x)",
+      "name": "package:numpy",
+      "status": "PASS"
+    },
+    {
+      "detail": "2.7.1+cu128 (expected 2.7.x)",
+      "name": "package:torch",
+      "status": "PASS"
+    },
+    {
+      "detail": "4.52.4 (expected 4.52.x)",
+      "name": "package:transformers",
+      "status": "PASS"
+    },
+    {
+      "detail": "0.21.1 (expected 0.21.x)",
+      "name": "package:tokenizers",
+      "status": "PASS"
+    },
+    {
+      "detail": "0.32.5 (expected 0.32.x)",
+      "name": "package:huggingface-hub",
+      "status": "PASS"
+    },
+    {
+      "detail": "0.5.3 (expected 0.5.x)",
+      "name": "package:safetensors",
+      "status": "PASS"
+    },
+    {
+      "detail": "3.4.2",
+      "name": "package:bitarray",
+      "status": "PASS"
+    },
+    {
+      "detail": "all 7 expected files are present",
+      "name": "reference_files",
+      "status": "PASS"
+    },
+    {
+      "detail": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+      "name": "reference_git_head",
+      "status": "PASS"
+    }
+  ],
+  "packages": {
+    "bitarray": "3.4.2",
+    "huggingface-hub": "0.32.5",
+    "numpy": "2.0.2",
+    "safetensors": "0.5.3",
+    "tokenizers": "0.21.1",
+    "torch": "2.7.1+cu128",
+    "transformers": "4.52.4"
+  },
+  "python_version": "3.12.14",
+  "ready": true,
+  "reference_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+  "reference_repository": "https://github.com/harvardnlp/NeuralSteganography"
+}

@@ -16,6 +16,7 @@ def _row(method: str, *, run_id: str, status: str = "ok") -> dict[str, object]:
         "bits_per_token": 2.0,
         "entropy_utilization": 0.5,
         "kl_mean_bits": math.inf,
+        "kl_stego_to_ref_mean_bits": 0.75,
         "tvd_mean": 0.25,
         "nll_raw_lm_nats_per_token": 1.5,
         "ppl_raw_lm": 4.5,
@@ -60,7 +61,7 @@ def test_normalize_order_is_deterministic() -> None:
 def test_markdown_formats_infinity_percent_and_metrics() -> None:
     table = build_markdown_table([_row("bins", run_id="1")])
     assert "| Метод | BPT | Использование энтропии, % |" in table
-    assert "| bins | 2.0000 | 50.00 | inf | 0.2500 | 1.5000 | 4.5000 | 0.000000 | 10.000 | 11.000 | ok |" in table
+    assert "| bins | 2.0000 | 50.00 | inf | 0.7500 | 0.2500 | 1.5000 | 4.5000 | 0.000000 | 10.000 | 11.000 | ok |" in table
 
 
 def test_markdown_empty_table_is_explicit() -> None:

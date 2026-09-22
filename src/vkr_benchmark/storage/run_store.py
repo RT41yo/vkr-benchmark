@@ -213,13 +213,27 @@ def build_result_record(
         "entropy_utilization": capacity.entropy_utilization,
         "entropy_utilization_percent": capacity.entropy_utilization_percent,
         "q_mode": distortion.q_mode.value,
-        # Specification v0.1 generic KL fields mean KL(P_reference || Q_stego).
+        # Frozen benchmark-v0.1 aliases (all mean P_reference -> Q_stego).
         "kl_mean_bits": distortion.kl_mean_bits,
         "kl_median_bits": distortion.kl_median_bits,
         "kl_p95_bits": distortion.kl_p95_bits,
         "kl_max_bits": distortion.kl_max_bits,
         "kl_infinite_steps": distortion.kl_infinite_steps,
         "kl_finite_steps": distortion.kl_finite_steps,
+        # ADR-0012 direction-qualified KL fields.  Stage 3 must never compare
+        # the legacy alias to an author Q_stego -> P_reference value.
+        "kl_ref_to_stego_mean_bits": distortion.kl_ref_to_stego_mean_bits,
+        "kl_ref_to_stego_median_bits": distortion.kl_ref_to_stego_median_bits,
+        "kl_ref_to_stego_p95_bits": distortion.kl_ref_to_stego_p95_bits,
+        "kl_ref_to_stego_max_bits": distortion.kl_ref_to_stego_max_bits,
+        "kl_ref_to_stego_infinite_steps": distortion.kl_ref_to_stego_infinite_steps,
+        "kl_ref_to_stego_finite_steps": distortion.kl_ref_to_stego_finite_steps,
+        "kl_stego_to_ref_mean_bits": distortion.kl_stego_to_ref_mean_bits,
+        "kl_stego_to_ref_median_bits": distortion.kl_stego_to_ref_median_bits,
+        "kl_stego_to_ref_p95_bits": distortion.kl_stego_to_ref_p95_bits,
+        "kl_stego_to_ref_max_bits": distortion.kl_stego_to_ref_max_bits,
+        "kl_stego_to_ref_infinite_steps": distortion.kl_stego_to_ref_infinite_steps,
+        "kl_stego_to_ref_finite_steps": distortion.kl_stego_to_ref_finite_steps,
         "tvd_mean": distortion.tvd_mean,
         "tvd_median": distortion.tvd_median,
         "tvd_p95": distortion.tvd_p95,
@@ -300,7 +314,8 @@ def iter_trace_records(execution: ExperimentExecution) -> Iterable[dict[str, Any
             "reference_entropy_bits": encode.step_reference_entropy_bits[index],
             "q_mode": distortion.q_mode.value,
             "q_source": distortion.q_source.value,
-            "kl_ref_to_stego_bits": distortion.kl_bits,
+            "kl_ref_to_stego_bits": distortion.kl_ref_to_stego_bits,
+            "kl_stego_to_ref_bits": distortion.kl_stego_to_ref_bits,
             "tvd": distortion.tvd,
             "raw_lm_nll_selected_nats": encode.step_raw_lm_nll_nats[index],
         }
@@ -337,9 +352,17 @@ def build_summary_row(
         "reference_entropy_sum_bits": capacity.reference_entropy_sum_bits,
         "entropy_utilization": capacity.entropy_utilization,
         "q_mode": distortion.q_mode.value,
+        # Frozen v0.1 aliases for P_reference -> Q_stego.
         "kl_mean_bits": distortion.kl_mean_bits,
         "kl_max_bits": distortion.kl_max_bits,
         "kl_infinite_steps": distortion.kl_infinite_steps,
+        # ADR-0012 explicit directions.
+        "kl_ref_to_stego_mean_bits": distortion.kl_ref_to_stego_mean_bits,
+        "kl_ref_to_stego_max_bits": distortion.kl_ref_to_stego_max_bits,
+        "kl_ref_to_stego_infinite_steps": distortion.kl_ref_to_stego_infinite_steps,
+        "kl_stego_to_ref_mean_bits": distortion.kl_stego_to_ref_mean_bits,
+        "kl_stego_to_ref_max_bits": distortion.kl_stego_to_ref_max_bits,
+        "kl_stego_to_ref_infinite_steps": distortion.kl_stego_to_ref_infinite_steps,
         "tvd_mean": distortion.tvd_mean,
         "tvd_max": distortion.tvd_max,
         "nll_raw_lm_nats_per_token": quality.nll_raw_lm_nats_per_token,
@@ -383,6 +406,12 @@ def build_failure_summary_row(
         "kl_mean_bits": None,
         "kl_max_bits": None,
         "kl_infinite_steps": None,
+        "kl_ref_to_stego_mean_bits": None,
+        "kl_ref_to_stego_max_bits": None,
+        "kl_ref_to_stego_infinite_steps": None,
+        "kl_stego_to_ref_mean_bits": None,
+        "kl_stego_to_ref_max_bits": None,
+        "kl_stego_to_ref_infinite_steps": None,
         "tvd_mean": None,
         "tvd_max": None,
         "nll_raw_lm_nats_per_token": None,
@@ -469,9 +498,17 @@ def _summary_schema(pa: Any) -> Any:
             ("reference_entropy_sum_bits", pa.float64()),
             ("entropy_utilization", pa.float64()),
             ("q_mode", pa.string()),
+            # v0.1 compatibility aliases for P_reference -> Q_stego.
             ("kl_mean_bits", pa.float64()),
             ("kl_max_bits", pa.float64()),
             ("kl_infinite_steps", pa.int64()),
+            # ADR-0012 direction-qualified fields.
+            ("kl_ref_to_stego_mean_bits", pa.float64()),
+            ("kl_ref_to_stego_max_bits", pa.float64()),
+            ("kl_ref_to_stego_infinite_steps", pa.int64()),
+            ("kl_stego_to_ref_mean_bits", pa.float64()),
+            ("kl_stego_to_ref_max_bits", pa.float64()),
+            ("kl_stego_to_ref_infinite_steps", pa.int64()),
             ("tvd_mean", pa.float64()),
             ("tvd_max", pa.float64()),
             ("nll_raw_lm_nats_per_token", pa.float64()),
@@ -510,10 +547,24 @@ def update_summary_parquet(path: str | Path, row: Mapping[str, Any]) -> Path:
     rows: list[dict[str, Any]] = []
     if summary_path.exists():
         try:
-            existing = pq.read_table(summary_path, schema=schema)
+            # Read the physical table as stored first.  Stage-2 repositories may
+            # still contain the pre-ADR-0012 schema; forcing the new schema at
+            # read time would make those valid historical rows unreadable.
+            existing = pq.read_table(summary_path)
         except Exception as exc:  # pyarrow exposes several concrete errors
             raise StorageError(f"cannot read existing summary {summary_path}: {exc}") from exc
-        rows.extend(existing.to_pylist())
+        for old_row in existing.to_pylist():
+            migrated = dict(old_row)
+            # The v0.1 generic KL aliases are unambiguously P_reference -> Q_stego.
+            migrated.setdefault("kl_ref_to_stego_mean_bits", migrated.get("kl_mean_bits"))
+            migrated.setdefault("kl_ref_to_stego_max_bits", migrated.get("kl_max_bits"))
+            migrated.setdefault("kl_ref_to_stego_infinite_steps", migrated.get("kl_infinite_steps"))
+            # Historical rows did not calculate the reverse direction.  Preserve
+            # that absence rather than inventing a value.
+            migrated.setdefault("kl_stego_to_ref_mean_bits", None)
+            migrated.setdefault("kl_stego_to_ref_max_bits", None)
+            migrated.setdefault("kl_stego_to_ref_infinite_steps", None)
+            rows.append(migrated)
 
     run_id = str(row["run_id"])
     rows = [existing for existing in rows if existing.get("run_id") != run_id]

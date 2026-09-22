@@ -243,3 +243,33 @@ benchmark-native `D_KL(P_reference || Q_stego)` может законно при
 Выявлено при реализации единого persistent storage на этапе 2, шаге 7.5.
 
 Учесть при подготовке `benchmark_specification_v1.0`.
+
+
+---
+
+## Замечание 6. Закрепить оба направления KL и их разные роли
+
+### Причина
+
+Matched author-vs-normalized experiment Этапа 3 показал, что для representative Bins, Huffman и Arithmetic Coding `D_KL(P_reference || Q_stego)` равен `+inf` во всех 32/32 normalized runs. Причина структурная: induced `Q_stego` имеет более узкую область поддержки, чем canonical `P_reference`. Одновременно reverse direction `D_KL(Q_stego || P_reference)` остаётся конечным и соответствует направлению, используемому для author-compatible comparison.
+
+### Решение реализации v0.2 / Stage 3
+
+- forward KL не сглаживается и хранится вместе с `infinite_steps`;
+- reverse KL хранится отдельными direction-qualified полями;
+- TVD хранится как дополнительная конечная distortion metric;
+- generic `kl` без направления не используется в новых результатах.
+
+### Предлагаемое уточнение для v1.0
+
+Явно закрепить три complementary сигнала:
+
+1. `kl_ref_to_stego` + число бесконечных шагов — строгий support-mismatch diagnostic;
+2. `kl_stego_to_ref` — конечная comparative/author-compatible KL;
+3. TVD — конечная companion metric.
+
+Не вводить epsilon smoothing только ради получения конечного forward KL: это изменило бы смысл frozen benchmark-native metric и скрывало бы фактическую потерю support.
+
+### Статус
+
+Подтверждено экспериментально на Этапе 3. Specification v0.1 остаётся неизменной; учесть при подготовке `benchmark_specification_v1.0`.

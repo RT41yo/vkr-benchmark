@@ -22,6 +22,7 @@ DEFAULT_COLUMNS: tuple[SummaryColumn, ...] = (
     SummaryColumn("bits_per_token", "BPT", digits=4),
     SummaryColumn("entropy_utilization", "Использование энтропии, %", digits=2, percent=True),
     SummaryColumn("kl_mean_bits", "KL P_ref→Q_stego, бит/токен", digits=4),
+    SummaryColumn("kl_stego_to_ref_mean_bits", "KL Q_stego→P_ref, бит/токен", digits=4),
     SummaryColumn("tvd_mean", "Среднее TVD", digits=4),
     SummaryColumn("nll_raw_lm_nats_per_token", "NLL исходной LM", digits=4),
     SummaryColumn("ppl_raw_lm", "PPL исходной LM", digits=4),

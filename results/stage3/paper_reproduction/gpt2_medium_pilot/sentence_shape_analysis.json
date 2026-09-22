@@ -1,0 +1,77 @@
+{
+  "early_sentence_finish_count_by_point": {
+    "arithmetic_t0.9_k300": 2,
+    "arithmetic_t1.0_k50256": 2,
+    "huffman_e3": 1
+  },
+  "early_sentence_finish_run_count": 5,
+  "early_sentence_finish_runs": [
+    {
+      "first_sentence_finish_position_zero_based": 9,
+      "generated_token_count_total": 40,
+      "point_id": "huffman_e3",
+      "selection_rank": 7,
+      "sentence_finish_token_positions_zero_based": [
+        9,
+        39
+      ],
+      "tokens_after_first_sentence_finish": 30
+    },
+    {
+      "first_sentence_finish_position_zero_based": 10,
+      "generated_token_count_total": 51,
+      "point_id": "arithmetic_t0.9_k300",
+      "selection_rank": 2,
+      "sentence_finish_token_positions_zero_based": [
+        10,
+        50
+      ],
+      "tokens_after_first_sentence_finish": 40
+    },
+    {
+      "first_sentence_finish_position_zero_based": 11,
+      "generated_token_count_total": 27,
+      "point_id": "arithmetic_t1.0_k50256",
+      "selection_rank": 5,
+      "sentence_finish_token_positions_zero_based": [
+        11,
+        26
+      ],
+      "tokens_after_first_sentence_finish": 15
+    },
+    {
+      "first_sentence_finish_position_zero_based": 4,
+      "generated_token_count_total": 25,
+      "point_id": "arithmetic_t0.9_k300",
+      "selection_rank": 7,
+      "sentence_finish_token_positions_zero_based": [
+        4,
+        24
+      ],
+      "tokens_after_first_sentence_finish": 20
+    },
+    {
+      "first_sentence_finish_position_zero_based": 4,
+      "generated_token_count_total": 36,
+      "point_id": "arithmetic_t1.0_k50256",
+      "selection_rank": 7,
+      "sentence_finish_token_positions_zero_based": [
+        4,
+        9,
+        35
+      ],
+      "tokens_after_first_sentence_finish": 31
+    }
+  ],
+  "interpretation": {
+    "fixed_payload_then_finish_can_cross_first_sentence_boundary": true,
+    "future_paper_driver_requirement": "Use a sufficiently long uniform bitstream and define the first sentence boundary as the candidate generation stop; do not reuse this audit as a Figure-3 measurement.",
+    "paper_sentence_shape_issue_observed": true,
+    "public_finish_sent_semantics": "The public author loop consumes the fixed payload first and only then greedily extends until a sentence-finish token is observed."
+  },
+  "schema_version": "stage3.gpt2_medium_pilot_sentence_shape.v1",
+  "single_sentence_shape_count": 27,
+  "source_result_path": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/results/stage3/paper_reproduction/gpt2_medium_pilot/result.json",
+  "source_result_sha256": "ee669fde58f880cca961baebca88e8c5b383bd2716c6775afb13b5a2d475c47d",
+  "total_run_count": 32
+}

@@ -1,0 +1,20 @@
+{
+  "benchmark_native_kl_infinite_pair_count": 32,
+  "conformance_point_count": 4,
+  "context_manifest_sha256": "cc25b492b26e102496137bc2f8eb78320c7f7768d83ff7e10af9b2e04a14aebc",
+  "core_principle_preserved_count": 4,
+  "exact_unmodulated_anchor_reproduced": false,
+  "figure3_overall_assessment": "partial_reproduction",
+  "figure3_point_count": 23,
+  "figure3_scheduled_runs": 5520,
+  "figure3_terminated_runs": 5513,
+  "figure3_termination_failures": 7,
+  "matched_exact_normalized_decode_count": 32,
+  "matched_pair_count": 32,
+  "model_revision": "6dcaa7a952f72f9298047fd5137cd6e4f05f41da",
+  "overall_conformance": "normalized_adaptations_preserve_core_method_behavior_with_documented_normalization_divergences",
+  "ready_for_stage4": true,
+  "reference_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+  "schema_version": "stage3.closeout_summary.v1",
+  "stage": 3
+}

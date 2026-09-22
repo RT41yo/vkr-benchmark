@@ -31,11 +31,18 @@ def _explicit(values: list[float], *, mode: QMode = QMode.ANALYTIC_EXACT) -> Dis
     )
 
 
-def _step(kl: float, tvd: float, *, mode: QMode = QMode.ANALYTIC_EXACT) -> StepDistributionDistortion:
+def _step(
+    kl: float,
+    tvd: float,
+    *,
+    reverse_kl: float | None = None,
+    mode: QMode = QMode.ANALYTIC_EXACT,
+) -> StepDistributionDistortion:
     return StepDistributionDistortion(
         q_mode=mode,
         q_source=QSource.ADAPTER_EXACT,
         kl_bits=kl,
+        kl_stego_to_ref_bits=kl if reverse_kl is None else reverse_kl,
         tvd=tvd,
     )
 
@@ -45,7 +52,8 @@ def test_identical_explicit_distributions_have_zero_kl_and_tvd() -> None:
     result = distribution_distortion_step(reference, _explicit([0.5, 0.25, 0.25]))
 
     assert result.q_mode == QMode.ANALYTIC_EXACT
-    assert result.kl_bits == pytest.approx(0.0)
+    assert result.kl_ref_to_stego_bits == pytest.approx(0.0)
+    assert result.kl_stego_to_ref_bits == pytest.approx(0.0)
     assert result.tvd == pytest.approx(0.0)
 
 
@@ -54,7 +62,13 @@ def test_manual_finite_kl_and_tvd_example() -> None:
     result = distribution_distortion_step(reference, _explicit([0.5, 0.4, 0.1]))
 
     expected_kl = 0.25 * math.log2(0.25 / 0.4) + 0.25 * math.log2(0.25 / 0.1)
-    assert result.kl_bits == pytest.approx(expected_kl)
+    expected_reverse = (
+        0.5 * math.log2(0.5 / 0.5)
+        + 0.4 * math.log2(0.4 / 0.25)
+        + 0.1 * math.log2(0.1 / 0.25)
+    )
+    assert result.kl_ref_to_stego_bits == pytest.approx(expected_kl)
+    assert result.kl_stego_to_ref_bits == pytest.approx(expected_reverse)
     assert result.tvd == pytest.approx(0.15)
 
 
@@ -62,7 +76,8 @@ def test_p_positive_q_zero_makes_kl_infinite_without_epsilon_smoothing() -> None
     reference = _reference([0.5, 0.25, 0.25])
     result = distribution_distortion_step(reference, _explicit([0.5, 0.5, 0.0]))
 
-    assert result.kl_bits == math.inf
+    assert result.kl_ref_to_stego_bits == math.inf
+    assert math.isfinite(float(result.kl_stego_to_ref_bits))
     assert result.tvd == pytest.approx(0.25)
 
 
@@ -70,8 +85,10 @@ def test_q_zero_where_p_is_zero_does_not_force_infinite_kl() -> None:
     reference = _reference([0.5, 0.5, 0.0])
     result = distribution_distortion_step(reference, _explicit([0.6, 0.4, 0.0]))
 
-    assert result.kl_bits is not None
-    assert math.isfinite(result.kl_bits)
+    assert result.kl_ref_to_stego_bits is not None
+    assert math.isfinite(result.kl_ref_to_stego_bits)
+    assert result.kl_stego_to_ref_bits is not None
+    assert math.isfinite(result.kl_stego_to_ref_bits)
     assert result.tvd == pytest.approx(0.1)
 
 
@@ -81,7 +98,8 @@ def test_reference_equality_certificate_is_exact_zero_distortion() -> None:
         DistributionInfo.reference_equality(),
     )
 
-    assert result.kl_bits == 0.0
+    assert result.kl_ref_to_stego_bits == 0.0
+    assert result.kl_stego_to_ref_bits == 0.0
     assert result.tvd == 0.0
     assert result.q_source == QSource.ANALYTIC_THEORY
 
@@ -94,8 +112,18 @@ def test_unavailable_q_is_preserved_as_unavailable_not_surrogated() -> None:
 
     assert result.q_mode == QMode.UNAVAILABLE
     assert result.available is False
-    assert result.kl_bits is None
+    assert result.kl_ref_to_stego_bits is None
+    assert result.kl_stego_to_ref_bits is None
     assert result.tvd is None
+
+
+def test_q_positive_p_zero_makes_reverse_kl_infinite_without_smoothing() -> None:
+    reference = _reference([0.5, 0.5, 0.0])
+    result = distribution_distortion_step(reference, _explicit([0.4, 0.4, 0.2]))
+
+    assert result.kl_ref_to_stego_bits is not None
+    assert math.isfinite(result.kl_ref_to_stego_bits)
+    assert result.kl_stego_to_ref_bits == math.inf
 
 
 def test_explicit_q_must_match_reference_vocabulary_size() -> None:
@@ -125,6 +153,12 @@ def test_finite_run_aggregation_matches_manual_statistics() -> None:
     assert metrics.kl_max_bits == pytest.approx(0.4)
     assert metrics.kl_infinite_steps == 0
     assert metrics.kl_finite_steps == 4
+    assert metrics.kl_stego_to_ref_mean_bits == pytest.approx(0.25)
+    assert metrics.kl_stego_to_ref_median_bits == pytest.approx(0.25)
+    assert metrics.kl_stego_to_ref_p95_bits == pytest.approx(0.4)
+    assert metrics.kl_stego_to_ref_max_bits == pytest.approx(0.4)
+    assert metrics.kl_stego_to_ref_infinite_steps == 0
+    assert metrics.kl_stego_to_ref_finite_steps == 4
     assert metrics.tvd_mean == pytest.approx(0.125)
     assert metrics.tvd_median == pytest.approx(0.125)
     assert metrics.tvd_p95 == pytest.approx(0.20)
@@ -196,7 +230,7 @@ def test_available_q_mode_cannot_have_missing_step_metrics() -> None:
         kl_bits=None,
         tvd=None,
     )
-    with pytest.raises(MetricError, match="requires KL/TVD"):
+    with pytest.raises(MetricError, match="requires both KL directions and TVD"):
         compute_distribution_distortion_metrics([broken])
 
 

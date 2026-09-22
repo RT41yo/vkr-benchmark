@@ -1,0 +1,96 @@
+{
+  "author_metrics": {
+    "avg_nll_nats_author": 3.5395455211400986,
+    "bits_per_word_author": 3.0,
+    "kl_q_stego_to_p_lm_bits_author": 2.3329993188381195,
+    "perplexity_author": 34.45125826376892,
+    "words_per_bit_author": 0.3333333333333333
+  },
+  "compatibility": {
+    "cache_translation": "historical stacked [2,batch,heads,seq,head_dim] <-> modern per-layer (key,value)",
+    "model_call_translation": "past -> past_key_values",
+    "model_class": "GPT2LMHeadModel",
+    "model_return_dict": false,
+    "profile": "hf_4_52_legacy_api",
+    "reference_files_modified": false,
+    "tokenizer_class": "GPT2Tokenizer",
+    "tokenizer_use_fast": false
+  },
+  "config": {
+    "block_size": 3,
+    "context_sha256": "658c80252c2f18dcb3b5fd44c4e0b082d1ecc9830dfe96f14cf4e3f0dc4d8fdf",
+    "finish_sent": false,
+    "model_id": "gpt2",
+    "path": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/configs/reproducibility/author_bins_gpt2_smoke.json",
+    "secret_bit_count": 24,
+    "secret_bits": "000100010110001101011111",
+    "seed": 1234,
+    "sha256": "699db83c9a6123f4b2f8a7bf27f9d90ae4b885e79a09ee42b39ca48cbc84f3ca"
+  },
+  "duration_seconds": 3.7970020299835596,
+  "environment": {
+    "device": "cuda:0",
+    "gpu_name": "NVIDIA GeForce RTX 5070 Ti",
+    "packages": {
+      "bitarray": "3.4.2",
+      "huggingface-hub": "0.32.5",
+      "numpy": "2.0.2",
+      "safetensors": "0.5.3",
+      "tokenizers": "0.21.1",
+      "torch": "2.7.1+cu128",
+      "transformers": "4.52.4"
+    },
+    "python": "3.12.14",
+    "torch_cuda_available": true
+  },
+  "evidence": {
+    "compat_cache_shape_failure": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/results/stage3/author_smoke/bins_gpt2/compat_cache_shape_failure.json",
+    "raw_reference_failure": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/results/stage3/author_smoke/bins_gpt2/raw_reference_failure.json"
+  },
+  "finished_at_utc": "2026-09-10T21:38:48.516580+00:00",
+  "generation": {
+    "generated_token_count": 8,
+    "retokenized_token_ids": [
+      3886,
+      1467,
+      5999,
+      11,
+      3162,
+      550,
+      2077,
+      287
+    ],
+    "sender_token_ids": [
+      3886,
+      1467,
+      5999,
+      11,
+      3162,
+      550,
+      2077,
+      287
+    ],
+    "stegotext_utf8_bytes": 30,
+    "text_token_roundtrip_exact": true
+  },
+  "method": "bins",
+  "mode": "author-compatible",
+  "recovery": {
+    "exact_payload_recovery": true,
+    "payload_prefix_bits": "000100010110001101011111",
+    "recovered_bit_count": 24,
+    "recovered_bits": "000100010110001101011111"
+  },
+  "reference": {
+    "actual_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+    "checkout": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/external/NeuralSteganography",
+    "expected_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+    "git_status_after": "",
+    "git_status_before": "",
+    "repository": "https://github.com/harvardnlp/NeuralSteganography",
+    "worktree_unchanged": true
+  },
+  "schema_version": "stage3.author_smoke_result.v1",
+  "started_at_utc": "2026-09-10T21:38:44.720304+00:00",
+  "status": "ok"
+}

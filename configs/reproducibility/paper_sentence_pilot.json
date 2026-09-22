@@ -1,0 +1,87 @@
+{
+  "schema_version": "stage3.paper_sentence_pilot.v1",
+  "status": "frozen_before_run",
+  "purpose": "Validate a paper-like one-sentence author-compatible orchestration before the full Figure-3 sweep: use a long deterministic uniform bitstream, embed continuously, and stop at the first sentence boundary selected by the pinned reference predicate.",
+  "reference_repository": "https://github.com/harvardnlp/NeuralSteganography",
+  "reference_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+  "model_id": "gpt2-medium",
+  "seed": 1234,
+  "context_manifest_path": "results/stage3/paper_reproduction/cnndm_context_manifest.json",
+  "context_manifest_sha256": "cc25b492b26e102496137bc2f8eb78320c7f7768d83ff7e10af9b2e04a14aebc",
+  "local_context_text_path": "data/stage3/cnndm/generated_contexts.jsonl",
+  "pilot_context_count": 8,
+  "secret_stream": {
+    "bit_count": 16384,
+    "generator_id": "paper_sentence_sha256_bitstream_v1",
+    "material": "stage3-paper-sentence|seed=<seed>|replicate=<replicate>|selection_rank=<rank>|counter=<counter>",
+    "same_stream_per_context_across_methods": true,
+    "replicate": 0,
+    "rule": "The stream is a finite implementation of an effectively long uniform random message. The run must stop at the first sentence boundary before the stream is exhausted; exhaustion is a hard failure, never silently zero-padded."
+  },
+  "sentence_stop": {
+    "stop_at_first_boundary": true,
+    "predicate": "pinned_reference_utils.is_sent_finish",
+    "predicate_semantics": "A generated token is sentence-final when its decoded token text contains '.', '!', or '?'. This is the only public sentence-finish predicate in the pinned author repository; the unavailable Figure-3 batch driver may have used additional orchestration that cannot be recovered from the public code.",
+    "max_generated_tokens": 256,
+    "max_token_policy": "Safety cap only. Hitting the cap is a hard pilot failure and does not silently truncate a Figure-3 sample."
+  },
+  "pilot_points": [
+    {
+      "id": "bins_b3",
+      "method": "bins",
+      "block_size_bits": 3,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "huffman_e3",
+      "method": "huffman",
+      "candidate_pool_exponent": 3,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "arithmetic_t0.9_k300",
+      "method": "arithmetic",
+      "temperature": 0.9,
+      "topk": 300,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache"
+    },
+    {
+      "id": "arithmetic_t1.0_k50256",
+      "method": "arithmetic",
+      "temperature": 1.0,
+      "topk": 50256,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache"
+    }
+  ],
+  "parity_sentinel": {
+    "selection_rank": 0,
+    "bit_count": 24,
+    "require_exact_generated_token_ids": true,
+    "require_metric_match_abs_tol": 1e-10,
+    "require_words_per_bit_match_abs_tol": 1e-12,
+    "rule": "Before trusting first-boundary stopping, the repository-owned mirrors must reproduce the pinned fixed-message encoders with finish_sent=false. Parity is checked for Bins, Huffman, and both Arithmetic pilot points."
+  },
+  "payload_accounting": {
+    "payload_bits": "Bits confirmed as encoded by the author algorithm when the first sentence boundary token has been emitted.",
+    "secret_bits_read": "For Bins/Huffman this equals consumed bits. For Arithmetic it includes the precision-bit look-ahead required to select tokens and can exceed confirmed payload_bits.",
+    "arithmetic_zero_padding": "Forbidden in the paper-sentence measurement path. A full precision-bit look-ahead must be available at every Arithmetic step.",
+    "decoder_check": "The author decoder applied to transported text must recover a prefix equal to all confirmed payload bits. Arithmetic may emit additional final-flush bits after that prefix."
+  },
+  "execution": {
+    "replicates": 1,
+    "expected_run_count": 32,
+    "output_directory": "results/stage3/paper_reproduction/paper_sentence_pilot"
+  },
+  "success_criteria": [
+    "all four mirror parity sentinels pass against the pinned executable reference",
+    "all 32 paper-sentence pilot runs stop on their first author sentence-boundary token",
+    "no run exhausts the long secret stream or hits the 256-token safety cap",
+    "all runs confirm at least one payload bit",
+    "the author decoder recovers every confirmed payload prefix from ordinary text transport",
+    "Arithmetic uses no implicit zero look-ahead in the paper-sentence measurement path",
+    "the pinned Harvard checkout remains byte-for-byte unmodified"
+  ],
+  "scope_note": "This pilot freezes the Stage-3 operationalization of the paper phrase 'generate an entire sentence given a uniform random message'. It does not claim that the unavailable original Figure-3 batch driver used the exact same stopping code."
+}

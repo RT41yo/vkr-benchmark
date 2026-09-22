@@ -1,0 +1,86 @@
+{
+  "checks": [
+    {
+      "detail": "all 23 required Stage-3 paths exist",
+      "name": "repository_structure",
+      "ok": true
+    },
+    {
+      "detail": "23 points and 5520/5520 scheduled outcomes are present",
+      "name": "figure3_execution_matrix",
+      "ok": true
+    },
+    {
+      "detail": "5513 sentence completions, 7 declared termination failures, pilot continuity and reference integrity preserved",
+      "name": "figure3_execution_integrity",
+      "ok": true
+    },
+    {
+      "detail": "all 8 Figure-3 claims have the frozen Step-3.11 classifications",
+      "name": "paper_claim_classification",
+      "ok": true
+    },
+    {
+      "detail": "overall paper reproduction status is partial_reproduction",
+      "name": "paper_overall_assessment",
+      "ok": true
+    },
+    {
+      "detail": "Bins/Huffman/Arithmetic characteristic curve behavior reproduced",
+      "name": "paper_curve_behavior",
+      "ok": true
+    },
+    {
+      "detail": "32/32 pairs have matched carriers, secret streams and exact normalized token-ID decode",
+      "name": "matched_pair_integrity",
+      "ok": true
+    },
+    {
+      "detail": "Harvard commit, GPT-2 Medium revision and context manifest are pinned",
+      "name": "matched_provenance",
+      "ok": true
+    },
+    {
+      "detail": "both KL directions are explicitly accounted for in all matched normalized runs",
+      "name": "dual_kl_contract",
+      "ok": true
+    },
+    {
+      "detail": "core embedding/decoding principle preserved at 4/4 representative matched points",
+      "name": "core_method_conformance",
+      "ok": true
+    },
+    {
+      "detail": "benchmark-native forward KL is +inf in 32/32 pairs and remains an unsmoothed support diagnostic",
+      "name": "support_mismatch_finding",
+      "ok": true
+    },
+    {
+      "detail": "overall conformance classification is frozen and ready for closeout",
+      "name": "conformance_overall",
+      "ok": true
+    },
+    {
+      "detail": "4 representative matched comparison rows are materialized",
+      "name": "comparison_csv",
+      "ok": true
+    },
+    {
+      "detail": "comparison.parquet is readable and contains the 4 representative points",
+      "name": "comparison_parquet",
+      "ok": true
+    },
+    {
+      "detail": "machine-readable Stage-3 closeout summary is internally consistent",
+      "name": "closeout_summary",
+      "ok": true
+    },
+    {
+      "detail": "302 passed in 0.89s",
+      "name": "pytest_suite",
+      "ok": true
+    }
+  ],
+  "ready": true,
+  "stage": 3
+}

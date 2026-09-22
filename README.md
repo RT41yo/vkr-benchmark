@@ -2,7 +2,19 @@
 
 Экспериментальная инфраструктура для воспроизводимой многокритериальной оценки методов генеративной лингвистической стеганографии.
 
-Текущий этап: **Этап 2 — базовая инфраструктура и адаптация Bins, Huffman, Arithmetic Coding**.
+Текущий этап: **Этап 3 завершён — воспроизводимость и соответствие Bins, Huffman, Arithmetic Coding подтверждены с документированными ограничениями**. Следующий этап ROADMAP — подключение современных методов (ADG, Discop, RRC и др.).
+
+## Статус Этапа 3
+
+Этап 3 закрыт автоматическим reproducibility gate. Author-compatible Figure-3 sweep содержит 23 точки и 5520/5520 сохранённых outcomes; 5513 runs достигли pinned first-sentence boundary, 7 сохранены как `sentence_termination_failure`. Характерные кривые Bins, Huffman и Arithmetic Coding воспроизведены по тренду, включая Arithmetic minimum при `tau=1.0` около 4 bits/word и его преимущество над Huffman/Bins на общей области capacity.
+
+Paper-level итог — `partial_reproduction`: special Arithmetic `tau=1,k=50256` сохраняет near-unmodified режим, но exact prose anchor `4e-8 nats` не воспроизводится при public `precision=26`; exact historical Figure-3 MC driver/sample count также недоступны. Эти ограничения зафиксированы, а не скрыты post-hoc настройкой.
+
+Matched author-vs-normalized analysis использует 32 пары (4 representative points × 8 contexts). Все 32 normalized runs имеют exact token-ID decode и matched carrier/secret-stream semantics. Conformance analysis подтверждает сохранение core method principle на 4/4 representative points; различия Bins/Huffman/Arithmetic локализованы к документированным normalization boundaries.
+
+Отдельный методологический результат: `D_KL(P_reference || Q_stego)=+inf` во всех 32/32 matched normalized runs из-за support mismatch. Forward KL остаётся строгим unsmoothed support diagnostic, а reverse KL и TVD сохраняются как complementary finite metrics для будущей specification v1.0.
+
+Итоговый отчёт: `docs/stages/stage3/reproducibility_report.md`. Презентация: `docs/stages/stage3/stage_3.typ`. Финальный gate: `scripts/check_stage3_readiness.py`.
 
 ## Принципы архитектуры
 
@@ -297,3 +309,11 @@ python scripts/run_experiment.py configs/experiments/stage2_bins.example.json
 per-run файлов без обновления общей таблицы — `--skip-summary-parquet`. Storage и
 формирование trace выполняются после измеряемых encode/decode sections и не
 входят в performance metrics.
+
+## Stage 3 Step 3.12: matched author vs normalized
+
+The reproducibility branch now includes a frozen 32-pair differential protocol for Bins, Huffman and Arithmetic Coding. It reuses committed author-compatible Figure-3 records and reruns only the normalized side with the same GPT-2 Medium revision, frozen contexts, secret streams and pairwise carrier lengths. The normalized metric/storage layer persists both ADR-0012 KL directions explicitly. See `docs/stages/stage3/matched_author_normalized.md`.
+
+## Stage 3 Step 3.13: conformance/discrepancy analysis
+
+The frozen 32-pair matched evidence is now interpreted without rerunning the LM. All four representative points preserve the defining method mechanism, while token-level divergence is attributed to documented normalization boundaries (Bins partition/RNG, canonical candidate/support policy, deterministic Huffman ties, and Arithmetic probability/numerical pipeline). Benchmark-native `D_KL(P_reference || Q_stego)` is `+inf` in 32/32 normalized matched runs and is therefore retained as a strict support diagnostic rather than used alone as a finite ranking scalar. See `docs/stages/stage3/conformance_analysis.md`.

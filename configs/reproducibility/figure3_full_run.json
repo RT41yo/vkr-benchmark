@@ -1,0 +1,431 @@
+{
+  "schema_version": "stage3.figure3_full_run.v1",
+  "status": "frozen_before_full_run",
+  "purpose": "Execute the frozen 23-point author-compatible Figure-3 reproduction grid after the Step-3.9 first-sentence orchestration gate passed.",
+  "matrix_path": "configs/reproducibility/paper_reproduction_matrix.json",
+  "matrix_sha256": "67b376590c7bb5a61dfb7565fd4699567880978c0a5b5bc4d741dafde5ff200b",
+  "paper_sentence_pilot_config_path": "configs/reproducibility/paper_sentence_pilot.json",
+  "paper_sentence_pilot_config_sha256": "b018c7dc84652bfb91918eea8da36af7ee02405dff619288c75e0698dbcda770",
+  "paper_sentence_pilot_result_path": "results/stage3/paper_reproduction/paper_sentence_pilot/result.json",
+  "reference_repository": "https://github.com/harvardnlp/NeuralSteganography",
+  "reference_commit": "14e982564aeaf9a33f7b4de440deda2184d17f12",
+  "model_id": "gpt2-medium",
+  "seed_base": 1234,
+  "context_manifest_path": "results/stage3/paper_reproduction/cnndm_context_manifest.json",
+  "context_manifest_sha256": "cc25b492b26e102496137bc2f8eb78320c7f7768d83ff7e10af9b2e04a14aebc",
+  "local_context_text_path": "data/stage3/cnndm/generated_contexts.jsonl",
+  "context_count": 80,
+  "replicates": [
+    0,
+    1,
+    2
+  ],
+  "secret_stream": {
+    "bit_count": 16384,
+    "generator_id": "paper_sentence_sha256_bitstream_v1",
+    "material": "stage3-paper-sentence|seed=<seed_base>|replicate=<replicate>|selection_rank=<rank>|counter=<counter>",
+    "paired_across_all_points_for_same_context_and_replicate": true,
+    "rule": "Use the Step-3.9 validated long uniform-looking stream. Stream exhaustion is a hard failure and Arithmetic implicit zero look-ahead is forbidden."
+  },
+  "sentence_stop": {
+    "stop_at_first_boundary": true,
+    "predicate": "pinned_reference_utils.is_sent_finish",
+    "max_generated_tokens": 1024,
+    "rule": "Emit the first sentence-boundary token and stop immediately; no greedy completion tail. The Step-3.9 pilot used a 256-token safety cap. The full run starts with a 1024-token engineering guard. For Arithmetic only, a cap hit triggers deterministic reruns at 2048, 4096 and 8192 tokens; the cap never defines a sentence and only a real first boundary is accepted.",
+    "pilot_validated_safety_cap_tokens": 256,
+    "cap_role": "emergency_runaway_guard_not_paper_parameter",
+    "adaptive_arithmetic_guard": {
+      "enabled": true,
+      "cap_sequence_tokens": [
+        1024,
+        2048,
+        4096,
+        8192
+      ],
+      "rerun_from_start_on_cap_hit": true,
+      "apply_to_methods": [
+        "arithmetic"
+      ],
+      "trigger_terminal_reason": "max_generated_tokens",
+      "rule": "1024 remains the initial emergency guard. If an Arithmetic sample reaches it without the pinned author sentence boundary, rerun that deterministic sample from the same context/secret-stream prefix with successively larger guards 2048, 4096 and 8192. Only the first real boundary is accepted as a completed sentence. If the 8192-token guard is exhausted without a boundary, classify the scheduled sample as sentence_termination_failure, retain it as a documented execution outcome, exclude it from Figure-3 KL/BPW sentence means, and continue the sweep. Secret-stream exhaustion or any other unexpected non-boundary termination remains a hard failure.",
+      "scientific_semantics": "The guard is not a truncation rule and does not define a sentence. Deterministic reruns preserve the exact token prefix that would be obtained by starting directly with the larger guard. Exhaustion of the final 8192-token guard is an observed non-termination outcome, not a completed sentence."
+    },
+    "termination_failure_policy": {
+      "enabled": true,
+      "applies_to_methods": [
+        "arithmetic"
+      ],
+      "trigger_terminal_reason": "max_generated_tokens",
+      "trigger_only_after_final_adaptive_guard_tokens": 8192,
+      "record_status": "sentence_termination_failure",
+      "figure3_metric_inclusion": "exclude_from_sentence_level_KL_BPW_and_NLL_means",
+      "execution_gate_role": "accepted_scheduled_outcome_not_completed_sentence",
+      "transport_recovery": "not_applicable_and_not_attempted",
+      "report_fields": [
+        "scheduled_run_count",
+        "terminated_sentence_run_count",
+        "termination_failure_count",
+        "termination_success_rate"
+      ],
+      "rule": "If an Arithmetic trajectory reaches the final 8192-token engineering guard without any token satisfying pinned_reference_utils.is_sent_finish, preserve the record as sentence_termination_failure and continue the sweep. Do not invent a boundary, do not extend the guard again, and do not include the partial trajectory in Figure-3 sentence-level means. The failure remains visible in per-point and global termination diagnostics.",
+      "unexpected_non_boundary_policy": "Secret-stream exhaustion, implicit zero look-ahead, invalid payload accounting, cache/runtime errors, or non-boundary terminal reasons other than final-guard exhaustion remain hard failures."
+    }
+  },
+  "transport_recovery": {
+    "role": "diagnostic_not_figure3_execution_gate",
+    "record_exact_prefix": true,
+    "retain_generation_sample_on_recovery_failure": true,
+    "paper_sentence_pilot_remains_strict": true,
+    "reason": "Figure 3 evaluates the information-theoretic generation distribution through KL and bits/word. Ordinary-text author decoding is retained as an additional reliability diagnostic, but public BPE repair can fail on individual transported samples. Dropping those generated samples would condition the Figure-3 estimator on decoder success and bias the curve.",
+    "amendment_trigger": "The first full-run attempt produced no completed shard because bins_b1 replicate_0 had two exact-prefix recovery failures after public-author BPE repair warnings. The generated sentences themselves satisfied the first-boundary, payload-positive and no-zero-padding invariants.",
+    "amendment_timing": "Protocol refined before the first completed full-run shard was accepted; the frozen 23-point paper matrix, contexts, model, secret streams, sentence stopping rule and information-theoretic metrics are unchanged."
+  },
+  "points": [
+    {
+      "id": "bins_b1",
+      "method": "bins",
+      "block_size_bits": 1,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "bins_b2",
+      "method": "bins",
+      "block_size_bits": 2,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "bins_b3",
+      "method": "bins",
+      "block_size_bits": 3,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "bins_b4",
+      "method": "bins",
+      "block_size_bits": 4,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "bins_b5",
+      "method": "bins",
+      "block_size_bits": 5,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "huffman_e1",
+      "method": "huffman",
+      "candidate_pool_exponent": 1,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "huffman_e2",
+      "method": "huffman",
+      "candidate_pool_exponent": 2,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "huffman_e3",
+      "method": "huffman",
+      "candidate_pool_exponent": 3,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "huffman_e4",
+      "method": "huffman",
+      "candidate_pool_exponent": 4,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "huffman_e5",
+      "method": "huffman",
+      "candidate_pool_exponent": 5,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "huffman_e6",
+      "method": "huffman",
+      "candidate_pool_exponent": 6,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "huffman_e7",
+      "method": "huffman",
+      "candidate_pool_exponent": 7,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "huffman_e8",
+      "method": "huffman",
+      "candidate_pool_exponent": 8,
+      "compatibility_profile": "hf_4_52_legacy_api"
+    },
+    {
+      "id": "arithmetic_t0.4_k300",
+      "method": "arithmetic",
+      "temperature": 0.4,
+      "topk": 300,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache"
+    },
+    {
+      "id": "arithmetic_t0.5_k300",
+      "method": "arithmetic",
+      "temperature": 0.5,
+      "topk": 300,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache"
+    },
+    {
+      "id": "arithmetic_t0.6_k300",
+      "method": "arithmetic",
+      "temperature": 0.6,
+      "topk": 300,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache"
+    },
+    {
+      "id": "arithmetic_t0.7_k300",
+      "method": "arithmetic",
+      "temperature": 0.7,
+      "topk": 300,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache"
+    },
+    {
+      "id": "arithmetic_t0.8_k300",
+      "method": "arithmetic",
+      "temperature": 0.8,
+      "topk": 300,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache"
+    },
+    {
+      "id": "arithmetic_t0.9_k300",
+      "method": "arithmetic",
+      "temperature": 0.9,
+      "topk": 300,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache"
+    },
+    {
+      "id": "arithmetic_t1.0_k300",
+      "method": "arithmetic",
+      "temperature": 1.0,
+      "topk": 300,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache"
+    },
+    {
+      "id": "arithmetic_t1.1_k300",
+      "method": "arithmetic",
+      "temperature": 1.1,
+      "topk": 300,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache"
+    },
+    {
+      "id": "arithmetic_t1.2_k300",
+      "method": "arithmetic",
+      "temperature": 1.2,
+      "topk": 300,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache"
+    },
+    {
+      "id": "arithmetic_t1.0_k50256",
+      "method": "arithmetic",
+      "temperature": 1.0,
+      "topk": 50256,
+      "precision": 26,
+      "compatibility_profile": "hf_4_52_arithmetic_native_dynamic_cache",
+      "special_point": "arithmetic_unmodulated"
+    }
+  ],
+  "pilot_continuity": {
+    "required": true,
+    "replicate": 0,
+    "selection_ranks": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "point_ids": [
+      "bins_b3",
+      "huffman_e3",
+      "arithmetic_t0.9_k300",
+      "arithmetic_t1.0_k50256"
+    ],
+    "comparison_fields": [
+      "generated_token_ids",
+      "payload_bits_confirmed",
+      "bits_per_word_author",
+      "kl_q_stego_to_p_lm_bits_author"
+    ],
+    "metric_abs_tol": 1e-10,
+    "rule": "The overlapping 32 full-run samples must reproduce the committed Step-3.9 pilot because they use the same model, contexts, bitstreams, parameters and first-boundary orchestration."
+  },
+  "storage": {
+    "output_directory": "results/stage3/paper_reproduction/figure3_full",
+    "shard_pattern": "shards/<point_id>/replicate_<replicate>.jsonl",
+    "records_per_shard": 80,
+    "atomic_shard_write": true,
+    "resume_completed_shards": true,
+    "summary_path": "summary.json",
+    "figure3_points_csv_path": "figure3_points.csv",
+    "run_state_path": "run_state.json"
+  },
+  "aggregation": {
+    "primary_unit": "successfully terminated generated sentence/run",
+    "primary_mean": "unweighted arithmetic mean over successfully terminated sentence runs only; scheduled sentence_termination_failure records are excluded and their frequency is reported separately",
+    "primary_standard_error": "sample standard deviation over successfully terminated run-level values divided by sqrt(n_success), ddof=1",
+    "context_clustered_diagnostic": "within each context average only successfully terminated replicates, then compute sample standard deviation across contexts with at least one successful replicate divided by sqrt(number of such contexts)",
+    "metrics": [
+      "bits_per_word_author",
+      "kl_q_stego_to_p_lm_bits_author",
+      "avg_nll_nats_author",
+      "carrier_tokens",
+      "payload_bits_confirmed"
+    ],
+    "note": "The paper reports mean and standard error over repeated samples but does not expose the original Figure-3 MC driver/sample count. This aggregation is a predeclared Stage-3 operationalization, not a claim about the authors' exact estimator.",
+    "termination_conditioning_note": "When sentence_termination_failure occurs, Figure-3 means are conditional on successful termination under the public pinned sentence predicate. Step 3.11 must report termination success rate alongside the conditional metric estimate."
+  },
+  "execution": {
+    "expected_point_count": 23,
+    "expected_shard_count": 69,
+    "expected_runs_per_point": 240,
+    "expected_total_run_count": 5520,
+    "resume_policy": "A completed shard is reused only if it contains exactly the expected 80 unique selection ranks with matching point/replicate and every record is either a valid completed sentence (status=ok) or a valid documented Arithmetic final-guard non-termination (status=sentence_termination_failure). Otherwise the shard is recomputed atomically.",
+    "scientific_claims_are_not_execution_gates": true,
+    "accepted_record_statuses": [
+      "ok",
+      "sentence_termination_failure"
+    ],
+    "metric_eligible_status": "ok"
+  },
+  "success_criteria": [
+    "Step-3.9 committed pilot result is present and its readiness gate is true",
+    "frozen paper matrix and context manifest hashes match",
+    "all 69 point/replicate shards complete with 80 unique scheduled contexts each",
+    "every scheduled run is either a completed first-boundary sentence or an explicitly classified Arithmetic sentence_termination_failure after exhausting the final 8192-token engineering guard",
+    "Arithmetic uses no implicit zero look-ahead; zero confirmed payload is allowed only as a recorded valid completed Arithmetic sentence outcome",
+    "the 32 samples overlapping Step-3.9 reproduce the pilot within the frozen tolerances",
+    "the pinned Harvard checkout remains unchanged",
+    "summary contains all 23 points, all 5520 scheduled outcomes, conditional Figure-3 metrics over completed sentences, and explicit termination success/failure rates"
+  ],
+  "scope_note": "Step 3.10 executes the author-compatible Figure-3 reproduction grid. Whether paper claims/trends are reproduced is interpreted in Step 3.11 and is deliberately not a hard execution gate.",
+  "paper_sentence_core_path": "scripts/stage3_paper_sentence_core.py",
+  "paper_sentence_core_sha256": "b0b52366aece6e5ec406336c699c5a0a9d3d66dae1943e232e9ad367c82ff6c7",
+  "model_provenance": {
+    "canonical_hub_repository": "openai-community/gpt2-medium",
+    "requested_identifier": "gpt2-medium",
+    "resolved_hf_revision_required": true,
+    "cross_phase_revision_equality_required": true,
+    "note": "The pinned author helper requests gpt2-medium without a revision argument. Before the costly sweep, capture the resolved Transformers config/tokenizer commit hash from the loaded objects and require the legacy and Arithmetic phases to resolve the same revision. Step-3.9 overlap continuity additionally protects behavioral identity."
+  },
+  "sentence_stop_amendment": {
+    "trigger": "During the resumed full sweep, bins_b4 replicate_0 selection rank 78 reached the Step-3.9 256-token safety cap without any token satisfying the pinned author sentence predicate.",
+    "interpretation": "The 256-token value was an engineering runaway guard, not a paper parameter or scientific truncation rule. Treating it as a terminal sentence would violate the frozen first-boundary semantics; dropping the sample would length-condition the Figure-3 estimator.",
+    "decision": "Increase only the full-run emergency guard from 256 to 1024 tokens and continue generation to the first pinned-author boundary. Step 3.9 remains unchanged and strict at 256 because all 32 pilot runs finished below that guard.",
+    "resume_compatibility": "Already completed shards remain valid because every accepted record ended at a real sentence boundary before the old 256-token guard; deterministic generation before that boundary is unchanged.",
+    "frozen_components_unchanged": [
+      "paper_reproduction_matrix",
+      "model",
+      "contexts",
+      "replicates",
+      "secret_stream_prefixes",
+      "author_token_selection",
+      "sentence_boundary_predicate",
+      "KL_semantics",
+      "payload_accounting"
+    ],
+    "new_emergency_cap_tokens": 1024,
+    "if_new_cap_is_hit": "Do not accept/truncate the sample; save the failed shard and review before any Step-3.11 interpretation."
+  },
+  "zero_payload_policy": {
+    "role": "valid_arithmetic_sample_not_execution_failure",
+    "applies_to": [
+      "arithmetic"
+    ],
+    "rule": "A first-boundary Arithmetic sentence may legitimately confirm zero payload bits if the sentence boundary occurs before the finite-precision interval has emitted any common-prefix bits. Such a run contributes bits_per_word_author = 0 to the Figure-3 Monte-Carlo mean and remains valid for KL/NLL. Bins and Huffman must still have strictly positive payload whenever at least one carrier token is emitted.",
+    "transport_recovery": "For zero-confirmed-payload Arithmetic samples there is no non-empty payload prefix to test. They are excluded from the transport-recovery denominator and counted separately as zero-payload/not-applicable diagnostics.",
+    "bias_guard": "Dropping zero-payload sentences would condition the Figure-3 estimator on positive capacity and bias mean bits/word upward.",
+    "amendment_trigger": "The resumed full sweep reached arithmetic_t0.4_k300 replicate 0 after all legacy shards. Two of 80 samples stopped at a valid first sentence boundary before Arithmetic confirmed any payload bits, causing the earlier payload-positive validator to reject the shard.",
+    "amendment_timing": "Refined at the first Arithmetic shard before any Arithmetic full-run shard was accepted. Already completed Bins/Huffman shards are unaffected because they all have positive payload by construction."
+  },
+  "payload_zero_amendment": {
+    "trigger": "arithmetic_t0.4_k300 replicate 0 contained two first-boundary samples with payload_bits_confirmed = 0",
+    "interpretation": "Arithmetic token selection can narrow the coding interval without immediately fixing any common-prefix secret bit. If the first author sentence boundary arrives before a common-prefix bit is fixed, the generated sentence carries zero confirmed payload even though its token generation, KL and NLL are well-defined.",
+    "decision": "Allow payload_bits_confirmed = 0 for Arithmetic only, keep bits_per_word_author = 0, retain the sample in the Figure-3 mean, and report zero-payload frequency separately. Negative payload remains invalid; Bins/Huffman still require positive payload.",
+    "resume_compatibility": "All accepted legacy shards remain valid. The failed arithmetic_t0.4_k300 replicate_0 shard is regenerated; no completed Arithmetic shard existed before this amendment.",
+    "frozen_components_unchanged": [
+      "paper_reproduction_matrix",
+      "model",
+      "contexts",
+      "replicates",
+      "secret_stream_prefixes",
+      "author_token_selection",
+      "sentence_boundary_predicate",
+      "KL_semantics",
+      "payload_accounting"
+    ],
+    "estimator_reason": "Rejecting zero-payload sentences would upward-bias the Monte-Carlo estimate of bits/word by conditioning on payload_bits_confirmed > 0."
+  },
+  "arithmetic_long_context_compatibility": {
+    "trigger": "During the resumed Arithmetic sweep a CUDA indexSelectSmallIndex assertion occurred on a long first-boundary sample after the full-run sentence cap had been raised above the Step-3.9 pilot range.",
+    "root_cause": "The pinned 2025 utils.limit_past tuple-cache branch keeps the historical slice key[:, :, :, -1022:]. Historical stacked GPT-2 caches used [2,batch,heads,seq,head_dim], where dimension 3 is sequence. Modern tuple/DynamicCache key/value tensors use [batch,heads,seq,head_dim], where that same slice trims head_dim instead of sequence. The cache can therefore grow beyond GPT-2 Medium's 1024 learned positions and trigger a CUDA embedding index assertion.",
+    "decision": "For the full-run Arithmetic compatibility path only, replace limit_past with a repository-owned shim that converts DynamicCache to legacy tuple layers and retains the last 1022 entries on the modern sequence axis [:, :, -1022:, :]. Patch the public author decoder with the same shim only while collecting the non-gating text-transport diagnostic.",
+    "max_cache_tokens": 1022,
+    "scope": "author-compatible full Figure-3 Arithmetic runner and its diagnostic decoder only",
+    "normalized_benchmark_unchanged": true,
+    "paper_sentence_core_unchanged": true,
+    "short_run_parity_expectation": "No behavior change before the cache exceeds 1022 sequence positions; existing fixed-message mirror parity remains exact.",
+    "resume_compatibility": "Already completed shards remain reusable. Any accepted record that never required sequence-axis trimming is byte-for-byte behaviorally unchanged; failed long-context Arithmetic work is regenerated.",
+    "diagnostics_recorded": [
+      "encode_trim_events",
+      "encode_max_seen_sequence_tokens",
+      "decode_trim_events",
+      "decode_max_seen_sequence_tokens"
+    ],
+    "if_compatibility_shim_fails": "Do not accept the shard; stop and review before Step 3.11."
+  },
+  "sentence_guard_escalation_amendment": {
+    "trigger": "arithmetic_t0.4_k300 replicate 1 produced three samples that reached the 1024-token full-run emergency guard without any token satisfying the pinned utils.is_sent_finish predicate.",
+    "interpretation": "At low temperature the author-compatible Arithmetic trajectory can be extremely long before the public punctuation predicate fires. Treating 1024 as a sentence boundary or dropping these samples would censor the Monte-Carlo estimator by sentence length.",
+    "decision": "Keep 1024 as the initial runaway guard but adaptively rerun only cap-hit Arithmetic samples with guards 2048, 4096 and 8192 until the first real author boundary is observed. The same deterministic secret stream and model state are regenerated from the beginning of the sample, so token selection before the old cap is unchanged.",
+    "max_escalated_guard_tokens": 8192,
+    "secret_stream_bit_count_unchanged": 16384,
+    "resume_compatibility": "All accepted shards remain reusable because they already ended at a real first boundary. The failed arithmetic_t0.4_k300 replicate_1 shard is regenerated. The previously accepted arithmetic_t0.4_k300 replicate_0 shard also remains valid.",
+    "if_max_guard_is_hit": "Classify the Arithmetic scheduled sample as sentence_termination_failure, preserve it, exclude it from sentence-level Figure-3 means, report the failure rate, and continue the sweep. Do not increase the guard further or invent a boundary."
+  },
+  "sentence_termination_failure_amendment": {
+    "trigger": "arithmetic_t0.4_k300 replicate 1 contained selection ranks 49, 50 and 58 that exhausted guards 1024, 2048, 4096 and 8192 without any token satisfying pinned utils.is_sent_finish; inspection showed long degenerate repetition loops rather than ordinary long sentences.",
+    "observed_examples": [
+      "rank 49: long repeated ' World' trajectory",
+      "rank 50: long repeated ' The' trajectory",
+      "rank 58: long repeated ' Trump' trajectory"
+    ],
+    "decision": "Do not increase the guard beyond 8192 and do not invent a replacement boundary. Classify final-guard exhaustion as sentence_termination_failure for Arithmetic, preserve the scheduled record, continue the sweep, and exclude the partial non-sentence trajectory from sentence-level Figure-3 KL/BPW/NLL means.",
+    "aggregation": "Per point report scheduled_run_count, terminated_sentence_run_count, termination_failure_count and termination_success_rate. Figure-3 means/SE are conditional on successfully terminated sentences and Step 3.11 must state that conditioning explicitly.",
+    "transport_recovery": "Not attempted for sentence_termination_failure because there is no completed carrier sentence to decode as a Figure-3 sample.",
+    "scope": "author-compatible full Figure-3 runner only",
+    "normalized_benchmark_unchanged": true,
+    "paper_sentence_core_unchanged": true,
+    "frozen_components_unchanged": [
+      "paper_reproduction_matrix",
+      "model",
+      "contexts",
+      "replicates",
+      "secret_stream_prefixes",
+      "author_token_selection",
+      "sentence_boundary_predicate",
+      "KL_semantics",
+      "payload_accounting"
+    ],
+    "scientific_interpretation": "The public algorithmic reference remains executable, but the unavailable original Figure-3 batch driver leaves treatment of such non-terminating low-temperature trajectories undocumented. This is a reproducibility limitation to be reported rather than tuned away."
+  }
+}

@@ -1,0 +1,261 @@
+{
+  "schema_version": "stage3.figure3_interpretation.v1",
+  "baseline_commit": "01244d2",
+  "paper": {
+    "citation": "Ziegler, Deng, Rush (2019), Neural Linguistic Steganography, EMNLP-IJCNLP 2019, pp. 1210-1215",
+    "doi": "10.18653/v1/D19-1115",
+    "url": "https://aclanthology.org/D19-1115/",
+    "figure": 3,
+    "reported_unmodulated_kl_nats": 4e-08,
+    "reported_arithmetic_minimum_description": "minimum KL around 4 bits/word with temperature=1.0",
+    "figure3_caption_semantics": "mean and standard error for repeated samples with a fixed tuning parameter"
+  },
+  "scientific_claims_evaluated": true,
+  "execution_input": {
+    "scheduled_runs": 5520,
+    "terminated_sentence_runs": 5513,
+    "termination_failures": 7,
+    "termination_success_rate": 0.998731884057971,
+    "point_count": 23
+  },
+  "curves": {
+    "bins": {
+      "point_count": 5,
+      "bits_per_word": [
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0
+      ],
+      "kl_bits": [
+        2.2232120104464084,
+        2.5782982879432828,
+        2.8863735957109724,
+        3.151110854481088,
+        3.2926537954726944
+      ],
+      "high_kl_tradeoff_reproduced": true
+    },
+    "huffman": {
+      "point_count": 8,
+      "bits_per_word": [
+        1.0,
+        1.8007359872872242,
+        2.3773291795602556,
+        2.9026928895529807,
+        3.321864747272609,
+        3.7106417789827675,
+        4.064795960697089,
+        4.2936927090278
+      ],
+      "kl_bits": [
+        1.924779885443718,
+        1.5675077625564389,
+        1.209243303634535,
+        0.9431618930532213,
+        0.7815648435672554,
+        0.6496484841417518,
+        0.5272174417006288,
+        0.5251057624063337
+      ],
+      "kl_nonincreasing": true
+    },
+    "arithmetic_k300": {
+      "point_count": 9,
+      "temperatures": [
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        1.0,
+        1.1,
+        1.2
+      ],
+      "bits_per_word": [
+        1.001233292281423,
+        1.354230625111742,
+        1.779330851076866,
+        2.266973415549314,
+        2.7113838377564234,
+        3.198813367762472,
+        3.7520964594587127,
+        4.166315752370318,
+        4.712295695100521
+      ],
+      "kl_bits": [
+        0.8729720281539689,
+        0.6565216827754736,
+        0.4786860020736554,
+        0.3251405220855817,
+        0.19900045439331823,
+        0.12859486526169714,
+        0.10084449568109179,
+        0.12637820084864723,
+        0.20086976933501402
+      ],
+      "minimum": {
+        "temperature": 1.0,
+        "bits_per_word": 3.7520964594587127,
+        "kl_bits": 0.10084449568109179,
+        "se_kl_bits_runs": 0.0029388829429682723
+      },
+      "decreases_to_tau_1_then_increases": true
+    },
+    "arithmetic_k50256": {
+      "bits_per_word": 4.651269448471326,
+      "kl_bits": 0.0006655253377472944,
+      "kl_nats": 0.0004613070114507424,
+      "paper_anchor_nats": 4e-08,
+      "ratio_to_paper_anchor": 11532.67528626856,
+      "kl_reduction_vs_k300_tau1_factor": 151.52615529625905
+    }
+  },
+  "curve_dominance_diagnostic": {
+    "arithmetic_vs_huffman": {
+      "common_bits_per_word_interval": [
+        1.001233292281423,
+        4.2936927090278
+      ],
+      "grid_points": 1001,
+      "arithmetic_lower_at_every_grid_point": true,
+      "minimum_baseline_minus_arithmetic_kl_bits": 0.38134870100286833,
+      "maximum_baseline_minus_arithmetic_kl_bits": 1.1101356357952477
+    },
+    "arithmetic_vs_bins": {
+      "common_bits_per_word_interval": [
+        1.001233292281423,
+        4.712295695100521
+      ],
+      "grid_points": 1001,
+      "arithmetic_lower_at_every_grid_point": true,
+      "minimum_baseline_minus_arithmetic_kl_bits": 1.3506779074577158,
+      "maximum_baseline_minus_arithmetic_kl_bits": 3.0510615126862626
+    }
+  },
+  "precision_discrepancy": {
+    "precision26_clean_kl_nats": 0.0007384681509634835,
+    "precision40_clean_kl_nats": 2.923903752173444e-08,
+    "precision40_to_paper_anchor_ratio": 0.730975938043361,
+    "paper_anchor_not_reproduced_at_pinned_precision26": true,
+    "do_not_infer_authors_used_precision40": true
+  },
+  "reliability_diagnostics": {
+    "transport_recovery_by_method": {
+      "bins": {
+        "applicable": 1200,
+        "exact": 1150,
+        "failures": 50,
+        "exact_prefix_rate": 0.9583333333333334
+      },
+      "huffman": {
+        "applicable": 1920,
+        "exact": 1856,
+        "failures": 64,
+        "exact_prefix_rate": 0.9666666666666667
+      },
+      "arithmetic": {
+        "applicable": 2370,
+        "exact": 2337,
+        "failures": 33,
+        "exact_prefix_rate": 0.9860759493670886
+      }
+    },
+    "global_transport_recovery": {
+      "applicable_positive_payload_count": 5490,
+      "decoder_exception_count": 0,
+      "exact_prefix_count": 5343,
+      "exact_prefix_rate": 0.973224043715847,
+      "failure_count": 147,
+      "figure3_execution_gate": false,
+      "not_applicable_termination_failure_count": 7,
+      "not_applicable_zero_payload_count": 23
+    },
+    "arithmetic_scheduled_runs": 2400,
+    "arithmetic_completed_runs": 2393,
+    "arithmetic_termination_failures": 7,
+    "arithmetic_termination_success_rate": 0.9970833333333333,
+    "zero_payload_completed_arithmetic_count": 23,
+    "zero_payload_rate_among_completed_arithmetic": 0.00961136648558295,
+    "cache_compatibility": {
+      "arithmetic_run_count": 2400,
+      "figure3_execution_gate": false,
+      "max_cache_tokens": 1022,
+      "max_decode_seen_sequence_tokens": 1023,
+      "max_encode_seen_sequence_tokens": 1023,
+      "role": "compatibility diagnostic for intended historical 1022-token sliding cache",
+      "runs_with_decode_trim": 7,
+      "runs_with_encode_trim": 14,
+      "total_decode_trim_events": 7074,
+      "total_encode_trim_events": 57951
+    },
+    "sentence_guard": {
+      "arithmetic_run_count": 2400,
+      "figure3_execution_gate": false,
+      "final_guard_exhaustion_count": 7,
+      "initial_guard_tokens": 1024,
+      "max_escalated_guard_tokens": 8192,
+      "max_final_guard_tokens": 8192,
+      "role": "engineering runaway guard diagnostic; final 8192-token exhaustion is classified separately as sentence_termination_failure",
+      "runs_with_escalation": 13,
+      "total_escalations": 30
+    }
+  },
+  "claims": [
+    {
+      "claim_id": "paper_orchestration",
+      "paper_claim": "GPT-2 345M + CNN/DailyMail first-three-sentence context + one generated sentence under uniform random message; repeated Monte-Carlo samples.",
+      "status": "partial_reproduction",
+      "evidence": "GPT-2 Medium, pinned CNN/DailyMail contexts, first-boundary sentence protocol, 80 contexts x 3 replicates and all 23 tuning points were executed; the paper does not expose the exact split, Figure-3 sample count, or original batch driver."
+    },
+    {
+      "claim_id": "bins_curve",
+      "paper_claim": "Block/Bins occupies the high-KL region of Figure 3 as capacity increases.",
+      "status": "trend_reproduction",
+      "evidence": "Reproduced Bins means: bits/word 1.0->5.0, KL 2.223->3.293 bits; all five means are in the high-KL region."
+    },
+    {
+      "claim_id": "huffman_curve",
+      "paper_claim": "Huffman trades larger candidate pools / higher capacity for lower KL than Block/Bins.",
+      "status": "trend_reproduction",
+      "evidence": "Huffman bits/word rises 1.000->4.294 while KL falls 1.925->0.525 bits; reproduced KL means are non-increasing across all 8 points."
+    },
+    {
+      "claim_id": "arithmetic_temperature_curve",
+      "paper_claim": "Arithmetic temperature sweep reaches minimum KL around 4 bits/word at temperature=1.0.",
+      "status": "trend_reproduction",
+      "evidence": "Minimum reproduced k=300 mean occurs at temperature=1.0, 3.752 bits/word and KL=0.100844 bits; KL decreases through the minimum and rises again above temperature 1.0."
+    },
+    {
+      "claim_id": "arithmetic_dominates_baselines",
+      "paper_claim": "Arithmetic gives the lowest Figure-3 KL trade-off relative to Huffman and Block/Bins.",
+      "status": "trend_reproduction",
+      "evidence": "Piecewise-linear reproduced mean curves: Arithmetic is below Huffman at all 1001 grid points on 1.001-4.294 bits/word (minimum margin 0.381 bits) and below Bins on the common interval (minimum margin 1.351 bits)."
+    },
+    {
+      "claim_id": "unmodulated_near_zero_behavior",
+      "paper_claim": "Unmodulated Arithmetic (temperature=1, k=50256) is near the language-model distribution and has near-zero KL.",
+      "status": "partial_reproduction",
+      "evidence": "Reproduced special point: 4.651 bits/word, 0.000665525 KL bits = 0.000461307011 nats; this is 151.5x lower than the reproduced k=300 temperature=1 point, but not at the paper's exact prose anchor."
+    },
+    {
+      "claim_id": "unmodulated_4e_minus_8_nats",
+      "paper_claim": "The unmodulated language-model Arithmetic point has KL = 4e-8 nats.",
+      "status": "not_reproducible",
+      "evidence": "Pinned executable precision=26 full sentence sweep gives 0.000461307011 nats, 11532.7x the paper anchor. Independent zero-padding-free precision probe gives p26=0.000738468151 nats and p40=2.92390375e-08 nats; p40 is the same order as 4e-8, but the public run_single.py sets precision=26 and the historical Figure-3 driver is unavailable, so precision=40 cannot be attributed to the authors."
+    },
+    {
+      "claim_id": "historical_mc_estimator",
+      "paper_claim": "Figure 3 reports mean and standard error over repeated samples for each tuning point.",
+      "status": "partial_reproduction",
+      "evidence": "The reproduction reports run-level and context-clustered standard errors over a predeclared 80-context x 3-replicate design. The paper does not publish the original Figure-3 sample count or exact estimator implementation, so exact historical Monte-Carlo orchestration cannot be claimed."
+    }
+  ],
+  "overall_assessment": {
+    "status": "partial_reproduction",
+    "summary": "The characteristic Figure-3 trade-off curves and method ordering are reproduced, including the Arithmetic minimum at temperature=1.0 near 4 bits/word. The exact unmodulated 4e-8-nat prose anchor is not numerically reproduced by the pinned public precision=26 executable, and exact historical Monte-Carlo orchestration is unavailable.",
+    "ready_for_step_3_12_matched_author_vs_normalized": true
+  }
+}

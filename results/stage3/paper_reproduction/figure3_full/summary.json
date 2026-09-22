@@ -1,0 +1,2712 @@
+{
+  "aggregation": {
+    "context_clustered_diagnostic": "within each context average only successfully terminated replicates, then compute sample standard deviation across contexts with at least one successful replicate divided by sqrt(number of such contexts)",
+    "metrics": [
+      "bits_per_word_author",
+      "kl_q_stego_to_p_lm_bits_author",
+      "avg_nll_nats_author",
+      "carrier_tokens",
+      "payload_bits_confirmed"
+    ],
+    "note": "The paper reports mean and standard error over repeated samples but does not expose the original Figure-3 MC driver/sample count. This aggregation is a predeclared Stage-3 operationalization, not a claim about the authors' exact estimator.",
+    "primary_mean": "unweighted arithmetic mean over successfully terminated sentence runs only; scheduled sentence_termination_failure records are excluded and their frequency is reported separately",
+    "primary_standard_error": "sample standard deviation over successfully terminated run-level values divided by sqrt(n_success), ddof=1",
+    "primary_unit": "successfully terminated generated sentence/run",
+    "termination_conditioning_note": "When sentence_termination_failure occurs, Figure-3 means are conditional on successful termination under the public pinned sentence predicate. Step 3.11 must report termination success rate alongside the conditional metric estimate."
+  },
+  "arithmetic_cache_compatibility_diagnostic": {
+    "arithmetic_run_count": 2400,
+    "figure3_execution_gate": false,
+    "max_cache_tokens": 1022,
+    "max_decode_seen_sequence_tokens": 1023,
+    "max_encode_seen_sequence_tokens": 1023,
+    "role": "compatibility diagnostic for intended historical 1022-token sliding cache",
+    "runs_with_decode_trim": 7,
+    "runs_with_encode_trim": 14,
+    "total_decode_trim_events": 7074,
+    "total_encode_trim_events": 57951
+  },
+  "config": {
+    "path": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/configs/reproducibility/figure3_full_run.json",
+    "sha256": "4e06b6fba93d137cd82a998a52d511cf960b81abcc83d758ac49f20b834f0cf0"
+  },
+  "execution_gate_ready_for_step_3_11_interpretation": true,
+  "expected_point_count": 23,
+  "expected_run_count": 5520,
+  "generated_at_utc": "2026-09-12T21:40:08.951950+00:00",
+  "matrix": {
+    "path": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/configs/reproducibility/paper_reproduction_matrix.json",
+    "sha256": "67b376590c7bb5a61dfb7565fd4699567880978c0a5b5bc4d741dafde5ff200b"
+  },
+  "mode": "author-compatible paper-sentence Figure-3 operationalization",
+  "model_id": "gpt2-medium",
+  "pilot_continuity": {
+    "difference_count": 0,
+    "differences": [],
+    "passed": true
+  },
+  "point_count": 23,
+  "points": [
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": false,
+        "max_cache_tokens": null,
+        "max_decode_seen_sequence_tokens": 0,
+        "max_encode_seen_sequence_tokens": 0,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "bins",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 3.918456620640225,
+          "mean": 2.248240791894946,
+          "min": 0.4048791825771332,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.027356503076159017,
+          "standard_error_runs": 0.024980026532950297
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 1.0,
+          "mean": 1.0,
+          "min": 1.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.0,
+          "standard_error_runs": 0.0
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 183.0,
+          "mean": 30.470833333333335,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.576737245969348,
+          "standard_error_runs": 1.2357683271235393
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 3.293481393293901,
+          "mean": 2.2232120104464084,
+          "min": 0.8014655075967312,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.026412721072056815,
+          "standard_error_runs": 0.02093523674166191
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 183.0,
+          "mean": 30.470833333333335,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.576737245969348,
+          "standard_error_runs": 1.2357683271235393
+        }
+      },
+      "point_id": "bins_b1",
+      "point_parameters": {
+        "block_size_bits": 1
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": false,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 0,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 183,
+        "max_observed_partial_tokens_including_termination_failures": 183,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 234,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 240,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 3,
+        "exact_prefix_count": 237,
+        "exact_prefix_rate": 0.9875,
+        "failure_count": 3,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 0
+      },
+      "zero_payload_diagnostic": {
+        "count": 0,
+        "rate_among_completed_sentences": 0.0,
+        "valid_for_figure3": false
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": false,
+        "max_cache_tokens": null,
+        "max_decode_seen_sequence_tokens": 0,
+        "max_encode_seen_sequence_tokens": 0,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "bins",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 6.87947016954422,
+          "mean": 3.1850975524332177,
+          "min": 2.0007880479097366,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.029255874513371277,
+          "standard_error_runs": 0.03143381703277393
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 2.0,
+          "mean": 2.0,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.0,
+          "standard_error_runs": 0.0
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 126.0,
+          "mean": 34.795833333333334,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.5249160562310753,
+          "standard_error_runs": 1.3724538733496068
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 6.0465617179870605,
+          "mean": 2.5782982879432828,
+          "min": 1.7969619949658713,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.033025804815353055,
+          "standard_error_runs": 0.029776220675531907
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 252.0,
+          "mean": 69.59166666666667,
+          "min": 4.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 3.0498321124621506,
+          "standard_error_runs": 2.7449077466992136
+        }
+      },
+      "point_id": "bins_b2",
+      "point_parameters": {
+        "block_size_bits": 2
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": false,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 0,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 126,
+        "max_observed_partial_tokens_including_termination_failures": 126,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 226,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 240,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 4,
+        "exact_prefix_count": 236,
+        "exact_prefix_rate": 0.9833333333333333,
+        "failure_count": 4,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 0
+      },
+      "zero_payload_diagnostic": {
+        "count": 0,
+        "rate_among_completed_sentences": 0.0,
+        "valid_for_figure3": false
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": false,
+        "max_cache_tokens": null,
+        "max_decode_seen_sequence_tokens": 0,
+        "max_encode_seen_sequence_tokens": 0,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "bins",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 5.814145565032959,
+          "mean": 4.07236819833778,
+          "min": 3.04281510040164,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.031122748564993197,
+          "standard_error_runs": 0.02942731332787486
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 3.0,
+          "mean": 3.0,
+          "min": 3.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.0,
+          "standard_error_runs": 0.0
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 175.0,
+          "mean": 39.9625,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.9556078417184557,
+          "standard_error_runs": 2.0645808572465225
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 6.544129729270935,
+          "mean": 2.8863735957109724,
+          "min": 1.9981961250305176,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.039196045983947554,
+          "standard_error_runs": 0.035710540794314106
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 525.0,
+          "mean": 119.8875,
+          "min": 6.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 5.866823525155367,
+          "standard_error_runs": 6.193742571739567
+        }
+      },
+      "point_id": "bins_b3",
+      "point_parameters": {
+        "block_size_bits": 3
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": false,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 0,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 175,
+        "max_observed_partial_tokens_including_termination_failures": 175,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 204,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 240,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 13,
+        "exact_prefix_count": 226,
+        "exact_prefix_rate": 0.9416666666666667,
+        "failure_count": 14,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 0
+      },
+      "zero_payload_diagnostic": {
+        "count": 0,
+        "rate_among_completed_sentences": 0.0,
+        "valid_for_figure3": false
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": false,
+        "max_cache_tokens": null,
+        "max_decode_seen_sequence_tokens": 0,
+        "max_encode_seen_sequence_tokens": 0,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "bins",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 9.279167334238688,
+          "mean": 4.889412393198383,
+          "min": 1.3977961440881093,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.04260503165620277,
+          "standard_error_runs": 0.038611706391476444
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 4.0,
+          "mean": 4.0,
+          "min": 4.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.0,
+          "standard_error_runs": 0.0
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 459.0,
+          "mean": 53.1,
+          "min": 1.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 4.732189200284104,
+          "standard_error_runs": 3.6122264486488094
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 7.710853815078735,
+          "mean": 3.151110854481088,
+          "min": 2.2303420305252075,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.04622011156363142,
+          "standard_error_runs": 0.04195480445405441
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 1836.0,
+          "mean": 212.4,
+          "min": 4.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 18.928756801136416,
+          "standard_error_runs": 14.448905794595237
+        }
+      },
+      "point_id": "bins_b4",
+      "point_parameters": {
+        "block_size_bits": 4
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": false,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 0,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 459,
+        "max_observed_partial_tokens_including_termination_failures": 459,
+        "over_step39_pilot_cap_256_count": 4
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 210,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 240,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 9,
+        "exact_prefix_count": 231,
+        "exact_prefix_rate": 0.9625,
+        "failure_count": 9,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 0
+      },
+      "zero_payload_diagnostic": {
+        "count": 0,
+        "rate_among_completed_sentences": 0.0,
+        "valid_for_figure3": false
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": false,
+        "max_cache_tokens": null,
+        "max_decode_seen_sequence_tokens": 0,
+        "max_encode_seen_sequence_tokens": 0,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "bins",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 7.5520579133714945,
+          "mean": 5.750656417335507,
+          "min": 4.202688574790955,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.0322834923424984,
+          "standard_error_runs": 0.02868896502730884
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 5.0,
+          "mean": 5.0,
+          "min": 5.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.0,
+          "standard_error_runs": 0.0
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 254.0,
+          "mean": 46.15833333333333,
+          "min": 3.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 2.910321458458014,
+          "standard_error_runs": 2.5779682332273843
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 6.176756048202515,
+          "mean": 3.2926537954726944,
+          "min": 2.322930694663006,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.03222751790864332,
+          "standard_error_runs": 0.03001189746535292
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 1270.0,
+          "mean": 230.79166666666666,
+          "min": 15.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 14.55160729229007,
+          "standard_error_runs": 12.88984116613692
+        }
+      },
+      "point_id": "bins_b5",
+      "point_parameters": {
+        "block_size_bits": 5
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": false,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 0,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 254,
+        "max_observed_partial_tokens_including_termination_failures": 254,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 191,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 240,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 20,
+        "exact_prefix_count": 220,
+        "exact_prefix_rate": 0.9166666666666666,
+        "failure_count": 20,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 0
+      },
+      "zero_payload_diagnostic": {
+        "count": 0,
+        "rate_among_completed_sentences": 0.0,
+        "valid_for_figure3": false
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": false,
+        "max_cache_tokens": null,
+        "max_decode_seen_sequence_tokens": 0,
+        "max_encode_seen_sequence_tokens": 0,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "huffman",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 5.32341680675745,
+          "mean": 2.0867039718632214,
+          "min": 0.6007163673639297,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.034743843925844155,
+          "standard_error_runs": 0.030686390438409733
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 1.0,
+          "mean": 1.0,
+          "min": 1.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.0,
+          "standard_error_runs": 0.0
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 79.0,
+          "mean": 26.283333333333335,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.9757809090978236,
+          "standard_error_runs": 0.8553581766802495
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 3.835980236530304,
+          "mean": 1.924779885443718,
+          "min": 0.8014657720923424,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.028949846509868045,
+          "standard_error_runs": 0.023510774634319772
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 79.0,
+          "mean": 26.283333333333335,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.9757809090978236,
+          "standard_error_runs": 0.8553581766802495
+        }
+      },
+      "point_id": "huffman_e1",
+      "point_parameters": {
+        "candidate_pool_exponent": 1
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": false,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 0,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 79,
+        "max_observed_partial_tokens_including_termination_failures": 79,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 234,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 240,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 2,
+        "exact_prefix_count": 237,
+        "exact_prefix_rate": 0.9875,
+        "failure_count": 3,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 0
+      },
+      "zero_payload_diagnostic": {
+        "count": 0,
+        "rate_among_completed_sentences": 0.0,
+        "valid_for_figure3": false
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": false,
+        "max_cache_tokens": null,
+        "max_decode_seen_sequence_tokens": 0,
+        "max_encode_seen_sequence_tokens": 0,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "huffman",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 5.814145624637604,
+          "mean": 2.4571046262206147,
+          "min": 0.6007163673639297,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.06371189741925665,
+          "standard_error_runs": 0.05665116472467669
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 2.375,
+          "mean": 1.8007359872872242,
+          "min": 1.368421052631579,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.00970351356843591,
+          "standard_error_runs": 0.011978176352899854
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 111.0,
+          "mean": 25.645833333333332,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.2407937172934203,
+          "standard_error_runs": 1.104770433070213
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 3.4730042219161987,
+          "mean": 1.5675077625564389,
+          "min": 0.5409234712521235,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.039175268284082215,
+          "standard_error_runs": 0.03343883170684448
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 214.0,
+          "mean": 45.82083333333333,
+          "min": 3.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 2.194914398706974,
+          "standard_error_runs": 2.0183316770542574
+        }
+      },
+      "point_id": "huffman_e2",
+      "point_parameters": {
+        "candidate_pool_exponent": 2
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": false,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 0,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 111,
+        "max_observed_partial_tokens_including_termination_failures": 111,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 229,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 240,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 6,
+        "exact_prefix_count": 232,
+        "exact_prefix_rate": 0.9666666666666667,
+        "failure_count": 8,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 0
+      },
+      "zero_payload_diagnostic": {
+        "count": 0,
+        "rate_among_completed_sentences": 0.0,
+        "valid_for_figure3": false
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": false,
+        "max_cache_tokens": null,
+        "max_decode_seen_sequence_tokens": 0,
+        "max_encode_seen_sequence_tokens": 0,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "huffman",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 6.134666919708252,
+          "mean": 2.610582447466085,
+          "min": 0.6007163673639297,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.05704152986365252,
+          "standard_error_runs": 0.05446859032729689
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 3.0952380952380953,
+          "mean": 2.3773291795602556,
+          "min": 1.5,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.01823588187383349,
+          "standard_error_runs": 0.01693713110677878
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 83.0,
+          "mean": 28.075,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.1150261108369173,
+          "standard_error_runs": 1.0903137144032904
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 3.253021478652954,
+          "mean": 1.209243303634535,
+          "min": 0.3941174950450659,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.033738220778433234,
+          "standard_error_runs": 0.03194503784247529
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 224.0,
+          "mean": 67.21666666666667,
+          "min": 3.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 2.7443273547626297,
+          "standard_error_runs": 2.674035538712342
+        }
+      },
+      "point_id": "huffman_e3",
+      "point_parameters": {
+        "candidate_pool_exponent": 3
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": false,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 0,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 83,
+        "max_observed_partial_tokens_including_termination_failures": 83,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 232,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 240,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 5,
+        "exact_prefix_count": 234,
+        "exact_prefix_rate": 0.975,
+        "failure_count": 6,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 0
+      },
+      "zero_payload_diagnostic": {
+        "count": 0,
+        "rate_among_completed_sentences": 0.0,
+        "valid_for_figure3": false
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": false,
+        "max_cache_tokens": null,
+        "max_decode_seen_sequence_tokens": 0,
+        "max_encode_seen_sequence_tokens": 0,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "huffman",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 5.6284374594688416,
+          "mean": 2.723870454678911,
+          "min": 0.6007163673639297,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.04818499419212683,
+          "standard_error_runs": 0.04542670325669888
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 4.25,
+          "mean": 2.9026928895529807,
+          "min": 1.5,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.026064299804516976,
+          "standard_error_runs": 0.02505158549694445
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 92.0,
+          "mean": 27.304166666666667,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.072809870355642,
+          "standard_error_runs": 1.0492807843748932
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 3.088396817445755,
+          "mean": 0.9431618930532213,
+          "min": 0.2807054162025452,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.031701090653514445,
+          "standard_error_runs": 0.028889279421277093
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 285.0,
+          "mean": 78.775,
+          "min": 3.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 3.122204938487931,
+          "standard_error_runs": 3.0269703807920667
+        }
+      },
+      "point_id": "huffman_e4",
+      "point_parameters": {
+        "candidate_pool_exponent": 4
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": false,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 0,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 92,
+        "max_observed_partial_tokens_including_termination_failures": 92,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 226,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 240,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 5,
+        "exact_prefix_count": 230,
+        "exact_prefix_rate": 0.9583333333333334,
+        "failure_count": 10,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 0
+      },
+      "zero_payload_diagnostic": {
+        "count": 0,
+        "rate_among_completed_sentences": 0.0,
+        "valid_for_figure3": false
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": false,
+        "max_cache_tokens": null,
+        "max_decode_seen_sequence_tokens": 0,
+        "max_encode_seen_sequence_tokens": 0,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "huffman",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 5.550034165382385,
+          "mean": 2.917279618063776,
+          "min": 0.6007163673639297,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.05029174251939445,
+          "standard_error_runs": 0.04255215747420146
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 4.777777777777778,
+          "mean": 3.321864747272609,
+          "min": 1.5,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.0352114050712997,
+          "standard_error_runs": 0.030546357264632985
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 112.0,
+          "mean": 28.3,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.2156908982369896,
+          "standard_error_runs": 1.1570865881103873
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 2.847534477710724,
+          "mean": 0.7815648435672554,
+          "min": 0.20939747244119644,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.031626496351890215,
+          "standard_error_runs": 0.027565610248755923
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 370.0,
+          "mean": 94.36666666666666,
+          "min": 3.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 4.047778991982207,
+          "standard_error_runs": 3.899146397781733
+        }
+      },
+      "point_id": "huffman_e5",
+      "point_parameters": {
+        "candidate_pool_exponent": 5
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": false,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 0,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 112,
+        "max_observed_partial_tokens_including_termination_failures": 112,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 228,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 240,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 5,
+        "exact_prefix_count": 230,
+        "exact_prefix_rate": 0.9583333333333334,
+        "failure_count": 10,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 0
+      },
+      "zero_payload_diagnostic": {
+        "count": 0,
+        "rate_among_completed_sentences": 0.0,
+        "valid_for_figure3": false
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": false,
+        "max_cache_tokens": null,
+        "max_decode_seen_sequence_tokens": 0,
+        "max_encode_seen_sequence_tokens": 0,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "huffman",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 6.652891010046005,
+          "mean": 3.0875719345376322,
+          "min": 0.6007163673639297,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.05247759376828734,
+          "standard_error_runs": 0.04696610234953003
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 6.5,
+          "mean": 3.7106417789827675,
+          "min": 1.5,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.04238229249743188,
+          "standard_error_runs": 0.0399098075442893
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 129.0,
+          "mean": 27.754166666666666,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.2131305724714792,
+          "standard_error_runs": 1.1247074300595046
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 2.7489927411079407,
+          "mean": 0.6496484841417518,
+          "min": 0.17621640140811604,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.031397237150924906,
+          "standard_error_runs": 0.025866973771172877
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 527.0,
+          "mean": 103.34583333333333,
+          "min": 3.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 4.815259542722843,
+          "standard_error_runs": 4.386755566970516
+        }
+      },
+      "point_id": "huffman_e6",
+      "point_parameters": {
+        "candidate_pool_exponent": 6
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": false,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 0,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 129,
+        "max_observed_partial_tokens_including_termination_failures": 129,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 230,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 240,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 1,
+        "exact_prefix_count": 236,
+        "exact_prefix_rate": 0.9833333333333333,
+        "failure_count": 4,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 0
+      },
+      "zero_payload_diagnostic": {
+        "count": 0,
+        "rate_among_completed_sentences": 0.0,
+        "valid_for_figure3": false
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": false,
+        "max_cache_tokens": null,
+        "max_decode_seen_sequence_tokens": 0,
+        "max_encode_seen_sequence_tokens": 0,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "huffman",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 7.728842735290527,
+          "mean": 3.2194455521400545,
+          "min": 0.6007163673639297,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.044611154246865015,
+          "standard_error_runs": 0.04374108439629717
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 11.0,
+          "mean": 4.064795960697089,
+          "min": 1.5,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.049740501347645065,
+          "standard_error_runs": 0.04888656459284199
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 107.0,
+          "mean": 28.429166666666667,
+          "min": 1.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.1833525545179284,
+          "standard_error_runs": 1.0314002803170206
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 2.463815525174141,
+          "mean": 0.5272174417006288,
+          "min": 0.13402595122655234,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.021887170182271317,
+          "standard_error_runs": 0.020589128128835916
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 462.0,
+          "mean": 115.05,
+          "min": 3.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 4.872499178236236,
+          "standard_error_runs": 4.317202704422613
+        }
+      },
+      "point_id": "huffman_e7",
+      "point_parameters": {
+        "candidate_pool_exponent": 7
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": false,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 0,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 107,
+        "max_observed_partial_tokens_including_termination_failures": 107,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 228,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 240,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 3,
+        "exact_prefix_count": 231,
+        "exact_prefix_rate": 0.9625,
+        "failure_count": 9,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 0
+      },
+      "zero_payload_diagnostic": {
+        "count": 0,
+        "rate_among_completed_sentences": 0.0,
+        "valid_for_figure3": false
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": false,
+        "max_cache_tokens": null,
+        "max_decode_seen_sequence_tokens": 0,
+        "max_encode_seen_sequence_tokens": 0,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "huffman",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 6.9064474403858185,
+          "mean": 3.38146039516688,
+          "min": 0.6007163673639297,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.0603427434218972,
+          "standard_error_runs": 0.050923316073042735
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 6.666666666666667,
+          "mean": 4.2936927090278,
+          "min": 1.5,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.06040957864873398,
+          "standard_error_runs": 0.0513503428938581
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 141.0,
+          "mean": 29.354166666666668,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.3507739062926991,
+          "standard_error_runs": 1.2257045893972778
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 2.7038677036762238,
+          "mean": 0.5251057624063337,
+          "min": 0.09698827676475048,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.032920927306587126,
+          "standard_error_runs": 0.027664686266357506
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 690.0,
+          "mean": 129.88333333333333,
+          "min": 3.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 6.725921004699856,
+          "standard_error_runs": 5.955449336656947
+        }
+      },
+      "point_id": "huffman_e8",
+      "point_parameters": {
+        "candidate_pool_exponent": 8
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": false,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 0,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 141,
+        "max_observed_partial_tokens_including_termination_failures": 141,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 225,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 240,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 5,
+        "exact_prefix_count": 226,
+        "exact_prefix_rate": 0.9416666666666667,
+        "failure_count": 14,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 0
+      },
+      "zero_payload_diagnostic": {
+        "count": 0,
+        "rate_among_completed_sentences": 0.0,
+        "valid_for_figure3": false
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": true,
+      "arithmetic_cache_compatibility": {
+        "applicable": true,
+        "max_cache_tokens": 1022,
+        "max_decode_seen_sequence_tokens": 1023,
+        "max_encode_seen_sequence_tokens": 1023,
+        "runs_with_decode_trim": 2,
+        "runs_with_encode_trim": 7,
+        "total_decode_trim_events": 1117,
+        "total_encode_trim_events": 37445
+      },
+      "context_count": 80,
+      "method": "arithmetic",
+      "metric_run_count": 235,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 2.208031683566665,
+          "mean": 1.364579818249243,
+          "min": 0.1200865558865505,
+          "n_successful_sentences": 235,
+          "standard_error_context_clustered": 0.03292125430357915,
+          "standard_error_runs": 0.023358165762711273
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 2.75,
+          "mean": 1.001233292281423,
+          "min": 0.0,
+          "n_successful_sentences": 235,
+          "standard_error_context_clustered": 0.03464407045966949,
+          "standard_error_runs": 0.028614564239865258
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 1930.0,
+          "mean": 38.56170212765957,
+          "min": 2.0,
+          "n_successful_sentences": 235,
+          "standard_error_context_clustered": 10.083639756193337,
+          "standard_error_runs": 9.121112175200281
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 1.3409685239346543,
+          "mean": 0.8729720281539689,
+          "min": 0.10229122120481209,
+          "n_successful_sentences": 235,
+          "standard_error_context_clustered": 0.02069966662325951,
+          "standard_error_runs": 0.013962834331990089
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 493.0,
+          "mean": 28.791489361702126,
+          "min": 0.0,
+          "n_successful_sentences": 235,
+          "standard_error_context_clustered": 2.525877139689619,
+          "standard_error_runs": 2.2334753477688465
+        }
+      },
+      "point_id": "arithmetic_t0.4_k300",
+      "point_parameters": {
+        "precision": 26,
+        "temperature": 0.4,
+        "topk": 300
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": true,
+        "final_guard_exhaustion_count": 5,
+        "max_final_guard_tokens": 8192,
+        "runs_with_escalation": 6,
+        "total_escalations": 16
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 1930,
+        "max_observed_partial_tokens_including_termination_failures": 8192,
+        "over_step39_pilot_cap_256_count": 2
+      },
+      "terminated_sentence_run_count": 235,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [
+          49,
+          49,
+          50,
+          58,
+          62
+        ],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 235,
+        "termination_failure_count": 5,
+        "termination_success_rate": 0.9791666666666666
+      },
+      "termination_failure_count": 5,
+      "termination_success_rate": 0.9791666666666666,
+      "text_token_roundtrip_exact_count": 234,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 231,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 0,
+        "exact_prefix_count": 231,
+        "exact_prefix_rate": 1.0,
+        "failure_count": 0,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 5,
+        "not_applicable_zero_payload_count": 4
+      },
+      "zero_payload_diagnostic": {
+        "count": 4,
+        "rate_among_completed_sentences": 0.01702127659574468,
+        "valid_for_figure3": true
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": true,
+      "arithmetic_cache_compatibility": {
+        "applicable": true,
+        "max_cache_tokens": 1022,
+        "max_decode_seen_sequence_tokens": 1023,
+        "max_encode_seen_sequence_tokens": 1023,
+        "runs_with_decode_trim": 2,
+        "runs_with_encode_trim": 3,
+        "total_decode_trim_events": 2294,
+        "total_encode_trim_events": 9564
+      },
+      "context_count": 80,
+      "method": "arithmetic",
+      "metric_run_count": 239,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 2.4840672483473654,
+          "mean": 1.443405766388878,
+          "min": 0.1200865558865505,
+          "n_successful_sentences": 239,
+          "standard_error_context_clustered": 0.03751353116021295,
+          "standard_error_runs": 0.02776546446785688
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 3.259259259259259,
+          "mean": 1.354230625111742,
+          "min": 0.0,
+          "n_successful_sentences": 239,
+          "standard_error_context_clustered": 0.046849033581200995,
+          "standard_error_runs": 0.03814663342605819
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 2772.0,
+          "mean": 44.82426778242678,
+          "min": 2.0,
+          "n_successful_sentences": 239,
+          "standard_error_context_clustered": 12.844052678307847,
+          "standard_error_runs": 12.849432613337553
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 1.0294419307922793,
+          "mean": 0.6565216827754736,
+          "min": 0.08348526339369804,
+          "n_successful_sentences": 239,
+          "standard_error_context_clustered": 0.016544165926392556,
+          "standard_error_runs": 0.011544374911460984
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 286.0,
+          "mean": 37.54393305439331,
+          "min": 0.0,
+          "n_successful_sentences": 239,
+          "standard_error_context_clustered": 1.9071150276140492,
+          "standard_error_runs": 1.6625886834878352
+        }
+      },
+      "point_id": "arithmetic_t0.5_k300",
+      "point_parameters": {
+        "precision": 26,
+        "temperature": 0.5,
+        "topk": 300
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": true,
+        "final_guard_exhaustion_count": 1,
+        "max_final_guard_tokens": 8192,
+        "runs_with_escalation": 3,
+        "total_escalations": 6
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 2772,
+        "max_observed_partial_tokens_including_termination_failures": 8192,
+        "over_step39_pilot_cap_256_count": 2
+      },
+      "terminated_sentence_run_count": 239,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [
+          37
+        ],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 239,
+        "termination_failure_count": 1,
+        "termination_success_rate": 0.9958333333333333
+      },
+      "termination_failure_count": 1,
+      "termination_success_rate": 0.9958333333333333,
+      "text_token_roundtrip_exact_count": 238,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 236,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 0,
+        "exact_prefix_count": 236,
+        "exact_prefix_rate": 1.0,
+        "failure_count": 0,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 1,
+        "not_applicable_zero_payload_count": 3
+      },
+      "zero_payload_diagnostic": {
+        "count": 3,
+        "rate_among_completed_sentences": 0.012552301255230125,
+        "valid_for_figure3": true
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": true,
+        "max_cache_tokens": 1022,
+        "max_decode_seen_sequence_tokens": 1023,
+        "max_encode_seen_sequence_tokens": 1023,
+        "runs_with_decode_trim": 2,
+        "runs_with_encode_trim": 2,
+        "total_decode_trim_events": 3084,
+        "total_encode_trim_events": 3084
+      },
+      "context_count": 80,
+      "method": "arithmetic",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 5.757880578647338,
+          "mean": 1.6310935868759073,
+          "min": 0.1200865558865505,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.038541583057296123,
+          "standard_error_runs": 0.03369237690230155
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 8.0,
+          "mean": 1.779330851076866,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.0550243168193877,
+          "standard_error_runs": 0.05025148851877534
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 2697.0,
+          "mean": 47.8375,
+          "min": 1.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 14.333312473920156,
+          "standard_error_runs": 14.318430266673923
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 0.7728044601432286,
+          "mean": 0.4786860020736554,
+          "min": 0.05572657908699928,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.009669073799475394,
+          "standard_error_runs": 0.007789084795011034
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 2545.0,
+          "mean": 67.64166666666667,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 14.253625855730945,
+          "standard_error_runs": 14.040798532111335
+        }
+      },
+      "point_id": "arithmetic_t0.6_k300",
+      "point_parameters": {
+        "precision": 26,
+        "temperature": 0.6,
+        "topk": 300
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": true,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 4096,
+        "runs_with_escalation": 2,
+        "total_escalations": 4
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 2697,
+        "max_observed_partial_tokens_including_termination_failures": 2697,
+        "over_step39_pilot_cap_256_count": 2
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 238,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 237,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 0,
+        "exact_prefix_count": 235,
+        "exact_prefix_rate": 0.9915611814345991,
+        "failure_count": 2,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 3
+      },
+      "zero_payload_diagnostic": {
+        "count": 3,
+        "rate_among_completed_sentences": 0.0125,
+        "valid_for_figure3": true
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": true,
+        "max_cache_tokens": 1022,
+        "max_decode_seen_sequence_tokens": 1023,
+        "max_encode_seen_sequence_tokens": 1023,
+        "runs_with_decode_trim": 1,
+        "runs_with_encode_trim": 1,
+        "total_decode_trim_events": 579,
+        "total_encode_trim_events": 596
+      },
+      "context_count": 80,
+      "method": "arithmetic",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 3.7809976500922016,
+          "mean": 1.8561383439240131,
+          "min": 0.1200865558865505,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.03933417812624876,
+          "standard_error_runs": 0.032322845305310544
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 5.875,
+          "mean": 2.266973415549314,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.058156016351927464,
+          "standard_error_runs": 0.051154235503123355
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 1518.0,
+          "mean": 34.96666666666667,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 6.406963181975519,
+          "standard_error_runs": 6.278988190868754
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 0.5371483752297599,
+          "mean": 0.3251405220855817,
+          "min": 0.046868755310434586,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.007401085477494059,
+          "standard_error_runs": 0.005290415656286898
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 817.0,
+          "mean": 69.55416666666666,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 4.360495622378815,
+          "standard_error_runs": 4.04085502605393
+        }
+      },
+      "point_id": "arithmetic_t0.7_k300",
+      "point_parameters": {
+        "precision": 26,
+        "temperature": 0.7,
+        "topk": 300
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": true,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 2048,
+        "runs_with_escalation": 1,
+        "total_escalations": 1
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 1518,
+        "max_observed_partial_tokens_including_termination_failures": 1518,
+        "over_step39_pilot_cap_256_count": 1
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 238,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 238,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 0,
+        "exact_prefix_count": 236,
+        "exact_prefix_rate": 0.9915966386554622,
+        "failure_count": 2,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 2
+      },
+      "zero_payload_diagnostic": {
+        "count": 2,
+        "rate_among_completed_sentences": 0.008333333333333333,
+        "valid_for_figure3": true
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": true,
+        "max_cache_tokens": 1022,
+        "max_decode_seen_sequence_tokens": 230,
+        "max_encode_seen_sequence_tokens": 230,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "arithmetic",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 3.751407081479696,
+          "mean": 2.079449774165585,
+          "min": 0.1200865558865505,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.043220717073812295,
+          "standard_error_runs": 0.035422168324744215
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 5.473684210526316,
+          "mean": 2.7113838377564234,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.06582434958479524,
+          "standard_error_runs": 0.05434772565068529
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 107.0,
+          "mean": 28.995833333333334,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.1922672463457429,
+          "standard_error_runs": 1.056023070357768
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 0.39700190563062193,
+          "mean": 0.19900045439331823,
+          "min": 0.026436162298072184,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.005168414684581596,
+          "standard_error_runs": 0.003775576515296914
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 338.0,
+          "mean": 80.24583333333334,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 3.573621633654071,
+          "standard_error_runs": 3.3029521045851746
+        }
+      },
+      "point_id": "arithmetic_t0.8_k300",
+      "point_parameters": {
+        "precision": 26,
+        "temperature": 0.8,
+        "topk": 300
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": true,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 1024,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 107,
+        "max_observed_partial_tokens_including_termination_failures": 107,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 239,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 238,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 1,
+        "exact_prefix_count": 237,
+        "exact_prefix_rate": 0.9957983193277311,
+        "failure_count": 1,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 2
+      },
+      "zero_payload_diagnostic": {
+        "count": 2,
+        "rate_among_completed_sentences": 0.008333333333333333,
+        "valid_for_figure3": true
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": true,
+        "max_cache_tokens": 1022,
+        "max_decode_seen_sequence_tokens": 218,
+        "max_encode_seen_sequence_tokens": 218,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "arithmetic",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 4.194514270379269,
+          "mean": 2.373492396301863,
+          "min": 0.1200865558865505,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.042574247578873736,
+          "standard_error_runs": 0.035049512245026906
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 5.666666666666667,
+          "mean": 3.198813367762472,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.061695358434263645,
+          "standard_error_runs": 0.05144742690112091
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 103.0,
+          "mean": 29.233333333333334,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.0732556252500156,
+          "standard_error_runs": 0.9555217686176412
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 0.28763743973200817,
+          "mean": 0.12859486526169714,
+          "min": 0.02024582961624109,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.004582671422456657,
+          "standard_error_runs": 0.003279908139904273
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 464.0,
+          "mean": 94.9875,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 3.876343030950765,
+          "standard_error_runs": 3.644762205674539
+        }
+      },
+      "point_id": "arithmetic_t0.9_k300",
+      "point_parameters": {
+        "precision": 26,
+        "temperature": 0.9,
+        "topk": 300
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": true,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 1024,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 103,
+        "max_observed_partial_tokens_including_termination_failures": 103,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 237,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 238,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 1,
+        "exact_prefix_count": 236,
+        "exact_prefix_rate": 0.9915966386554622,
+        "failure_count": 2,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 2
+      },
+      "zero_payload_diagnostic": {
+        "count": 2,
+        "rate_among_completed_sentences": 0.008333333333333333,
+        "valid_for_figure3": true
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": true,
+        "max_cache_tokens": 1022,
+        "max_decode_seen_sequence_tokens": 237,
+        "max_encode_seen_sequence_tokens": 1023,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 1,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 7262
+      },
+      "context_count": 80,
+      "method": "arithmetic",
+      "metric_run_count": 239,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 4.876726498474155,
+          "mean": 2.73266966862322,
+          "min": 0.37448938190949915,
+          "n_successful_sentences": 239,
+          "standard_error_context_clustered": 0.05413198664306951,
+          "standard_error_runs": 0.04373580739444656
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 6.833333333333333,
+          "mean": 3.7520964594587127,
+          "min": 0.0,
+          "n_successful_sentences": 239,
+          "standard_error_context_clustered": 0.07962499276328704,
+          "standard_error_runs": 0.06342010610597863
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 89.0,
+          "mean": 31.799163179916317,
+          "min": 2.0,
+          "n_successful_sentences": 239,
+          "standard_error_context_clustered": 1.2765602956644655,
+          "standard_error_runs": 1.10262702751783
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 0.24362298739043473,
+          "mean": 0.10084449568109179,
+          "min": 0.008869995622121027,
+          "n_successful_sentences": 239,
+          "standard_error_context_clustered": 0.00377949716455486,
+          "standard_error_runs": 0.0029388829429682723
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 349.0,
+          "mean": 121.92887029288703,
+          "min": 0.0,
+          "n_successful_sentences": 239,
+          "standard_error_context_clustered": 5.340160116667107,
+          "standard_error_runs": 4.6190669156039466
+        }
+      },
+      "point_id": "arithmetic_t1.0_k300",
+      "point_parameters": {
+        "precision": 26,
+        "temperature": 1.0,
+        "topk": 300
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": true,
+        "final_guard_exhaustion_count": 1,
+        "max_final_guard_tokens": 8192,
+        "runs_with_escalation": 1,
+        "total_escalations": 3
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 89,
+        "max_observed_partial_tokens_including_termination_failures": 8192,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 239,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [
+          57
+        ],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 239,
+        "termination_failure_count": 1,
+        "termination_success_rate": 0.9958333333333333
+      },
+      "termination_failure_count": 1,
+      "termination_success_rate": 0.9958333333333333,
+      "text_token_roundtrip_exact_count": 232,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 237,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 2,
+        "exact_prefix_count": 233,
+        "exact_prefix_rate": 0.9831223628691983,
+        "failure_count": 4,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 1,
+        "not_applicable_zero_payload_count": 2
+      },
+      "zero_payload_diagnostic": {
+        "count": 2,
+        "rate_among_completed_sentences": 0.008368200836820083,
+        "valid_for_figure3": true
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": true,
+        "max_cache_tokens": 1022,
+        "max_decode_seen_sequence_tokens": 231,
+        "max_encode_seen_sequence_tokens": 231,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "arithmetic",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 4.874913134210771,
+          "mean": 3.036792540485681,
+          "min": 0.2000953279741888,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.055540835753913546,
+          "standard_error_runs": 0.04270213606440529
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 6.5,
+          "mean": 4.166315752370318,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.07930296281379544,
+          "standard_error_runs": 0.05941467495516528
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 97.0,
+          "mean": 29.858333333333334,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.124615499224978,
+          "standard_error_runs": 1.0780812231290426
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 0.3134055955304253,
+          "mean": 0.12637820084864723,
+          "min": 0.029430764926860798,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.004248716308008967,
+          "standard_error_runs": 0.003125490498529658
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 421.0,
+          "mean": 126.79166666666667,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 5.552952405244311,
+          "standard_error_runs": 5.011008772139437
+        }
+      },
+      "point_id": "arithmetic_t1.1_k300",
+      "point_parameters": {
+        "precision": 26,
+        "temperature": 1.1,
+        "topk": 300
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": true,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 1024,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 97,
+        "max_observed_partial_tokens_including_termination_failures": 97,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 234,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 238,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 1,
+        "exact_prefix_count": 234,
+        "exact_prefix_rate": 0.9831932773109243,
+        "failure_count": 4,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 2
+      },
+      "zero_payload_diagnostic": {
+        "count": 2,
+        "rate_among_completed_sentences": 0.008333333333333333,
+        "valid_for_figure3": true
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": true,
+        "max_cache_tokens": 1022,
+        "max_decode_seen_sequence_tokens": 217,
+        "max_encode_seen_sequence_tokens": 217,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "arithmetic",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 8.392893506914639,
+          "mean": 3.48247696596133,
+          "min": 0.404879292072146,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.055919384648007636,
+          "standard_error_runs": 0.04876416276829788
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 8.0,
+          "mean": 4.712295695100521,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.0676814200057331,
+          "standard_error_runs": 0.057800717984803955
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 118.0,
+          "mean": 31.604166666666668,
+          "min": 1.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.2745078991599452,
+          "standard_error_runs": 1.1898820587315813
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 0.3686540946278426,
+          "mean": 0.20086976933501402,
+          "min": 0.10371791903832026,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.003718520091836996,
+          "standard_error_runs": 0.002792913205467674
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 555.0,
+          "mean": 149.89166666666668,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 6.237932865509147,
+          "standard_error_runs": 5.862167999677156
+        }
+      },
+      "point_id": "arithmetic_t1.2_k300",
+      "point_parameters": {
+        "precision": 26,
+        "temperature": 1.2,
+        "topk": 300
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": true,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 1024,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 118,
+        "max_observed_partial_tokens_including_termination_failures": 118,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 232,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 239,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 3,
+        "exact_prefix_count": 233,
+        "exact_prefix_rate": 0.9748953974895398,
+        "failure_count": 6,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 1
+      },
+      "zero_payload_diagnostic": {
+        "count": 1,
+        "rate_among_completed_sentences": 0.004166666666666667,
+        "valid_for_figure3": true
+      }
+    },
+    {
+      "all_first_boundary_stop": true,
+      "all_no_implicit_zero_lookahead": true,
+      "all_payload_recovered": false,
+      "arithmetic_cache_compatibility": {
+        "applicable": true,
+        "max_cache_tokens": 1022,
+        "max_decode_seen_sequence_tokens": 223,
+        "max_encode_seen_sequence_tokens": 224,
+        "runs_with_decode_trim": 0,
+        "runs_with_encode_trim": 0,
+        "total_decode_trim_events": 0,
+        "total_encode_trim_events": 0
+      },
+      "context_count": 80,
+      "method": "arithmetic",
+      "metric_run_count": 240,
+      "metrics": {
+        "avg_nll_nats_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 7.034860677968746,
+          "mean": 3.2869181606383604,
+          "min": 0.404879292072146,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.061948326829832416,
+          "standard_error_runs": 0.05356554843341755
+        },
+        "bits_per_word_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 9.8,
+          "mean": 4.651269448471326,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 0.09202848109477793,
+          "standard_error_runs": 0.07863240230441176
+        },
+        "carrier_tokens": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 118.0,
+          "mean": 33.391666666666666,
+          "min": 2.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 1.4783811874149342,
+          "standard_error_runs": 1.2915964798495103
+        },
+        "kl_q_stego_to_p_lm_bits_author": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 0.00737978742481757,
+          "mean": 0.0006655253377472944,
+          "min": 0.00010630872078180105,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 3.852409474129052e-05,
+          "standard_error_runs": 3.8518036431438466e-05
+        },
+        "payload_bits_confirmed": {
+          "conditioning": "successfully terminated sentences only",
+          "max": 780.0,
+          "mean": 160.63333333333333,
+          "min": 0.0,
+          "n_successful_sentences": 240,
+          "standard_error_context_clustered": 8.548248930334495,
+          "standard_error_runs": 7.529159647817576
+        }
+      },
+      "point_id": "arithmetic_t1.0_k50256",
+      "point_parameters": {
+        "precision": 26,
+        "special_point": "arithmetic_unmodulated",
+        "temperature": 1.0,
+        "topk": 50256
+      },
+      "replicate_count": 3,
+      "run_count": 240,
+      "scheduled_run_count": 240,
+      "sentence_guard_diagnostic": {
+        "applicable": true,
+        "final_guard_exhaustion_count": 0,
+        "max_final_guard_tokens": 1024,
+        "runs_with_escalation": 0,
+        "total_escalations": 0
+      },
+      "sentence_length_diagnostic": {
+        "max_carrier_tokens": 118,
+        "max_observed_partial_tokens_including_termination_failures": 118,
+        "over_step39_pilot_cap_256_count": 0
+      },
+      "terminated_sentence_run_count": 240,
+      "termination_diagnostic": {
+        "failure_selection_ranks": [],
+        "metric_conditioning": "conditional_on_successful_sentence_termination",
+        "scheduled_run_count": 240,
+        "terminated_sentence_run_count": 240,
+        "termination_failure_count": 0,
+        "termination_success_rate": 1.0
+      },
+      "termination_failure_count": 0,
+      "termination_success_rate": 1.0,
+      "text_token_roundtrip_exact_count": 228,
+      "transport_recovery": {
+        "applicable_positive_payload_count": 238,
+        "decoder_exception_count": 0,
+        "decoder_warning_count": 0,
+        "exact_prefix_count": 226,
+        "exact_prefix_rate": 0.9495798319327731,
+        "failure_count": 12,
+        "figure3_execution_gate": false,
+        "not_applicable_termination_failure_count": 0,
+        "not_applicable_zero_payload_count": 2
+      },
+      "zero_payload_diagnostic": {
+        "count": 2,
+        "rate_among_completed_sentences": 0.008333333333333333,
+        "valid_for_figure3": true
+      }
+    }
+  ],
+  "reference_worktree_unchanged": true,
+  "run_count": 5520,
+  "scheduled_run_count": 5520,
+  "schema_version": "stage3.figure3_full_summary.v1",
+  "scientific_claims_evaluated": false,
+  "sentence_guard_escalation_diagnostic": {
+    "arithmetic_run_count": 2400,
+    "figure3_execution_gate": false,
+    "final_guard_exhaustion_count": 7,
+    "initial_guard_tokens": 1024,
+    "max_escalated_guard_tokens": 8192,
+    "max_final_guard_tokens": 8192,
+    "role": "engineering runaway guard diagnostic; final 8192-token exhaustion is classified separately as sentence_termination_failure",
+    "runs_with_escalation": 13,
+    "total_escalations": 30
+  },
+  "sentence_length_diagnostic": {
+    "full_run_emergency_cap_tokens": 1024,
+    "max_carrier_tokens": 2772,
+    "max_observed_partial_tokens_including_termination_failures": 8192,
+    "over_step39_pilot_cap_256_count": 11
+  },
+  "terminated_sentence_run_count": 5513,
+  "termination_diagnostic": {
+    "failure_point_counts": {
+      "arithmetic_t0.4_k300": 5,
+      "arithmetic_t0.5_k300": 1,
+      "arithmetic_t1.0_k300": 1
+    },
+    "figure3_execution_gate": false,
+    "metric_conditioning": "Figure-3 sentence metrics are conditional on successful termination under pinned utils.is_sent_finish",
+    "scheduled_run_count": 5520,
+    "terminated_sentence_run_count": 5513,
+    "termination_failure_count": 7,
+    "termination_success_rate": 0.998731884057971
+  },
+  "termination_failure_count": 7,
+  "termination_success_rate": 0.998731884057971,
+  "transport_recovery_diagnostic": {
+    "applicable_positive_payload_count": 5490,
+    "decoder_exception_count": 0,
+    "exact_prefix_count": 5343,
+    "exact_prefix_rate": 0.973224043715847,
+    "failure_count": 147,
+    "figure3_execution_gate": false,
+    "not_applicable_termination_failure_count": 7,
+    "not_applicable_zero_payload_count": 23
+  },
+  "zero_payload_diagnostic": {
+    "count": 23,
+    "included_in_bits_per_word_mean_as_zero": true,
+    "rate_among_completed_sentences": 0.0041719571920914205,
+    "valid_only_for_method": "arithmetic"
+  }
+}

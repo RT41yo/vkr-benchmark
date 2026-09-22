@@ -1,4 +1,11 @@
-"""KL/TVD metrics between canonical P_reference and method-induced Q_stego."""
+"""KL/TVD metrics between canonical P_reference and method-induced Q_stego.
+
+Benchmark v0.1 originally exposed only ``D_KL(P_reference || Q_stego)`` under
+legacy ``kl_*`` field names.  ADR-0012 requires Stage 3 and later normalized
+runs to calculate both directions explicitly.  The legacy names are retained
+as compatibility aliases for the benchmark-native direction; new persistence
+code always writes direction-qualified fields as well.
+"""
 
 from __future__ import annotations
 
@@ -27,21 +34,42 @@ _KL_NEGATIVE_ATOL = 1e-10
 
 @dataclass(frozen=True, slots=True)
 class StepDistributionDistortion:
-    """Distribution-distortion metrics for one generated carrier token."""
+    """Distribution-distortion metrics for one generated carrier token.
+
+    ``kl_bits`` is the frozen v0.1 compatibility name for
+    ``D_KL(P_reference || Q_stego)``.  New code should prefer the explicit
+    ``kl_ref_to_stego_bits`` property and ``kl_stego_to_ref_bits`` field.
+    """
 
     q_mode: QMode
     q_source: QSource
     kl_bits: float | None
     tvd: float | None
+    kl_stego_to_ref_bits: float | None = None
+
+    @property
+    def kl_ref_to_stego_bits(self) -> float | None:
+        """Explicit ADR-0012 name for the benchmark-native KL direction."""
+
+        return self.kl_bits
 
     @property
     def available(self) -> bool:
-        return self.kl_bits is not None and self.tvd is not None
+        return (
+            self.kl_ref_to_stego_bits is not None
+            and self.kl_stego_to_ref_bits is not None
+            and self.tvd is not None
+        )
 
 
 @dataclass(frozen=True, slots=True)
 class DistributionDistortionMetrics:
-    """Run-level aggregation required by benchmark specification v0.1."""
+    """Run-level dual-KL/TVD aggregation.
+
+    The ``kl_*`` fields are the legacy benchmark-v0.1 names and mean
+    ``D_KL(P_reference || Q_stego)``.  Direction-qualified properties/fields
+    implement ADR-0012 without invalidating already persisted v0.1 runs.
+    """
 
     q_mode: QMode
     kl_mean_bits: float | None
@@ -54,6 +82,36 @@ class DistributionDistortionMetrics:
     tvd_median: float | None
     tvd_p95: float | None
     tvd_max: float | None
+    kl_stego_to_ref_mean_bits: float | None = None
+    kl_stego_to_ref_median_bits: float | None = None
+    kl_stego_to_ref_p95_bits: float | None = None
+    kl_stego_to_ref_max_bits: float | None = None
+    kl_stego_to_ref_infinite_steps: int = 0
+    kl_stego_to_ref_finite_steps: int = 0
+
+    @property
+    def kl_ref_to_stego_mean_bits(self) -> float | None:
+        return self.kl_mean_bits
+
+    @property
+    def kl_ref_to_stego_median_bits(self) -> float | None:
+        return self.kl_median_bits
+
+    @property
+    def kl_ref_to_stego_p95_bits(self) -> float | None:
+        return self.kl_p95_bits
+
+    @property
+    def kl_ref_to_stego_max_bits(self) -> float | None:
+        return self.kl_max_bits
+
+    @property
+    def kl_ref_to_stego_infinite_steps(self) -> int:
+        return self.kl_infinite_steps
+
+    @property
+    def kl_ref_to_stego_finite_steps(self) -> int:
+        return self.kl_finite_steps
 
 
 def _explicit_q(
@@ -87,14 +145,41 @@ def _kl_ref_to_stego_bits(p: np.ndarray, q: np.ndarray) -> float:
     terms = p_support * (np.log2(p_support) - np.log2(q_support))
     value = float(np.sum(terms, dtype=np.float64))
     if not isfinite(value):
-        raise MetricError(f"finite-support KL computation produced {value!r}")
+        raise MetricError(f"finite-support KL(P_reference || Q_stego) produced {value!r}")
 
-    # Gibbs' inequality gives KL >= 0. A tiny negative value can only come from
-    # finite-precision reduction and is normalized to mathematical zero.
     if value < 0.0:
         if value >= -_KL_NEGATIVE_ATOL:
             return 0.0
         raise MetricError(f"KL(P_reference || Q_stego) became negative: {value!r}")
+    return value
+
+
+def _kl_stego_to_ref_bits(q: np.ndarray, p: np.ndarray) -> float:
+    """Return ADR-0012 author-compatible ``D_KL(Q_stego || P_reference)``.
+
+    As in the benchmark-native direction, no smoothing is allowed.  A positive
+    Q mass assigned to a zero-probability reference event therefore produces
+    ``+inf``.  Normalized Bins/Huffman/Arithmetic construct Q from positive
+    P_reference support, so this direction is normally finite for those methods.
+    """
+
+    positive_q = q > 0.0
+    if not np.any(positive_q):
+        raise MetricError("Q_stego has no positive-probability support")
+
+    q_support = q[positive_q]
+    p_support = p[positive_q]
+    if np.any(p_support == 0.0):
+        return inf
+
+    terms = q_support * (np.log2(q_support) - np.log2(p_support))
+    value = float(np.sum(terms, dtype=np.float64))
+    if not isfinite(value):
+        raise MetricError(f"finite-support KL(Q_stego || P_reference) produced {value!r}")
+    if value < 0.0:
+        if value >= -_KL_NEGATIVE_ATOL:
+            return 0.0
+        raise MetricError(f"KL(Q_stego || P_reference) became negative: {value!r}")
     return value
 
 
@@ -104,7 +189,6 @@ def _tvd(p: np.ndarray, q: np.ndarray) -> float:
         raise MetricError(f"TVD computation produced {value!r}")
     if value < -_TVD_BOUND_ATOL or value > 1.0 + _TVD_BOUND_ATOL:
         raise MetricError(f"TVD lies outside [0, 1]: {value!r}")
-    # Endpoint-only roundoff normalization; this is not probability smoothing.
     return min(1.0, max(0.0, value))
 
 
@@ -112,18 +196,14 @@ def distribution_distortion_step(
     reference: ReferenceDistribution,
     distribution_info: DistributionInfo,
 ) -> StepDistributionDistortion:
-    """Compute one-step KL(P_reference || Q_stego) and TVD.
-
-    ``q_mode=unavailable`` is represented explicitly by ``None`` metric values;
-    unavailable Q is never replaced by the selected-token probability or by a
-    smoothed surrogate distribution.
-    """
+    """Compute both ADR-0012 KL directions and TVD for one carrier step."""
 
     if distribution_info.mode == QMode.UNAVAILABLE:
         return StepDistributionDistortion(
             q_mode=distribution_info.mode,
             q_source=distribution_info.source,
             kl_bits=None,
+            kl_stego_to_ref_bits=None,
             tvd=None,
         )
 
@@ -132,6 +212,7 @@ def distribution_distortion_step(
             q_mode=distribution_info.mode,
             q_source=distribution_info.source,
             kl_bits=0.0,
+            kl_stego_to_ref_bits=0.0,
             tvd=0.0,
         )
 
@@ -147,6 +228,7 @@ def distribution_distortion_step(
         q_mode=distribution_info.mode,
         q_source=distribution_info.source,
         kl_bits=_kl_ref_to_stego_bits(p, q),
+        kl_stego_to_ref_bits=_kl_stego_to_ref_bits(q, p),
         tvd=_tvd(p, q),
     )
 
@@ -172,10 +254,27 @@ def _nearest_rank_percentile_sorted(values: list[float], percentile: float) -> f
     return values[rank - 1]
 
 
+def _aggregate_kl(values: list[float]) -> tuple[float, float, float, float, int, int]:
+    if any(np.isnan(value) or value == -inf or value < 0.0 for value in values):
+        raise MetricError("KL values must be non-negative finite values or +inf")
+    ordered = sorted(values)
+    infinite_steps = sum(value == inf for value in values)
+    finite_steps = len(values) - infinite_steps
+    mean = inf if infinite_steps else float(fsum(values) / len(values))
+    return (
+        mean,
+        float(_median_sorted(ordered)),
+        float(_nearest_rank_percentile_sorted(ordered, 95.0)),
+        float(ordered[-1]),
+        infinite_steps,
+        finite_steps,
+    )
+
+
 def compute_distribution_distortion_metrics(
     step_metrics: Iterable[StepDistributionDistortion],
 ) -> DistributionDistortionMetrics:
-    """Aggregate one-step KL/TVD values into the v0.1 run-level fields."""
+    """Aggregate both KL directions and TVD into run-level fields."""
 
     steps = tuple(step_metrics)
     if not steps:
@@ -203,41 +302,54 @@ def compute_distribution_distortion_metrics(
             tvd_median=None,
             tvd_p95=None,
             tvd_max=None,
+            kl_stego_to_ref_mean_bits=None,
+            kl_stego_to_ref_median_bits=None,
+            kl_stego_to_ref_p95_bits=None,
+            kl_stego_to_ref_max_bits=None,
+            kl_stego_to_ref_infinite_steps=0,
+            kl_stego_to_ref_finite_steps=0,
         )
 
     if any(not step.available for step in steps):
-        raise MetricError("available q_mode requires KL/TVD values on every carrier step")
+        raise MetricError("available q_mode requires both KL directions and TVD on every carrier step")
 
-    kl_values = [float(step.kl_bits) for step in steps if step.kl_bits is not None]
+    kl_ref = [
+        float(step.kl_ref_to_stego_bits)
+        for step in steps
+        if step.kl_ref_to_stego_bits is not None
+    ]
+    kl_stego = [
+        float(step.kl_stego_to_ref_bits)
+        for step in steps
+        if step.kl_stego_to_ref_bits is not None
+    ]
     tvd_values = [float(step.tvd) for step in steps if step.tvd is not None]
 
-    if len(kl_values) != len(steps) or len(tvd_values) != len(steps):
-        raise MetricError("incomplete KL/TVD step sequence")
-    if any(np.isnan(value) or value == -inf or value < 0.0 for value in kl_values):
-        raise MetricError("KL values must be non-negative finite values or +inf")
+    if len(kl_ref) != len(steps) or len(kl_stego) != len(steps) or len(tvd_values) != len(steps):
+        raise MetricError("incomplete dual-KL/TVD step sequence")
     if any(not isfinite(value) or value < 0.0 or value > 1.0 for value in tvd_values):
         raise MetricError("TVD values must be finite and lie in [0, 1]")
 
-    kl_sorted = sorted(kl_values)
+    ref_mean, ref_median, ref_p95, ref_max, ref_inf, ref_finite = _aggregate_kl(kl_ref)
+    stego_mean, stego_median, stego_p95, stego_max, stego_inf, stego_finite = _aggregate_kl(kl_stego)
     tvd_sorted = sorted(tvd_values)
-    infinite_steps = sum(value == inf for value in kl_values)
-    finite_steps = len(kl_values) - infinite_steps
-
-    if infinite_steps:
-        kl_mean = inf
-    else:
-        kl_mean = float(fsum(kl_values) / len(kl_values))
 
     return DistributionDistortionMetrics(
         q_mode=q_mode,
-        kl_mean_bits=kl_mean,
-        kl_median_bits=float(_median_sorted(kl_sorted)),
-        kl_p95_bits=float(_nearest_rank_percentile_sorted(kl_sorted, 95.0)),
-        kl_max_bits=float(kl_sorted[-1]),
-        kl_infinite_steps=infinite_steps,
-        kl_finite_steps=finite_steps,
+        kl_mean_bits=ref_mean,
+        kl_median_bits=ref_median,
+        kl_p95_bits=ref_p95,
+        kl_max_bits=ref_max,
+        kl_infinite_steps=ref_inf,
+        kl_finite_steps=ref_finite,
         tvd_mean=float(fsum(tvd_values) / len(tvd_values)),
         tvd_median=float(_median_sorted(tvd_sorted)),
         tvd_p95=float(_nearest_rank_percentile_sorted(tvd_sorted, 95.0)),
         tvd_max=float(tvd_sorted[-1]),
+        kl_stego_to_ref_mean_bits=stego_mean,
+        kl_stego_to_ref_median_bits=stego_median,
+        kl_stego_to_ref_p95_bits=stego_p95,
+        kl_stego_to_ref_max_bits=stego_max,
+        kl_stego_to_ref_infinite_steps=stego_inf,
+        kl_stego_to_ref_finite_steps=stego_finite,
     )
