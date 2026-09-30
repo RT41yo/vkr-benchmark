@@ -74,7 +74,7 @@ class _ExperimentFakeLM(LMAdapter):
         return updated.pending_logits, updated
 
 
-def _config(method_id: str, params: dict, *, random_seed=None) -> ExperimentConfig:
+def _config(method_id: str, params: dict, *, random_seed=None, key=None) -> ExperimentConfig:
     return ExperimentConfig(
         benchmark_version="0.1",
         run_kind="normalized",
@@ -85,6 +85,7 @@ def _config(method_id: str, params: dict, *, random_seed=None) -> ExperimentConf
             params=params,
             implementation_revision="test",
             random_seed=random_seed,
+            key=key,
         ),
         generation=GenerationRunConfig(),
         secret_id="000001",
@@ -102,20 +103,22 @@ def _prompts() -> PromptRegistry:
 
 
 @pytest.mark.parametrize(
-    ("method_id", "params", "random_seed"),
+    ("method_id", "params", "random_seed", "key"),
     [
-        ("bins", {"block_size": 2}, 12345),
-        ("huffman", {"bits_per_word": 2}, None),
-        ("arithmetic_coding", {"precision": 8, "top_k": 8}, None),
+        ("bins", {"block_size": 2}, 12345, None),
+        ("huffman", {"bits_per_word": 2}, None, None),
+        ("arithmetic_coding", {"precision": 8, "top_k": 8}, None, None),
+        ("discop", {}, None, 12345),
     ],
 )
-def test_all_three_baselines_run_through_one_experiment_entrypoint(
+def test_normalized_methods_run_through_one_experiment_entrypoint(
     method_id: str,
     params: dict,
     random_seed,
+    key,
 ) -> None:
     execution = run_experiment(
-        config=_config(method_id, params, random_seed=random_seed),
+        config=_config(method_id, params, random_seed=random_seed, key=key),
         prompt_registry=_prompts(),
         lm_adapter=_ExperimentFakeLM(),
     )
@@ -185,6 +188,7 @@ def test_method_factory_resolves_all_baseline_ids() -> None:
     assert create_method("bins").method_id == "bins"
     assert create_method("huffman").method_id == "huffman"
     assert create_method("arithmetic_coding").method_id == "arithmetic_coding"
+    assert create_method("discop").method_id == "discop"
 
 
 def test_method_factory_rejects_unknown_method() -> None:
@@ -209,6 +213,23 @@ def test_bins_sender_receiver_rng_are_independent_but_reproducible() -> None:
     ]
 
 
+def test_discop_runtime_uses_key_as_shared_prng_seed() -> None:
+    runtime = create_method_runtime(_config("discop", {}, key=12345))
+    assert runtime.encoder_random_source is not runtime.decoder_random_source
+    assert runtime.encoder_random_source is not None
+    assert runtime.decoder_random_source is not None
+    assert [runtime.encoder_random_source.random() for _ in range(5)] == [
+        runtime.decoder_random_source.random() for _ in range(5)
+    ]
+
+
+def test_discop_runtime_requires_key_and_rejects_ambiguous_random_seed() -> None:
+    with pytest.raises(ConfigurationError, match="method.key"):
+        create_method_runtime(_config("discop", {}))
+    with pytest.raises(ConfigurationError, match="do not also set"):
+        create_method_runtime(_config("discop", {}, random_seed=7, key=12345))
+
+
 def test_unified_runner_resolves_prompt_by_id() -> None:
     config = _config("huffman", {"bits_per_word": 2})
     missing = PromptRegistry([PromptRecord("other", "unit", "r1", "prompt", "en")])
@@ -218,3 +239,16 @@ def test_unified_runner_resolves_prompt_by_id() -> None:
             prompt_registry=missing,
             lm_adapter=_ExperimentFakeLM(),
         )
+
+
+def test_discop_unified_runner_uses_reference_equality_metrics() -> None:
+    execution = run_experiment(
+        config=_config("discop", {}, key=12345),
+        prompt_registry=_prompts(),
+        lm_adapter=_ExperimentFakeLM(),
+    )
+    distortion = execution.distribution_distortion_metrics
+    assert distortion.kl_ref_to_stego_mean_bits == 0.0
+    assert distortion.kl_stego_to_ref_mean_bits == 0.0
+    assert distortion.tvd_mean == 0.0
+    assert execution.roundtrip.roundtrip_exact is True

@@ -317,3 +317,24 @@ The reproducibility branch now includes a frozen 32-pair differential protocol f
 ## Stage 3 Step 3.13: conformance/discrepancy analysis
 
 The frozen 32-pair matched evidence is now interpreted without rerunning the LM. All four representative points preserve the defining method mechanism, while token-level divergence is attributed to documented normalization boundaries (Bins partition/RNG, canonical candidate/support policy, deterministic Huffman ties, and Arithmetic probability/numerical pipeline). Benchmark-native `D_KL(P_reference || Q_stego)` is `+inf` in 32/32 normalized matched runs and is therefore retained as a strict support diagnostic rather than used alone as a finite ranking scalar. See `docs/stages/stage3/conformance_analysis.md`.
+
+## Stage 4: modern methods
+
+Stage 4 starts from `main@85fbebc` on branch `stage4-modern-methods`. The pinned modern-method references and the integration contract are documented in `docs/decisions/0017-stage4-reference-freeze.md` and `docs/stages/stage4/method_contracts.md`.
+
+The first modern normalized adapter is **Discop** (`comydream/Discop@3c3a10099a242eae405b49cc4d09fba1abb148ad`). It uses the same common pipeline as the three baselines and represents the author's shared PRNG seed as `method.key`. A real-model smoke can be run with:
+
+```bash
+python scripts/check_discop_e2e.py \
+  configs/models/llama-3.2-3b.local.json \
+  --carrier-tokens 16 \
+  --key 12345
+```
+
+The unified launcher equivalent is:
+
+```bash
+python scripts/run_experiment.py configs/experiments/stage4_discop.example.json
+```
+
+Stage-4 infrastructure also supports `termination.mode=fixed_payload_bits` with `target_payload_bits` plus a mandatory `max_carrier_tokens` safety cap. This lifecycle is prepared for RRC; RRC itself is not yet integrated in this first Stage-4 iteration.

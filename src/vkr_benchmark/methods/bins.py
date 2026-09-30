@@ -385,8 +385,9 @@ class BinsMethod(StegoMethod):
         secret_source: SecretSource,
         random_source: RandomSource | None = None,
         key: KeyMaterial = None,
+        target_payload_bits: int | None = None,
     ) -> EncoderSession:
-        del key
+        del key, target_payload_bits
         parsed = BinsConfig.from_mapping(config)
         partition = self._partition(
             config=parsed,

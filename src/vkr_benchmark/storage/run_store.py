@@ -122,6 +122,13 @@ def materialize_run_config(
     if config.method.key is not None:
         method["key"] = config.method.key
 
+    termination: dict[str, Any] = {"mode": config.termination.mode}
+    if config.termination.mode == "fixed_carrier_tokens":
+        termination["target_carrier_tokens"] = config.termination.target_carrier_tokens
+    else:
+        termination["target_payload_bits"] = config.termination.target_payload_bits
+        termination["max_carrier_tokens"] = config.termination.max_carrier_tokens
+
     return {
         "benchmark_version": config.benchmark_version,
         "run_kind": config.run_kind,
@@ -142,10 +149,7 @@ def materialize_run_config(
             "kv_cache": config.generation.kv_cache,
         },
         "secret_id": config.secret_id,
-        "termination": {
-            "mode": config.termination.mode,
-            "target_carrier_tokens": config.termination.target_carrier_tokens,
-        },
+        "termination": termination,
     }
 
 

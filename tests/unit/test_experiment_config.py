@@ -76,14 +76,47 @@ def test_generation_config_reuses_reference_policy_validation() -> None:
         GenerationRunConfig(temperature=0.0)
 
 
+def test_fixed_payload_termination_is_supported_with_safety_cap() -> None:
+    termination = TerminationConfig(
+        mode="fixed_payload_bits",
+        target_payload_bits=128,
+        max_carrier_tokens=256,
+    )
+    assert termination.target_payload_bits == 128
+    assert termination.max_carrier_tokens == 256
+    assert termination.target_carrier_tokens is None
+
+
 def test_termination_rejects_unknown_mode() -> None:
-    with pytest.raises(ConfigurationError, match="fixed_carrier_tokens"):
-        TerminationConfig(mode="fixed_payload_bits", target_carrier_tokens=16)
+    with pytest.raises(ConfigurationError, match="termination.mode"):
+        TerminationConfig(mode="unknown", target_carrier_tokens=16)
+
+
+def test_fixed_payload_requires_both_target_and_cap() -> None:
+    with pytest.raises(ConfigurationError, match="target_payload_bits"):
+        TerminationConfig(mode="fixed_payload_bits", max_carrier_tokens=16)
+    with pytest.raises(ConfigurationError, match="max_carrier_tokens"):
+        TerminationConfig(mode="fixed_payload_bits", target_payload_bits=8)
 
 
 def test_termination_rejects_nonpositive_target() -> None:
     with pytest.raises(ConfigurationError, match="positive integer"):
         TerminationConfig(mode="fixed_carrier_tokens", target_carrier_tokens=0)
+
+
+def test_experiment_config_loads_fixed_payload_termination(tmp_path) -> None:
+    raw = _raw_config()
+    raw["termination"] = {
+        "mode": "fixed_payload_bits",
+        "target_payload_bits": 64,
+        "max_carrier_tokens": 128,
+    }
+    path = tmp_path / "run.json"
+    path.write_text(json.dumps(raw), encoding="utf-8")
+    config = ExperimentConfig.from_json(path, project_root=tmp_path)
+    assert config.termination.target_payload_bits == 64
+    assert config.termination.max_carrier_tokens == 128
+    assert config.termination.target_carrier_tokens is None
 
 
 def test_experiment_config_rejects_wrong_benchmark_version(tmp_path) -> None:

@@ -574,10 +574,11 @@ class ArithmeticMethod(StegoMethod):
         secret_source: SecretSource,
         random_source: RandomSource | None = None,
         key: KeyMaterial = None,
+        target_payload_bits: int | None = None,
     ) -> EncoderSession:
         # Basic Arithmetic Coding is deterministic once P_reference and the
         # secret stream are fixed; method randomness/key are not used here.
-        del random_source, key
+        del random_source, key, target_payload_bits
         parsed = ArithmeticConfig.from_mapping(config)
         return ArithmeticEncoderSession(
             config=parsed,

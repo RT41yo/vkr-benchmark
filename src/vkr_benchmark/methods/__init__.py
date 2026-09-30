@@ -15,6 +15,12 @@ from vkr_benchmark.methods.bins import (
     BinsMethod,
     BinsPartition,
 )
+from vkr_benchmark.methods.discop import (
+    DiscopConfig,
+    DiscopDecoderSession,
+    DiscopEncoderSession,
+    DiscopMethod,
+)
 from vkr_benchmark.methods.huffman import (
     HuffmanCodebook,
     HuffmanConfig,
@@ -47,6 +53,10 @@ __all__ = [
     "EncodeDecision",
     "EncoderFinalization",
     "EncoderSession",
+    "DiscopConfig",
+    "DiscopDecoderSession",
+    "DiscopEncoderSession",
+    "DiscopMethod",
     "HuffmanCodebook",
     "HuffmanConfig",
     "HuffmanDecoderSession",

@@ -172,7 +172,7 @@ def warm_up_streaming_path(
     _cuda_synchronize_if_needed(lm_adapter)
 
 
-def encode_fixed_carrier_tokens(
+def _encode_streaming_tokens(
     *,
     lm_adapter: LMAdapter,
     reference_builder: ReferenceDistributionBuilder,
@@ -180,20 +180,23 @@ def encode_fixed_carrier_tokens(
     method_config: Mapping[str, Any],
     environment: MethodEnvironment,
     prompt_text: str,
-    carrier_tokens: int,
+    carrier_token_limit: int,
+    target_payload_bits: int | None,
     secret_source: SecretSource,
     method_random_source: RandomSource | None,
     key: KeyMaterial = None,
 ) -> StreamingEncodeResult:
-    """Generate at most ``carrier_tokens`` through one streaming method session.
+    """Run one encoder session under an explicit carrier-token safety limit.
 
-    Timing includes prompt prefill, canonical distribution processing, method
-    session creation/steps/finalization and cached LM advances. Metric
-    calculations themselves are intentionally outside the timed components.
+    ``target_payload_bits`` is ``None`` for ordinary fixed-carrier streaming.
+    Fixed-payload methods receive the requested message length before their
+    first step and must set ``done`` once that payload has been embedded.
     """
 
-    if carrier_tokens <= 0:
-        raise ValueError("carrier_tokens must be positive")
+    if carrier_token_limit <= 0:
+        raise ValueError("carrier_token_limit must be positive")
+    if target_payload_bits is not None and target_payload_bits <= 0:
+        raise ValueError("target_payload_bits must be positive or None")
 
     lm_ms = 0.0
     distribution_ms = 0.0
@@ -214,6 +217,7 @@ def encode_fixed_carrier_tokens(
             secret_source=recorded_secret,
             random_source=method_random_source,
             key=key,
+            target_payload_bits=target_payload_bits,
         ),
     )
     stego_ms += elapsed
@@ -224,7 +228,7 @@ def encode_fixed_carrier_tokens(
     step_distortion: list[StepDistributionDistortion] = []
     step_raw_nll: list[float] = []
 
-    for step_index in range(carrier_tokens):
+    for step_index in range(carrier_token_limit):
         (raw_logits, state), elapsed = _measure_ms(
             lm_adapter, lambda: lm_adapter.next_logits(state)
         )
@@ -258,7 +262,7 @@ def encode_fixed_carrier_tokens(
         generated.append(token_id)
         step_bits.append(decision.bits_consumed)
 
-        if encoder.done or step_index + 1 >= carrier_tokens:
+        if encoder.done or step_index + 1 >= carrier_token_limit:
             break
 
         (_, state), elapsed = _measure_ms(
@@ -266,8 +270,21 @@ def encode_fixed_carrier_tokens(
         )
         lm_ms += elapsed
 
+    if target_payload_bits is not None and not encoder.done:
+        raise ContractError(
+            "fixed-payload encoder did not terminate before max_carrier_tokens"
+        )
+
     finalization, elapsed = _measure_ms(lm_adapter, encoder.finalize)
     stego_ms += elapsed
+    if (
+        target_payload_bits is not None
+        and finalization.payload_bits != target_payload_bits
+    ):
+        raise ContractError(
+            "fixed-payload encoder finalization disagrees with target_payload_bits: "
+            f"{finalization.payload_bits} != {target_payload_bits}"
+        )
     read_secret_bits = recorded_secret.consumed_bits
     if finalization.payload_bits > len(read_secret_bits):
         raise ContractError(
@@ -300,6 +317,67 @@ def encode_fixed_carrier_tokens(
             stego_algorithm_ms=stego_ms,
         ),
         finalization=finalization,
+    )
+
+
+def encode_fixed_carrier_tokens(
+    *,
+    lm_adapter: LMAdapter,
+    reference_builder: ReferenceDistributionBuilder,
+    method: StegoMethod,
+    method_config: Mapping[str, Any],
+    environment: MethodEnvironment,
+    prompt_text: str,
+    carrier_tokens: int,
+    secret_source: SecretSource,
+    method_random_source: RandomSource | None,
+    key: KeyMaterial = None,
+) -> StreamingEncodeResult:
+    """Encode under the benchmark fixed-carrier termination policy."""
+
+    return _encode_streaming_tokens(
+        lm_adapter=lm_adapter,
+        reference_builder=reference_builder,
+        method=method,
+        method_config=method_config,
+        environment=environment,
+        prompt_text=prompt_text,
+        carrier_token_limit=carrier_tokens,
+        target_payload_bits=None,
+        secret_source=secret_source,
+        method_random_source=method_random_source,
+        key=key,
+    )
+
+
+def encode_fixed_payload_bits(
+    *,
+    lm_adapter: LMAdapter,
+    reference_builder: ReferenceDistributionBuilder,
+    method: StegoMethod,
+    method_config: Mapping[str, Any],
+    environment: MethodEnvironment,
+    prompt_text: str,
+    target_payload_bits: int,
+    max_carrier_tokens: int,
+    secret_source: SecretSource,
+    method_random_source: RandomSource | None,
+    key: KeyMaterial = None,
+) -> StreamingEncodeResult:
+    """Encode a fixed-size payload with a carrier-token safety cap."""
+
+    return _encode_streaming_tokens(
+        lm_adapter=lm_adapter,
+        reference_builder=reference_builder,
+        method=method,
+        method_config=method_config,
+        environment=environment,
+        prompt_text=prompt_text,
+        carrier_token_limit=max_carrier_tokens,
+        target_payload_bits=target_payload_bits,
+        secret_source=secret_source,
+        method_random_source=method_random_source,
+        key=key,
     )
 
 
@@ -395,26 +473,62 @@ def run_streaming_text_roundtrip(
     method_config: Mapping[str, Any],
     environment: MethodEnvironment,
     prompt_text: str,
-    carrier_tokens: int,
+    carrier_tokens: int | None = None,
+    target_payload_bits: int | None = None,
+    max_carrier_tokens: int | None = None,
     secret_source: SecretSource,
     encoder_random_source: RandomSource | None,
     decoder_random_source: RandomSource | None,
     key: KeyMaterial = None,
 ) -> StreamingTextRoundtripResult:
-    """Encode, transmit only ordinary text, retokenize, then decode."""
+    """Encode, transmit ordinary text, retokenize, then decode.
 
-    encoded = encode_fixed_carrier_tokens(
-        lm_adapter=lm_adapter,
-        reference_builder=reference_builder,
-        method=method,
-        method_config=method_config,
-        environment=environment,
-        prompt_text=prompt_text,
-        carrier_tokens=carrier_tokens,
-        secret_source=secret_source,
-        method_random_source=encoder_random_source,
-        key=key,
-    )
+    Exactly one termination policy is selected: either ``carrier_tokens`` for
+    fixed-carrier methods or ``target_payload_bits`` + ``max_carrier_tokens``
+    for fixed-payload methods such as RRC.
+    """
+
+    fixed_carrier = carrier_tokens is not None
+    fixed_payload = target_payload_bits is not None or max_carrier_tokens is not None
+    if fixed_carrier == fixed_payload:
+        raise ValueError(
+            "select exactly one termination policy: carrier_tokens OR "
+            "target_payload_bits + max_carrier_tokens"
+        )
+
+    if fixed_carrier:
+        assert carrier_tokens is not None
+        encoded = encode_fixed_carrier_tokens(
+            lm_adapter=lm_adapter,
+            reference_builder=reference_builder,
+            method=method,
+            method_config=method_config,
+            environment=environment,
+            prompt_text=prompt_text,
+            carrier_tokens=carrier_tokens,
+            secret_source=secret_source,
+            method_random_source=encoder_random_source,
+            key=key,
+        )
+    else:
+        if target_payload_bits is None or max_carrier_tokens is None:
+            raise ValueError(
+                "fixed-payload termination requires target_payload_bits and "
+                "max_carrier_tokens"
+            )
+        encoded = encode_fixed_payload_bits(
+            lm_adapter=lm_adapter,
+            reference_builder=reference_builder,
+            method=method,
+            method_config=method_config,
+            environment=environment,
+            prompt_text=prompt_text,
+            target_payload_bits=target_payload_bits,
+            max_carrier_tokens=max_carrier_tokens,
+            secret_source=secret_source,
+            method_random_source=encoder_random_source,
+            key=key,
+        )
 
     # Text transport is part of reliability validation but intentionally not
     # included in encode/decode computational-efficiency timing.
@@ -436,10 +550,19 @@ def run_streaming_text_roundtrip(
     expected = encoded.payload_secret_bits
     recovered = decoded.recovered_bits
     mismatch = _first_bit_mismatch(expected, recovered)
-    raw_recovered_length = len(decoded.incremental_recovered_bits)
+
+    # DecoderFinalization is authoritative for recovered payload content.  Keep
+    # the longest observed length as a raw diagnostic so streaming decoders
+    # that emitted extra bits cannot hide them by truncating during finalize(),
+    # while finalize-only decoders (RRC-like) are handled correctly.
+    raw_recovered_length = max(
+        len(decoded.incremental_recovered_bits),
+        len(recovered),
+    )
     recovered_extra_bits = max(0, raw_recovered_length - len(expected))
     exact = (
         mismatch is None
+        and len(recovered) == len(expected)
         and raw_recovered_length == len(expected)
         and decoded.finalization.complete
     )

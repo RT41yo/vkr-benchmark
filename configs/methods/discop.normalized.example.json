@@ -1,0 +1,6 @@
+{
+  "method_id": "discop",
+  "run_kind": "normalized",
+  "params": {},
+  "notes": "Pinned Discop core has no Stage-4 method-local tuning parameter. The shared PRNG seed is represented by experiment method.key, not method.random_seed. Common temperature/top-p/top-k remain part of P_reference."
+}

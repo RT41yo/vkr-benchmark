@@ -430,3 +430,35 @@ def test_summary_backend_error_is_explicit(monkeypatch) -> None:
     monkeypatch.setattr(run_store, "_import_pyarrow", _missing)
     with pytest.raises(StorageError, match="storage extra"):
         run_store.ensure_summary_backend_available()
+
+
+def test_fixed_carrier_materialized_termination_keeps_stage2_shape() -> None:
+    materialized = materialize_run_config(_config(), _model())
+    assert materialized["termination"] == {
+        "mode": "fixed_carrier_tokens",
+        "target_carrier_tokens": 2,
+    }
+
+
+def test_fixed_payload_materialized_termination_records_target_and_safety_cap() -> None:
+    base = _config()
+    config = ExperimentConfig(
+        benchmark_version=base.benchmark_version,
+        run_kind=base.run_kind,
+        model_config_path=base.model_config_path,
+        prompt_id=base.prompt_id,
+        method=base.method,
+        generation=base.generation,
+        secret_id=base.secret_id,
+        termination=TerminationConfig(
+            mode="fixed_payload_bits",
+            target_payload_bits=128,
+            max_carrier_tokens=256,
+        ),
+    )
+    materialized = materialize_run_config(config, _model())
+    assert materialized["termination"] == {
+        "mode": "fixed_payload_bits",
+        "target_payload_bits": 128,
+        "max_carrier_tokens": 256,
+    }

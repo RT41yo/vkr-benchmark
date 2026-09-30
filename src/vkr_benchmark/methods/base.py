@@ -67,8 +67,13 @@ class StegoMethod(ABC):
         secret_source: SecretSource,
         random_source: RandomSource | None = None,
         key: KeyMaterial = None,
+        target_payload_bits: int | None = None,
     ) -> EncoderSession:
-        """Create an encoder session isolated from LM/tokenizer ownership."""
+        """Create an encoder session isolated from LM/tokenizer ownership.
+
+        ``target_payload_bits`` is populated only for fixed-payload termination.
+        Streaming fixed-carrier methods receive ``None``.
+        """
 
     @abstractmethod
     def create_decoder(

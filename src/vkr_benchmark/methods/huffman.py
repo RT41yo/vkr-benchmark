@@ -434,9 +434,10 @@ class HuffmanMethod(StegoMethod):
         secret_source: SecretSource,
         random_source: RandomSource | None = None,
         key: KeyMaterial = None,
+        target_payload_bits: int | None = None,
     ) -> EncoderSession:
         # Huffman is deterministic once P_reference and secret bits are fixed.
-        del random_source, key
+        del random_source, key, target_payload_bits
         parsed = HuffmanConfig.from_mapping(config)
         return HuffmanEncoderSession(
             config=parsed,
