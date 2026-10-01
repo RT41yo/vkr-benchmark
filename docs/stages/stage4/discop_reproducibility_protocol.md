@@ -1,37 +1,44 @@
-# Stage 4 — Discop conformance and reproducibility protocol
+# Этап 4 — протокол проверки воспроизводимости Discop
 
-## Scope
+## Область проверки
 
-Discop is checked at three distinct levels so that algorithmic conformance is
-not confused with paper-level numerical reproduction.
+Проверка Discop проводится на трех уровнях. Это позволяет отдельно подтвердить соответствие алгоритма авторской реализации и проверить характерное поведение метода на языковых моделях, используемых в бенчмарке.
 
-1. **Pinned-source oracle vs normalized adapter.** A separate Python oracle is a
-   literal translation of `cy_encode_step`/`cy_decode_step` from
-   `comydream/Discop@3c3a10099a242eae405b49cc4d09fba1abb148ad`.  The oracle
-   and normalized adapter receive the same canonical probability vector,
-   secret bits and Python PRNG seed.  Token choice, payload consumption,
-   recovered bits and PRNG draw count must match exactly over fixed and
-   randomized synthetic fixtures.  This is source-level conformance; it does
-   not claim that the original Cython binary was executed.
+### 1. Сравнение с независимой эталонной реализацией
 
-2. **Original Cython step API vs normalized adapter.** When a pinned local
-   checkout can be compiled, `stega_cy.encode_step` and `decode_step` are
-   executed directly on the same synthetic fixtures.  The checkout HEAD must
-   equal the frozen commit and tracked author files must remain unchanged.
-   This isolates the algorithmic core from legacy GPT-2/dataset dependencies.
+Отдельная реализация на Python повторяет логику функций `cy_encode_step` и `cy_decode_step` из зафиксированной версии авторского репозитория `comydream/Discop@3c3a10099a242eae405b49cc4d09fba1abb148ad`.
 
-3. **Real-LM characteristic probe.** The normalized adapter is run for 100
-   carrier tokens at the paper top-p grid `0.80, 0.92, 0.95, 0.98, 1.00`.
-   We record BPT, reference entropy, entropy utilization, both benchmark KL
-   directions, TVD and ordinary-text roundtrip.  This probe uses the benchmark
-   model and explicit prompt, so it is **not** a numerical reproduction of the
-   paper's GPT-2/IMDb Table II values.
+Для эталонной и нашей реализации используются одинаковые распределения вероятностей, секретные биты и начальное состояние генератора случайных чисел. Должны полностью совпадать выбранный токен, число встроенных битов, восстановленные биты и число обращений к генератору случайных чисел.
 
-## Publication target
+Проверка выполняется как на заранее заданных примерах, так и на случайно сформированных тестовых распределениях.
 
-Ding et al. (IEEE S&P 2023), Table II reports for recursive Discop on GPT-2:
+### 2. Сравнение с исходным авторским кодом
 
-| top-p | Capacity, bit/token | Entropy, bit/token | Utilization | Ave KLD | Max KLD |
+Если зафиксированная версия авторского репозитория успешно собирается, исходные функции `stega_cy.encode_step` и `stega_cy.decode_step` запускаются непосредственно и сравниваются с нашей реализацией на тех же тестовых примерах.
+
+Перед запуском проверяется, что используется именно зафиксированный коммит и что исходные файлы авторского репозитория не изменены. Таким образом проверяется непосредственно алгоритмическое ядро Discop без привязки к устаревшему окружению GPT-2 и наборам данных авторского проекта.
+
+### 3. Проверка характерного поведения на реальной языковой модели
+
+Наша реализация запускается на Llama-3.2-3B для 100 токенов-носителей при значениях `top-p = 0.80, 0.92, 0.95, 0.98, 1.00`.
+
+Для каждой точки фиксируются:
+
+- пропускная способность в битах на токен;
+- энтропия опорного распределения;
+- эффективность использования энтропии;
+- оба направления KL-дивергенции;
+- TVD;
+- точность восстановления последовательности токенов после преобразования в текст и повторной токенизации;
+- точность восстановления скрытого сообщения.
+
+Эта проверка не считается прямым численным воспроизведением результатов статьи, поскольку в публикации использовались другая языковая модель и другой набор текстовых контекстов.
+
+## Ориентир из публикации
+
+В статье Ding et al. (IEEE S&P 2023) для Discop на GPT-2 приводятся следующие результаты.
+
+| `top-p` | Пропускная способность, бит/токен | Энтропия, бит/токен | Использование энтропии | Средний KLD | Максимальный KLD |
 |---:|---:|---:|---:|---:|---:|
 | 0.80 | 3.48 | 3.79 | 0.92 | 0 | 0 |
 | 0.92 | 4.55 | 4.86 | 0.94 | 0 | 0 |
@@ -39,41 +46,34 @@ Ding et al. (IEEE S&P 2023), Table II reports for recursive Discop on GPT-2:
 | 0.98 | 5.29 | 5.59 | 0.95 | 0 | 0 |
 | 1.00 | 5.76 | 6.08 | 0.95 | 0 | 0 |
 
-The paper protocol uses 100 IMDb texts, the first three sentences as context,
-and 100 generated tokens per context.  Therefore the short Stage-4 Llama/Qwen
-probe is interpreted only as a characteristic check.  A future exact
-paper-compatible numerical run must preserve the paper model/data protocol or
-be explicitly classified as a near-publication replication.
+В публикации использовались 100 текстов IMDb, первые три предложения каждого текста служили контекстом, после чего генерировалось по 100 токенов. Поэтому результаты нашего короткого запуска на Llama-3.2-3B используются как проверка характерного поведения метода, а не как попытка получить те же численные значения.
 
+## Окружение для сборки авторской реализации
 
-## Reference build environment
+В авторском репозитории указана зависимость `cython~=0.29.28`. Для проверки зафиксированной версии исходного кода используется `Cython==0.29.37`, совместимый с Python 3.12.
 
-The pinned Discop repository declares `cython~=0.29.28`. The Stage-4
-compatibility extra therefore pins `Cython==0.29.37`. This is intentionally
-separate from the benchmark runtime implementation: the old Cython dependency
-is needed only to build the untouched author `stega_cy.pyx` for direct
-step-level conformance. Cython 3.x is not used for this reference build because
-it rejects the pinned source during cythonization.
+Эта зависимость нужна только для сборки неизмененного файла `stega_cy.pyx`. Основная реализация Discop в бенчмарке от Cython не зависит.
 
-## Q_stego handling
+Cython 3.x для этой проверки не используется, поскольку зафиксированный авторский исходный код не собирается с этой версией без изменений.
 
-The normalized adapter reports `Q_stego = P_reference` as
-`analytic_exact/reference_equality_certificate` with source
-`analytic_theory`.  The benchmark never imports the author's hard-coded `kld=0`
-field as measured evidence.  Independent synthetic sampling remains a separate
-validation of the equality claim, while central benchmark metrics compute both
-KL directions and TVD from the certificate.
+## Проверка распределения `Q_stego`
 
-## Acceptance for the Discop adapter
+Для нашей реализации Discop используется теоретическое свойство
 
-Discop can move to Stage-4 "integrated and conformant" status when:
+`Q_stego = P_reference`.
 
-- the full unit/regression suite passes;
-- source-oracle conformance has zero mismatches;
-- the original Cython step-level comparison passes, or an environment/build
-  limitation is recorded explicitly;
-- Llama normalized ordinary-text roundtrip is exact on the characteristic
-  probe and the same probe is attempted on Qwen;
-- zero reported KL/TVD is accompanied by the analytic-certificate provenance;
-- observed utilization is reported without treating a different-model value as
-  a direct numerical reproduction of Table II.
+Оно фиксируется как аналитически точное равенство. Нулевые значения KL-дивергенции и TVD не берутся из поля `kld=0` авторского кода и не считаются измеренными на основании одного экспериментального запуска.
+
+Дополнительно равенство проверяется на синтетических распределениях, а все итоговые метрики рассчитываются общим модулем бенчмарка.
+
+## Условия успешного завершения проверки
+
+Discop считается успешно интегрированным и проверенным в рамках Этапа 4, если выполняются следующие условия:
+
+- полный набор модульных и регрессионных тестов проходит без ошибок;
+- сравнение с независимой эталонной реализацией не выявляет расхождений;
+- прямое сравнение с исходным кодом на Cython проходит успешно либо ограничение среды явно зафиксировано;
+- на Llama-3.2-3B скрытое сообщение точно восстанавливается после передачи через обычный текстовый канал;
+- нулевые значения KL и TVD сопровождаются указанием их аналитического происхождения;
+- эффективность использования энтропии интерпретируется как характеристика конкретного запуска и не выдается за прямое численное воспроизведение результатов статьи;
+- аналогичная проверка предпринимается на резервной модели Qwen3-4B-Base.
