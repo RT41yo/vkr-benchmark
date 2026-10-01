@@ -1,0 +1,11 @@
+{
+  "status": "pass",
+  "comparison_kind": "pinned-source-oracle-vs-normalized",
+  "reference_repository": "https://github.com/comydream/Discop",
+  "reference_commit": "3c3a10099a242eae405b49cc4d09fba1abb148ad",
+  "fixture_count": 133,
+  "random_fixture_count": 128,
+  "failure_count": 0,
+  "failures": [],
+  "limitation": "The oracle is an independent Python translation of the pinned Cython step logic; this check does not execute the original compiled Cython module."
+}
