@@ -147,7 +147,8 @@ def test_normalized_methods_run_through_one_experiment_entrypoint(
     )
 
     distortion = execution.distribution_distortion_metrics
-    assert distortion.q_mode.value == "analytic_exact"
+    expected_q_mode = "exact_enumeration" if method_id == "discop" else "analytic_exact"
+    assert distortion.q_mode.value == expected_q_mode
     assert len(execution.roundtrip.encode.step_distribution_distortion) == 8
     assert distortion.kl_infinite_steps + distortion.kl_finite_steps == 8
     assert distortion.tvd_mean is not None
@@ -241,14 +242,20 @@ def test_unified_runner_resolves_prompt_by_id() -> None:
         )
 
 
-def test_discop_unified_runner_uses_reference_equality_metrics() -> None:
+def test_discop_unified_runner_uses_explicit_q_metrics() -> None:
     execution = run_experiment(
         config=_config("discop", {}, key=12345),
         prompt_registry=_prompts(),
         lm_adapter=_ExperimentFakeLM(),
     )
     distortion = execution.distribution_distortion_metrics
-    assert distortion.kl_ref_to_stego_mean_bits == 0.0
-    assert distortion.kl_stego_to_ref_mean_bits == 0.0
-    assert distortion.tvd_mean == 0.0
+    assert distortion.q_mode.value == "exact_enumeration"
+    assert distortion.kl_ref_to_stego_mean_bits is not None
+    assert distortion.kl_stego_to_ref_mean_bits is not None
+    assert distortion.tvd_mean is not None
+    assert distortion.kl_ref_to_stego_mean_bits < 1e-6
+    assert distortion.kl_stego_to_ref_mean_bits < 1e-6
+    assert distortion.tvd_mean < 1e-6
+    first_step = execution.roundtrip.encode.step_distribution_distortion[0]
+    assert first_step.q_source.value == "independent_enumeration"
     assert execution.roundtrip.roundtrip_exact is True

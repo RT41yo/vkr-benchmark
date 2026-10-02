@@ -1,6 +1,6 @@
 # ADR-0019: Normalized Discop adaptation
 
-- **Status:** Accepted
+- **Status:** Superseded in part by ADR-0020
 - **Date:** 2026-10-01
 - **Context:** First modern method integrated in Stage 4
 - **Author reference:** `comydream/Discop@3c3a10099a242eae405b49cc4d09fba1abb148ad`, `src/stega_cy.pyx`
@@ -27,9 +27,9 @@ The author code calls Python `random.seed(settings.seed)` independently before e
 
 ## Q_stego
 
-Discop's theoretical construction claims `Q_stego = P_reference` under uniformly distributed secret bits and PRNG output. The adapter reports a `reference_equality_certificate` with source `analytic_theory`; it does **not** reuse the author's hard-coded zero `kld` field as an empirical measurement.
+Discop's theoretical construction claims `Q_stego = P_reference` under uniformly distributed secret bits and PRNG output. This was the initial Stage-4 representation.
 
-An independent deterministic synthetic sampling test validates the equality claim numerically. Both KL directions and TVD are then zero in the benchmark metric layer because the representation is an explicit equality certificate.
+ADR-0020 supersedes this part of the decision: ordinary benchmark runs now construct an explicit `Q_stego` independently on every step and pass it to the common KL/TVD layer. The explicit construction is benchmark metric instrumentation and is excluded from method-performance timing.
 
 ## Boundaries of normalization
 

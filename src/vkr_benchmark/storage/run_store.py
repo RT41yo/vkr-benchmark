@@ -264,6 +264,7 @@ def build_result_record(
         "lm_forward_total_ms": performance.lm_forward_total_ms,
         "distribution_processing_total_ms": performance.distribution_processing_total_ms,
         "stego_algorithm_total_ms": performance.stego_algorithm_total_ms,
+        "metric_instrumentation_total_ms": performance.metric_instrumentation_total_ms,
         "error": None,
     }
 

@@ -183,6 +183,9 @@ def _execution() -> SimpleNamespace:
             decode_lm_forward_ms=4.0,
             decode_distribution_processing_ms=2.0,
             decode_stego_algorithm_ms=2.0,
+            metric_instrumentation_total_ms=7.0,
+            encode_metric_instrumentation_ms=7.0,
+            decode_metric_instrumentation_ms=0.0,
         ),
     )
 
@@ -227,6 +230,12 @@ def test_result_record_retains_benchmark_native_infinite_kl_in_memory() -> None:
     assert record["kl_mean_bits"] == math.inf
     assert record["status"] == "ok"
     assert record["error"] is None
+
+
+def test_result_record_persists_metric_instrumentation_separately() -> None:
+    record = build_result_record(_execution(), run_id="0123456789abcdef")
+    assert record["metric_instrumentation_total_ms"] == pytest.approx(7.0)
+    assert record["encode_total_ms"] == pytest.approx(10.0)
 
 
 def test_result_record_persists_both_kl_directions_explicitly() -> None:

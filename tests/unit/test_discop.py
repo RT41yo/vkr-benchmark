@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from vkr_benchmark.distributions import (
+    QMode,
     QRepresentation,
     QSource,
     ReferenceDistribution,
@@ -59,6 +60,28 @@ def _context(probabilities: list[float]) -> tuple[StepContext, MethodEnvironment
     return StepContext(step_index=0, reference=reference), environment
 
 
+
+
+def test_explicit_q_is_metric_instrumentation_not_part_of_encoder_step(monkeypatch) -> None:
+    context, environment = _context([0.4, 0.3, 0.2, 0.1])
+    encoder = DiscopMethod().create_encoder(
+        config={},
+        environment=environment,
+        secret_source=_Bits((1, 0)),
+        random_source=_ScriptedRandom((0.1, 0.7)),
+    )
+
+    import vkr_benchmark.methods.discop as discop_module
+
+    def fail_if_called(_reference):
+        raise AssertionError("explicit Q must not be constructed inside encoder.step()")
+
+    monkeypatch.setattr(discop_module, "explicit_discop_q", fail_if_called)
+    decision = encoder.step(context)
+    assert decision.token_id == 1
+    with pytest.raises(AssertionError, match="explicit Q"):
+        encoder.distribution_info(context, decision)
+
 def test_discop_matches_pinned_reference_step_fixture() -> None:
     # Pinned create_huffman_tree for [0.4, 0.3, 0.2, 0.1] builds:
     # root: token0 | ((token3, token2), token1).
@@ -79,8 +102,16 @@ def test_discop_matches_pinned_reference_step_fixture() -> None:
     assert decision.token_id == 1
     assert decision.bits_consumed == 2
     assert encoder_rng.draws == 2
-    assert decision.distribution_info.representation == QRepresentation.REFERENCE_EQUALITY_CERTIFICATE
-    assert decision.distribution_info.source == QSource.ANALYTIC_THEORY
+    info = encoder.distribution_info(context, decision)
+    assert info.representation == QRepresentation.EXPLICIT_PROBABILITIES
+    assert info.mode == QMode.EXACT_ENUMERATION
+    assert info.source == QSource.INDEPENDENT_ENUMERATION
+    assert info.probabilities is not None
+    expected_q = context.reference.probabilities.astype(np.float64)
+    expected_q /= expected_q.sum(dtype=np.float64)
+    assert np.allclose(
+        info.probabilities, expected_q, rtol=0.0, atol=1e-14
+    )
 
     decoder_rng = _ScriptedRandom((0.1, 0.7))
     decoder = DiscopMethod().create_decoder(
@@ -172,7 +203,7 @@ def test_discop_empirical_distribution_matches_reference_independently() -> None
     target = context.reference.probabilities.astype(np.float64)
     tvd = 0.5 * float(np.abs(empirical - target).sum())
 
-    # This is an independent deterministic validation of the analytic
-    # Q_stego=P_reference certificate, not the certificate itself. The fixed
-    # seeds make the test non-flaky; the observed TVD is ~0.002 for this fixture.
+    # This Monte Carlo check is independent of the exact Q_stego calculator.
+    # The fixed seeds make the test non-flaky; the observed TVD is ~0.002 for
+    # this fixture.
     assert tvd < 0.01

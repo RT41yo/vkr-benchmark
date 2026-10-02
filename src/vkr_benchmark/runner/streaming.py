@@ -201,6 +201,7 @@ def _encode_streaming_tokens(
     lm_ms = 0.0
     distribution_ms = 0.0
     stego_ms = 0.0
+    metric_ms = 0.0
 
     prompt_token_ids = lm_adapter.encode_prompt(prompt_text)
     state, elapsed = _measure_ms(
@@ -239,25 +240,40 @@ def _encode_streaming_tokens(
         )
         distribution_ms += elapsed
 
-        # Diagnostic metric calculations are excluded from performance timing.
-        step_entropies.append(reference_entropy_bits(reference))
+        context = StepContext(step_index=step_index, reference=reference)
+
+        entropy_bits, elapsed = _measure_ms(
+            lm_adapter, lambda: reference_entropy_bits(reference)
+        )
+        metric_ms += elapsed
+        step_entropies.append(entropy_bits)
+
         decision, elapsed = _measure_ms(
-            lm_adapter,
-            lambda: encoder.step(
-                StepContext(step_index=step_index, reference=reference)
-            ),
+            lm_adapter, lambda: encoder.step(context)
         )
         stego_ms += elapsed
-        step_distortion.append(
-            distribution_distortion_step(reference, decision.distribution_info)
+
+        distribution_info, elapsed = _measure_ms(
+            lm_adapter, lambda: encoder.distribution_info(context, decision)
         )
+        metric_ms += elapsed
+        distortion, elapsed = _measure_ms(
+            lm_adapter,
+            lambda: distribution_distortion_step(reference, distribution_info),
+        )
+        metric_ms += elapsed
+        step_distortion.append(distortion)
 
         token_id = int(decision.token_id)
         if not environment.is_allowed(token_id):
             raise ContractError(
                 f"method emitted token {token_id}, which is outside V_allowed"
             )
-        step_raw_nll.append(raw_lm_token_nll_nats(raw_logits, token_id))
+        raw_nll, elapsed = _measure_ms(
+            lm_adapter, lambda: raw_lm_token_nll_nats(raw_logits, token_id)
+        )
+        metric_ms += elapsed
+        step_raw_nll.append(raw_nll)
 
         generated.append(token_id)
         step_bits.append(decision.bits_consumed)
@@ -315,6 +331,7 @@ def _encode_streaming_tokens(
             lm_forward_ms=lm_ms,
             distribution_processing_ms=distribution_ms,
             stego_algorithm_ms=stego_ms,
+            metric_instrumentation_ms=metric_ms,
         ),
         finalization=finalization,
     )
@@ -402,6 +419,7 @@ def decode_streaming_tokens(
     lm_ms = 0.0
     distribution_ms = 0.0
     stego_ms = 0.0
+    metric_ms = 0.0
 
     observed = tuple(int(token_id) for token_id in observed_token_ids)
     prompt_token_ids = lm_adapter.encode_prompt(prompt_text)
@@ -460,6 +478,7 @@ def decode_streaming_tokens(
             lm_forward_ms=lm_ms,
             distribution_processing_ms=distribution_ms,
             stego_algorithm_ms=stego_ms,
+            metric_instrumentation_ms=metric_ms,
         ),
         finalization=finalization,
     )

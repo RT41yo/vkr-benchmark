@@ -105,7 +105,7 @@ class ArithmeticPartition:
     candidate_token_ids: tuple[int, ...]
     integer_widths: tuple[int, ...]
     cumulative_upper_bounds: tuple[int, ...]
-    q_stego: np.ndarray
+    q_stego: np.ndarray | None = None
 
     def __post_init__(self) -> None:
         if not 0 <= self.interval_lower < self.interval_upper:
@@ -123,10 +123,12 @@ class ArithmeticPartition:
         if self.cumulative_upper_bounds[-1] != self.interval_upper:
             raise ValueError("last cumulative upper bound must equal interval upper")
 
-        q = np.asarray(self.q_stego, dtype=np.float64).copy()
-        if q.ndim != 1:
-            raise ValueError("q_stego must be one-dimensional")
-        q.setflags(write=False)
+        q: np.ndarray | None = None
+        if self.q_stego is not None:
+            q = np.asarray(self.q_stego, dtype=np.float64).copy()
+            if q.ndim != 1:
+                raise ValueError("q_stego must be one-dimensional")
+            q.setflags(write=False)
         object.__setattr__(self, "q_stego", q)
 
     @property
@@ -236,8 +238,14 @@ def _build_partition(
     environment: MethodEnvironment,
     interval_lower: int,
     interval_upper: int,
+    include_q: bool = False,
 ) -> ArithmeticPartition:
-    """Reproduce the reference integer-mass construction from P_reference."""
+    """Reproduce the reference integer-mass construction from P_reference.
+
+    ``include_q`` is used only by benchmark metric instrumentation; ordinary
+    encode/decode timing constructs the coding partition without materializing
+    the full-vocabulary induced distribution.
+    """
 
     reference = context.reference
     if reference.vocab_size != environment.output_vocab_size:
@@ -310,13 +318,15 @@ def _build_partition(
     widths_array = np.diff(cumulative, prepend=0).astype(np.int64)
     absolute_upper = cumulative + int(interval_lower)
 
-    q = np.zeros(reference.vocab_size, dtype=np.float64)
-    for token_id, width in zip(candidate_ids, widths_array, strict=True):
-        if width > 0:
-            q[token_id] = float(width) / float(interval_width)
+    q: np.ndarray | None = None
+    if include_q:
+        q = np.zeros(reference.vocab_size, dtype=np.float64)
+        for token_id, width in zip(candidate_ids, widths_array, strict=True):
+            if width > 0:
+                q[token_id] = float(width) / float(interval_width)
 
-    if not np.isclose(float(q.sum(dtype=np.float64)), 1.0, rtol=0.0, atol=1e-12):
-        raise MethodError("Arithmetic induced Q_stego failed integer normalization")
+        if not np.isclose(float(q.sum(dtype=np.float64)), 1.0, rtol=0.0, atol=1e-12):
+            raise MethodError("Arithmetic induced Q_stego failed integer normalization")
 
     return ArithmeticPartition(
         interval_lower=interval_lower,
@@ -425,18 +435,6 @@ class ArithmeticEncoderSession(EncoderSession):
         return EncodeDecision(
             token_id=token_id,
             bits_consumed=len(confirmed),
-            distribution_info=DistributionInfo.explicit(
-                partition.q_stego,
-                mode=QMode.ANALYTIC_EXACT,
-                source=QSource.ADAPTER_EXACT,
-                metadata={
-                    "method": "arithmetic_coding",
-                    "precision": self._config.precision,
-                    "top_k": self._config.top_k,
-                    "candidate_count": len(partition.candidate_token_ids),
-                    "interval_width": partition.interval_width,
-                },
-            ),
             method_trace={
                 "interval_before": before,
                 "selected_rank": rank,
@@ -444,6 +442,41 @@ class ArithmeticEncoderSession(EncoderSession):
                 "confirmed_prefix": confirmed,
                 "candidate_count": len(partition.candidate_token_ids),
                 "interval_after": (new_lower, new_upper),
+            },
+        )
+
+    def distribution_info(
+        self, context: StepContext, decision: EncodeDecision
+    ) -> DistributionInfo:
+        interval_before = decision.method_trace.get("interval_before")
+        if not (
+            isinstance(interval_before, tuple)
+            and len(interval_before) == 2
+            and all(isinstance(value, int) for value in interval_before)
+        ):
+            raise MethodError(
+                "Arithmetic metric instrumentation requires interval_before trace"
+            )
+        partition = _build_partition(
+            context=context,
+            config=self._config,
+            environment=self._environment,
+            interval_lower=interval_before[0],
+            interval_upper=interval_before[1],
+            include_q=True,
+        )
+        if partition.q_stego is None:
+            raise MethodError("Arithmetic metric instrumentation failed to construct Q_stego")
+        return DistributionInfo.explicit(
+            partition.q_stego,
+            mode=QMode.ANALYTIC_EXACT,
+            source=QSource.ADAPTER_EXACT,
+            metadata={
+                "method": "arithmetic_coding",
+                "precision": self._config.precision,
+                "top_k": self._config.top_k,
+                "candidate_count": len(partition.candidate_token_ids),
+                "interval_width": partition.interval_width,
             },
         )
 

@@ -110,7 +110,7 @@ class HuffmanCodebook:
     candidate_token_ids: tuple[int, ...]
     root: _HuffmanNode
     codes: Mapping[int, tuple[int, ...]]
-    q_stego: np.ndarray
+    q_stego: np.ndarray | None = None
 
     def __post_init__(self) -> None:
         if len(self.candidate_token_ids) < 2:
@@ -127,10 +127,12 @@ class HuffmanCodebook:
         if any(bit not in (0, 1) for bits in codes.values() for bit in bits):
             raise ValueError("Huffman codes must contain only 0/1")
 
-        q = np.asarray(self.q_stego, dtype=np.float64).copy()
-        if q.ndim != 1:
-            raise ValueError("q_stego must be one-dimensional")
-        q.setflags(write=False)
+        q: np.ndarray | None = None
+        if self.q_stego is not None:
+            q = np.asarray(self.q_stego, dtype=np.float64).copy()
+            if q.ndim != 1:
+                raise ValueError("q_stego must be one-dimensional")
+            q.setflags(write=False)
 
         object.__setattr__(self, "codes", MappingProxyType(codes))
         object.__setattr__(self, "q_stego", q)
@@ -162,8 +164,13 @@ def _build_codebook(
     context: StepContext,
     config: HuffmanConfig,
     environment: MethodEnvironment,
+    include_q: bool = False,
 ) -> HuffmanCodebook:
-    """Build the deterministic per-step Huffman tree and exact induced Q.
+    """Build the deterministic per-step Huffman tree.
+
+    ``include_q`` is reserved for benchmark metric instrumentation so ordinary
+    encode/decode timing does not include construction of the induced
+    distribution.
 
     Candidate selection follows the benchmark's canonical token order.  The
     Harvard tree compares heap nodes only by frequency, so exact equal-weight
@@ -237,14 +244,15 @@ def _build_codebook(
 
     visit(root, ())
 
-    q = np.zeros(reference.vocab_size, dtype=np.float64)
-    for token_id, code in codes.items():
-        q[token_id] = 2.0 ** (-len(code))
+    q: np.ndarray | None = None
+    if include_q:
+        q = np.zeros(reference.vocab_size, dtype=np.float64)
+        for token_id, code in codes.items():
+            q[token_id] = 2.0 ** (-len(code))
 
-    # A full binary Huffman tree satisfies Kraft equality.  Check internally so
-    # malformed construction cannot silently reach the metric layer.
-    if not np.isclose(float(q.sum(dtype=np.float64)), 1.0, rtol=0.0, atol=1e-12):
-        raise MethodError("Huffman induced Q_stego failed Kraft normalization")
+        # A full binary Huffman tree satisfies Kraft equality.
+        if not np.isclose(float(q.sum(dtype=np.float64)), 1.0, rtol=0.0, atol=1e-12):
+            raise MethodError("Huffman induced Q_stego failed Kraft normalization")
 
     return HuffmanCodebook(
         candidate_token_ids=candidate_token_ids,
@@ -313,19 +321,32 @@ class HuffmanEncoderSession(EncoderSession):
         return EncodeDecision(
             token_id=token_id,
             bits_consumed=len(code),
-            distribution_info=DistributionInfo.explicit(
-                codebook.q_stego,
-                mode=QMode.ANALYTIC_EXACT,
-                source=QSource.ADAPTER_EXACT,
-                metadata={
-                    "method": "huffman",
-                    "bits_per_word": self._config.bits_per_word,
-                    "candidate_count": self._config.candidate_count,
-                },
-            ),
             method_trace={
                 "selected_code": code,
                 "code_length": len(code),
+                "candidate_count": self._config.candidate_count,
+            },
+        )
+
+    def distribution_info(
+        self, context: StepContext, decision: EncodeDecision
+    ) -> DistributionInfo:
+        del decision
+        codebook = _build_codebook(
+            context=context,
+            config=self._config,
+            environment=self._environment,
+            include_q=True,
+        )
+        if codebook.q_stego is None:
+            raise MethodError("Huffman metric instrumentation failed to construct Q_stego")
+        return DistributionInfo.explicit(
+            codebook.q_stego,
+            mode=QMode.ANALYTIC_EXACT,
+            source=QSource.ADAPTER_EXACT,
+            metadata={
+                "method": "huffman",
+                "bits_per_word": self._config.bits_per_word,
                 "candidate_count": self._config.candidate_count,
             },
         )

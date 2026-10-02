@@ -12,6 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = (
     "check_discop_e2e.py",
     "check_stage4_discop_core_conformance.py",
+    "check_stage4_discop_explicit_q.py",
     "probe_stage4_discop_characteristic.py",
     "run_stage4_discop_author_cython_conformance.py",
 )

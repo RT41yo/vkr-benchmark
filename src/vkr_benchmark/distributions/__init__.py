@@ -1,5 +1,9 @@
 """Canonical and method-induced probability distribution types."""
 
+from vkr_benchmark.distributions.discop_q import (
+    branch_selection_probabilities,
+    explicit_discop_q,
+)
 from vkr_benchmark.distributions.ordering import deterministic_token_order
 from vkr_benchmark.distributions.reference import (
     GenerationPolicy,
@@ -16,6 +20,8 @@ from vkr_benchmark.distributions.types import (
 
 __all__ = [
     "DistributionInfo",
+    "branch_selection_probabilities",
+    "explicit_discop_q",
     "GenerationPolicy",
     "QMode",
     "QRepresentation",

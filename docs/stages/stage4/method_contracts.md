@@ -4,7 +4,7 @@ This file freezes implementation boundaries before adapting modern methods. Exac
 
 | Method | Secret semantics | Shared randomness | Termination | Decoder in pinned repo | Normalized Q strategy | Stage-4 characteristic check |
 |---|---|---|---|---|---|---|
-| Discop | streaming, variable bits/token | shared PRNG seed; represented by `method.key` | fixed carrier | yes | analytic `Q=P` certificate + independent synthetic validation | encode/decode fixture, distribution preservation, real-LM roundtrip |
+| Discop | streaming, variable bits/token | shared PRNG seed; represented by `method.key` | fixed carrier | yes | explicit Q from independent exact piecewise integration | encode/decode fixture, distribution preservation, real-LM roundtrip |
 | RRC | fixed-length whole message | fresh shared PRNG offset per carrier token | fixed payload + safety cap | yes | analytic/theoretical `Q=P`, separately validate numerically | fixed-message roundtrip, termination, distribution preservation |
 | ADG | streaming variable grouping | no separate sampling RNG after final group except reference implementation's within-group stochastic selection; exact mapping must be frozen before coding | fixed carrier | no public decoder | explicit/analytic Q from grouping where derivable | grouping correspondence + own inverse decoder + author characteristic result |
 | DAIRstega | streaming common-prefix payload from allocated interval | secret bitstream drives interval point | fixed carrier | extraction described by paper; public repo generation-focused | explicit Q from integer interval allocation | allocation/inverse tests + alpha/beta characteristic point |

@@ -129,14 +129,26 @@ def test_timing_breakdown_total_is_component_sum() -> None:
     assert timing.total_ms == pytest.approx(17.0)
 
 
+
+
+def test_timing_breakdown_excludes_metric_instrumentation_from_performance_total() -> None:
+    timing = TimingBreakdown(
+        lm_forward_ms=10.0,
+        distribution_processing_ms=5.0,
+        stego_algorithm_ms=2.0,
+        metric_instrumentation_ms=100.0,
+    )
+    assert timing.total_ms == pytest.approx(17.0)
+    assert timing.instrumented_total_ms == pytest.approx(117.0)
+
 def test_timing_breakdown_rejects_negative_values() -> None:
     with pytest.raises(MetricError, match="non-negative"):
         TimingBreakdown(-1.0, 0.0, 0.0)
 
 
 def test_performance_metrics_normalize_time_and_throughput() -> None:
-    encode = TimingBreakdown(10.0, 5.0, 5.0)  # 20 ms
-    decode = TimingBreakdown(8.0, 4.0, 4.0)   # 16 ms
+    encode = TimingBreakdown(10.0, 5.0, 5.0, 11.0)  # 20 ms + 11 ms metrics
+    decode = TimingBreakdown(8.0, 4.0, 4.0, 3.0)    # 16 ms + 3 ms metrics
     metrics = compute_performance_metrics(
         payload_bits=40,
         encode_tokens=10,
@@ -153,6 +165,9 @@ def test_performance_metrics_normalize_time_and_throughput() -> None:
     assert metrics.lm_forward_total_ms == pytest.approx(18.0)
     assert metrics.distribution_processing_total_ms == pytest.approx(9.0)
     assert metrics.stego_algorithm_total_ms == pytest.approx(9.0)
+    assert metrics.metric_instrumentation_total_ms == pytest.approx(14.0)
+    assert metrics.encode_metric_instrumentation_ms == pytest.approx(11.0)
+    assert metrics.decode_metric_instrumentation_ms == pytest.approx(3.0)
 
 
 def test_performance_metrics_allow_zero_payload_with_zero_throughput() -> None:

@@ -192,6 +192,51 @@ def _tvd(p: np.ndarray, q: np.ndarray) -> float:
     return min(1.0, max(0.0, value))
 
 
+
+def distribution_distortion_explicit_arrays(
+    p: np.ndarray,
+    q: np.ndarray,
+    *,
+    q_mode: QMode = QMode.EXACT_ENUMERATION,
+    q_source: QSource = QSource.INDEPENDENT_ENUMERATION,
+) -> StepDistributionDistortion:
+    """Evaluate explicit P/Q arrays with the benchmark KL/TVD formulas.
+
+    This helper exists for independent validation paths that construct an
+    explicit induced distribution outside a method adapter.  Callers are
+    responsible for supplying probability vectors normalized for the intended
+    comparison.  Ordinary benchmark runs continue to use
+    :func:`distribution_distortion_step`.
+    """
+
+    p_values = np.asarray(p, dtype=np.float64)
+    q_values = np.asarray(q, dtype=np.float64)
+    if p_values.ndim != 1 or q_values.ndim != 1 or p_values.size == 0:
+        raise MetricError("explicit P/Q arrays must be non-empty and one-dimensional")
+    if p_values.shape != q_values.shape:
+        raise MetricError(
+            "explicit P/Q arrays must have identical shapes: "
+            f"{p_values.shape} != {q_values.shape}"
+        )
+    if not np.all(np.isfinite(p_values)) or not np.all(np.isfinite(q_values)):
+        raise MetricError("explicit P/Q arrays must contain only finite values")
+    if np.any(p_values < 0.0) or np.any(q_values < 0.0):
+        raise MetricError("explicit P/Q arrays must be non-negative")
+    p_total = float(np.sum(p_values, dtype=np.float64))
+    q_total = float(np.sum(q_values, dtype=np.float64))
+    if not np.isclose(p_total, 1.0, rtol=0.0, atol=1e-8):
+        raise MetricError(f"explicit P array must sum to 1; got {p_total!r}")
+    if not np.isclose(q_total, 1.0, rtol=0.0, atol=1e-8):
+        raise MetricError(f"explicit Q array must sum to 1; got {q_total!r}")
+
+    return StepDistributionDistortion(
+        q_mode=q_mode,
+        q_source=q_source,
+        kl_bits=_kl_ref_to_stego_bits(p_values, q_values),
+        kl_stego_to_ref_bits=_kl_stego_to_ref_bits(q_values, p_values),
+        tvd=_tvd(p_values, q_values),
+    )
+
 def distribution_distortion_step(
     reference: ReferenceDistribution,
     distribution_info: DistributionInfo,
@@ -222,7 +267,16 @@ def distribution_distortion_step(
             "a reference-equality certificate"
         )
 
-    p = reference.probabilities.astype(np.float64, copy=False)
+    # Canonical P_reference is stored in FP32 and may therefore carry a tiny
+    # unit-sum residual when viewed in FP64. KL/TVD are probability-distribution
+    # metrics, so remove only that storage residual before comparing against an
+    # explicit unit-sum Q. This normalization is common to every explicit-Q
+    # method and does not alter support or apply any generation policy.
+    p = reference.probabilities.astype(np.float64, copy=True)
+    p_total = float(np.sum(p, dtype=np.float64))
+    if not isfinite(p_total) or p_total <= 0.0:
+        raise MetricError(f"P_reference normalization total is invalid: {p_total!r}")
+    p /= p_total
     q = _explicit_q(reference=reference, distribution_info=distribution_info)
     return StepDistributionDistortion(
         q_mode=distribution_info.mode,

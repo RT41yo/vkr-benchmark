@@ -39,3 +39,19 @@ __all__.extend([
     "evaluate_stage3_readiness",
     "format_stage3_report",
 ])
+
+from .discop_q import (
+    ExplicitQValidation,
+    branch_selection_probabilities,
+    evaluate_explicit_discop_q,
+    explicit_discop_q,
+    normalized_reference_probabilities,
+)
+
+__all__.extend([
+    "ExplicitQValidation",
+    "branch_selection_probabilities",
+    "evaluate_explicit_discop_q",
+    "explicit_discop_q",
+    "normalized_reference_probabilities",
+])

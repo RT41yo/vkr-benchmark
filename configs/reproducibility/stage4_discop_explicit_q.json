@@ -1,0 +1,26 @@
+{
+  "method": "discop",
+  "validation": "independent-explicit-q",
+  "reference_repository": "https://github.com/comydream/Discop",
+  "reference_commit": "3c3a10099a242eae405b49cc4d09fba1abb148ad",
+  "synthetic_random_cases": 128,
+  "real_steps_per_point": 5,
+  "top_p": [
+    0.8,
+    0.92,
+    0.95,
+    0.98,
+    1.0
+  ],
+  "tolerances": {
+    "max_abs_q_minus_p": 1e-12,
+    "kl_bits": 1e-10,
+    "tvd": 1e-12
+  },
+  "notes": {
+    "secret_model": "independent uniform secret bits",
+    "q_construction": "independent piecewise integration of the two Discop distribution copies over each Huffman node",
+    "reference_normalization": "for validation only, canonical FP32 P_reference is converted to FP64 and divided by its FP64 sum to remove storage-level unit-sum residuals before KL/TVD; no generation-policy or stegomethod transformation is applied",
+    "main_adapter": "ordinary normalized Discop runs use explicit Q_stego from the independent piecewise-integration calculator; no reference-equality certificate is used"
+  }
+}

@@ -9,6 +9,12 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import sys
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
 from vkr_benchmark.config import ExperimentConfig, LocalModelConfig
 from vkr_benchmark.inputs import PromptRegistry
@@ -215,6 +221,10 @@ def main() -> None:
     print(
         "stego algorithm total (ms):",
         _format_metric(performance.stego_algorithm_total_ms, digits=3),
+    )
+    print(
+        "metric instrumentation total (ms, excluded from performance):",
+        _format_metric(performance.metric_instrumentation_total_ms, digits=3),
     )
 
     print()

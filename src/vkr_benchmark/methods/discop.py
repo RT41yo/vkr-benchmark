@@ -13,10 +13,12 @@ consuming payload. Sender and receiver consume exactly one shared-PRNG draw per
 visited internal node.
 
 LM/tokenizer ownership, common generation policy, text transport, key storage,
-and metrics remain benchmark infrastructure responsibilities. The adapter
-reports the paper/reference equality claim Q_stego = P_reference as an analytic
-certificate; Stage-4 validation tests independently check that claim on a
-synthetic distribution rather than accepting the certificate alone.
+and metrics remain benchmark infrastructure responsibilities. For every carrier step the adapter constructs an explicit Q_stego through an
+independent exact integration path.  That calculator rebuilds the Huffman tree
+separately from the encoder and marginalizes over the full random-pointer
+domain and uniformly distributed secret bits.  The resulting probability
+vector is passed to the same benchmark KL/TVD layer as the other methods; no
+Q=P equality certificate is used in ordinary Discop runs.
 """
 
 from __future__ import annotations
@@ -27,7 +29,13 @@ from typing import Any, Mapping
 
 import numpy as np
 
-from vkr_benchmark.distributions import DistributionInfo, QSource, StepContext
+from vkr_benchmark.distributions import (
+    DistributionInfo,
+    QMode,
+    QSource,
+    StepContext,
+    explicit_discop_q,
+)
 from vkr_benchmark.errors import (
     ConfigurationError,
     MethodError,
@@ -190,13 +198,17 @@ def _path_to_token(root: _Node, token_id: int) -> tuple[int, ...] | None:
     return None
 
 
-def _distribution_info() -> DistributionInfo:
-    return DistributionInfo.reference_equality(
-        source=QSource.ANALYTIC_THEORY,
+def _distribution_info(context: StepContext) -> DistributionInfo:
+    q = explicit_discop_q(context.reference)
+    return DistributionInfo.explicit(
+        q,
+        mode=QMode.EXACT_ENUMERATION,
+        source=QSource.INDEPENDENT_ENUMERATION,
         metadata={
             "method": "discop",
             "reference_commit": _REFERENCE_COMMIT,
-            "claim": "distribution_copies_preserve_reference_distribution",
+            "construction": "independent_piecewise_integration",
+            "secret_model": "independent_uniform_bits",
         },
     )
 
@@ -251,7 +263,6 @@ class DiscopEncoderSession(EncoderSession):
         return EncodeDecision(
             token_id=node.token_id,
             bits_consumed=bits_consumed,
-            distribution_info=_distribution_info(),
             method_trace={
                 "tree_depth": len(path),
                 "path": tuple(path),
@@ -259,6 +270,12 @@ class DiscopEncoderSession(EncoderSession):
                 "bits_consumed": bits_consumed,
             },
         )
+
+    def distribution_info(
+        self, context: StepContext, decision: EncodeDecision
+    ) -> DistributionInfo:
+        del decision
+        return _distribution_info(context)
 
     def finalize(self) -> EncoderFinalization:
         if self._finalized:

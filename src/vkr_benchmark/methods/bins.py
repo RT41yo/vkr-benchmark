@@ -161,18 +161,12 @@ def _int_to_bits(value: int, width: int) -> tuple[int, ...]:
     return tuple((value >> shift) & 1 for shift in range(width - 1, -1, -1))
 
 
-def _representatives_and_q(
+def _representatives(
     *,
     context: StepContext,
     partition: BinsPartition,
-) -> tuple[tuple[int, ...], np.ndarray]:
-    """Return the best positive-probability token in each bin and exact Q.
-
-    Under an i.i.d. Bernoulli(0.5) secret stream every b-bit value, hence every
-    bin, is selected with probability 2**(-b). Because the encoder emits one
-    deterministic representative per selected bin, Q puts exactly that mass on
-    each representative.
-    """
+) -> tuple[int, ...]:
+    """Return the best positive-probability token in each fixed bin."""
 
     reference = context.reference
     if partition.token_to_bin.size != reference.vocab_size:
@@ -202,10 +196,28 @@ def _representatives_and_q(
             "this Bins configuration at this step"
         )
 
-    q = np.zeros(reference.vocab_size, dtype=np.float64)
+    return tuple(representatives)
+
+
+def _bins_distribution_info(
+    *, context: StepContext, partition: BinsPartition, block_size: int
+) -> DistributionInfo:
+    """Construct exact induced Q only for benchmark metric instrumentation."""
+
+    representatives = _representatives(context=context, partition=partition)
+    q = np.zeros(context.reference.vocab_size, dtype=np.float64)
     mass = 1.0 / partition.num_bins
     q[np.asarray(representatives, dtype=np.int64)] = mass
-    return tuple(representatives), q
+    return DistributionInfo.explicit(
+        q,
+        mode=QMode.ANALYTIC_EXACT,
+        source=QSource.ADAPTER_EXACT,
+        metadata={
+            "method": "bins",
+            "block_size": block_size,
+            "num_bins": partition.num_bins,
+        },
+    )
 
 
 class BinsEncoderSession(EncoderSession):
@@ -239,7 +251,7 @@ class BinsEncoderSession(EncoderSession):
         if self._finalized:
             raise SessionStateError("cannot call Bins encoder.step() after finalize()")
 
-        representatives, q = _representatives_and_q(
+        representatives = _representatives(
             context=context,
             partition=self._partition,
         )
@@ -254,21 +266,21 @@ class BinsEncoderSession(EncoderSession):
         return EncodeDecision(
             token_id=token_id,
             bits_consumed=self._config.block_size,
-            distribution_info=DistributionInfo.explicit(
-                q,
-                mode=QMode.ANALYTIC_EXACT,
-                source=QSource.ADAPTER_EXACT,
-                metadata={
-                    "method": "bins",
-                    "block_size": self._config.block_size,
-                    "num_bins": self._partition.num_bins,
-                },
-            ),
             method_trace={
                 "selected_bin": selected_bin,
                 "secret_bits": secret_bits,
                 "representative_token_id": token_id,
             },
+        )
+
+    def distribution_info(
+        self, context: StepContext, decision: EncodeDecision
+    ) -> DistributionInfo:
+        del decision
+        return _bins_distribution_info(
+            context=context,
+            partition=self._partition,
+            block_size=self._config.block_size,
         )
 
     def finalize(self) -> EncoderFinalization:

@@ -43,23 +43,31 @@ class TimingBreakdown:
     lm_forward_ms: float
     distribution_processing_ms: float
     stego_algorithm_ms: float
+    metric_instrumentation_ms: float = 0.0
 
     def __post_init__(self) -> None:
         for name, value in (
             ("lm_forward_ms", self.lm_forward_ms),
             ("distribution_processing_ms", self.distribution_processing_ms),
             ("stego_algorithm_ms", self.stego_algorithm_ms),
+            ("metric_instrumentation_ms", self.metric_instrumentation_ms),
         ):
             if not isfinite(value) or value < 0.0:
                 raise MetricError(f"{name} must be finite and non-negative")
 
     @property
     def total_ms(self) -> float:
+        """Benchmark performance time, excluding metric instrumentation."""
         return float(
             self.lm_forward_ms
             + self.distribution_processing_ms
             + self.stego_algorithm_ms
         )
+
+    @property
+    def instrumented_total_ms(self) -> float:
+        """Measured components plus benchmark-only metric instrumentation."""
+        return float(self.total_ms + self.metric_instrumentation_ms)
 
 
 @dataclass(frozen=True, slots=True)
@@ -81,6 +89,9 @@ class PerformanceMetrics:
     decode_lm_forward_ms: float
     decode_distribution_processing_ms: float
     decode_stego_algorithm_ms: float
+    metric_instrumentation_total_ms: float = 0.0
+    encode_metric_instrumentation_ms: float = 0.0
+    decode_metric_instrumentation_ms: float = 0.0
 
 
 def raw_lm_token_nll_nats(raw_logits: Any, token_id: int) -> float:
@@ -260,4 +271,14 @@ def compute_performance_metrics(
             decode_timing.distribution_processing_ms
         ),
         decode_stego_algorithm_ms=float(decode_timing.stego_algorithm_ms),
+        metric_instrumentation_total_ms=float(
+            encode_timing.metric_instrumentation_ms
+            + decode_timing.metric_instrumentation_ms
+        ),
+        encode_metric_instrumentation_ms=float(
+            encode_timing.metric_instrumentation_ms
+        ),
+        decode_metric_instrumentation_ms=float(
+            decode_timing.metric_instrumentation_ms
+        ),
     )
