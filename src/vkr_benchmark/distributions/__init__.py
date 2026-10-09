@@ -5,6 +5,7 @@ from vkr_benchmark.distributions.discop_q import (
     explicit_discop_q,
 )
 from vkr_benchmark.distributions.ordering import deterministic_token_order
+from vkr_benchmark.distributions.rrc_q import explicit_rrc_q
 from vkr_benchmark.distributions.reference import (
     GenerationPolicy,
     ReferenceDistributionBuilder,
@@ -22,6 +23,7 @@ __all__ = [
     "DistributionInfo",
     "branch_selection_probabilities",
     "explicit_discop_q",
+    "explicit_rrc_q",
     "GenerationPolicy",
     "QMode",
     "QRepresentation",

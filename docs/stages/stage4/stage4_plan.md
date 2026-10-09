@@ -10,6 +10,12 @@ Stage 4 follows the roadmap chain for each modern method:
 
 The fixed Stage-4 method set is ADG, Discop, RRC and DAIRstega, in addition to the already integrated Bins, Huffman and Arithmetic Coding baselines.
 
+## Current status
+
+- Discop: Stage-4 reproducibility/conformance closed.
+- RRC: Stage-4 reproducibility/conformance closed; direct token-ID recovery 100/100, ordinary-text recovery 98/100 on the fixed Llama series.
+- Next: ADG.
+
 ## Implementation order
 
 1. **Foundation + Discop.** Freeze external revisions, add fixed-payload/finalize-only lifecycle support, integrate normalized Discop, add core and common-runner tests, and provide a real-LM smoke script.

@@ -26,6 +26,7 @@ from vkr_benchmark.methods import (
     BinsMethod,
     DiscopMethod,
     HuffmanMethod,
+    RRCMethod,
     StegoMethod,
 )
 from vkr_benchmark.randomness import MethodRandomSource, RandomSource
@@ -69,6 +70,7 @@ _METHODS: dict[str, type[StegoMethod]] = {
     "huffman": HuffmanMethod,
     "arithmetic_coding": ArithmeticMethod,
     "discop": DiscopMethod,
+    "rrc": RRCMethod,
 }
 
 
@@ -97,15 +99,17 @@ def create_method_runtime(config: ExperimentConfig) -> MethodRuntime:
             "can reconstruct the same fixed partition"
         )
 
-    if method.method_id == "discop":
+    if method.method_id in {"discop", "rrc"}:
         if config.method.key is None:
+            label = "Discop" if method.method_id == "discop" else "RRC"
             raise ConfigurationError(
-                "normalized Discop requires method.key; the pinned reference uses "
-                "the shared PRNG seed as the steganographic key"
+                f"normalized {label} requires method.key; sender and receiver "
+                "must reproduce the same method PRNG stream"
             )
         if seed is not None:
+            label = "Discop" if method.method_id == "discop" else "RRC"
             raise ConfigurationError(
-                "normalized Discop derives its synchronized PRNG from method.key; "
+                f"normalized {label} derives its synchronized PRNG from method.key; "
                 "do not also set method.random_seed"
             )
         seed = config.method.key

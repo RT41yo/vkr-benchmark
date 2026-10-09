@@ -55,3 +55,15 @@ __all__.extend([
     "explicit_discop_q",
     "normalized_reference_probabilities",
 ])
+
+from .rrc_q import (
+    RRCExplicitQValidation,
+    evaluate_explicit_rrc_q,
+    normalized_rrc_reference,
+)
+
+__all__.extend([
+    "RRCExplicitQValidation",
+    "evaluate_explicit_rrc_q",
+    "normalized_rrc_reference",
+])

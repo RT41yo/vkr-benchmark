@@ -190,6 +190,7 @@ def test_method_factory_resolves_all_baseline_ids() -> None:
     assert create_method("huffman").method_id == "huffman"
     assert create_method("arithmetic_coding").method_id == "arithmetic_coding"
     assert create_method("discop").method_id == "discop"
+    assert create_method("rrc").method_id == "rrc"
 
 
 def test_method_factory_rejects_unknown_method() -> None:
@@ -259,3 +260,69 @@ def test_discop_unified_runner_uses_explicit_q_metrics() -> None:
     first_step = execution.roundtrip.encode.step_distribution_distortion[0]
     assert first_step.q_source.value == "independent_enumeration"
     assert execution.roundtrip.roundtrip_exact is True
+
+
+
+def _rrc_config(*, key=42, random_seed=None) -> ExperimentConfig:
+    return ExperimentConfig(
+        benchmark_version="0.1",
+        run_kind="normalized",
+        model_config_path=Path("unused.json"),
+        prompt_id="p000001",
+        method=MethodRunConfig(
+            method_id="rrc",
+            params={"precision_margin": 40, "verify_termination": True},
+            implementation_revision="test",
+            random_seed=random_seed,
+            key=key,
+        ),
+        generation=GenerationRunConfig(),
+        secret_id="000001",
+        termination=TerminationConfig(
+            mode="fixed_payload_bits",
+            target_payload_bits=16,
+            max_carrier_tokens=64,
+        ),
+    )
+
+
+def test_rrc_runtime_uses_key_as_shared_prng_seed() -> None:
+    runtime = create_method_runtime(_rrc_config(key=42))
+    assert runtime.encoder_random_source is not runtime.decoder_random_source
+    assert runtime.encoder_random_source is not None
+    assert runtime.decoder_random_source is not None
+    assert [runtime.encoder_random_source.random() for _ in range(5)] == [
+        runtime.decoder_random_source.random() for _ in range(5)
+    ]
+
+
+def test_rrc_runtime_requires_key_and_rejects_ambiguous_random_seed() -> None:
+    with pytest.raises(ConfigurationError, match="method.key"):
+        create_method_runtime(_rrc_config(key=None))
+    with pytest.raises(ConfigurationError, match="do not also set"):
+        create_method_runtime(_rrc_config(key=42, random_seed=7))
+
+
+def test_rrc_runs_through_fixed_payload_unified_entrypoint() -> None:
+    execution = run_experiment(
+        config=_rrc_config(),
+        prompt_registry=_prompts(),
+        lm_adapter=_ExperimentFakeLM(),
+    )
+    assert execution.method_id == "rrc"
+    assert execution.roundtrip.encode.payload_bits == 16
+    assert execution.roundtrip.encode.secret_bits_read == 16
+    assert execution.roundtrip.encode.carrier_tokens <= 64
+    assert execution.roundtrip.roundtrip_exact is True
+    assert execution.reliability_metrics.ber == 0.0
+    assert execution.roundtrip.decode.incremental_recovered_bits == ()
+    assert execution.roundtrip.decode.finalization.complete is True
+    distortion = execution.distribution_distortion_metrics
+    assert distortion.q_mode.value == "analytic_exact"
+    assert distortion.kl_ref_to_stego_mean_bits is not None
+    assert distortion.kl_ref_to_stego_mean_bits < 1e-6
+    assert distortion.kl_stego_to_ref_mean_bits is not None
+    assert distortion.kl_stego_to_ref_mean_bits < 1e-6
+    assert distortion.tvd_mean is not None and distortion.tvd_mean < 1e-6
+    first = execution.roundtrip.encode.step_distribution_distortion[0]
+    assert first.q_source.value == "independent_analytic"

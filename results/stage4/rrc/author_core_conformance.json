@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "comparison_kind": "original-author-rrc-core-vs-normalized",
+  "reference_repository": "https://github.com/ryehr/RRC_steganography",
+  "reference_commit": "dae326259e4fca8bc4fcf460dafdbc0e88a0a71a",
+  "reference_dir": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/external/RRC_steganography",
+  "checkout": {
+    "head": "dae326259e4fca8bc4fcf460dafdbc0e88a0a71a",
+    "tracked_diff": ""
+  },
+  "fixture_count": 68,
+  "random_fixture_count": 64,
+  "failure_count": 0,
+  "failures": [],
+  "author_checkout_unchanged": true
+}

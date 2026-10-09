@@ -21,6 +21,14 @@ from vkr_benchmark.methods.discop import (
     DiscopEncoderSession,
     DiscopMethod,
 )
+from vkr_benchmark.methods.rrc import (
+    RRCConfig,
+    RRCDecoderSession,
+    RRCEncoderSession,
+    RRCMethod,
+    RRCPrecisionError,
+    required_precision as rrc_required_precision,
+)
 from vkr_benchmark.methods.huffman import (
     HuffmanCodebook,
     HuffmanConfig,
@@ -63,5 +71,11 @@ __all__ = [
     "HuffmanEncoderSession",
     "HuffmanMethod",
     "MethodEnvironment",
+    "RRCConfig",
+    "RRCDecoderSession",
+    "RRCEncoderSession",
+    "RRCMethod",
+    "RRCPrecisionError",
+    "rrc_required_precision",
     "StegoMethod",
 ]

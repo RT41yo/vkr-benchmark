@@ -1,0 +1,40 @@
+{
+  "method": "rrc",
+  "reference_repository": "https://github.com/ryehr/RRC_steganography",
+  "reference_commit": "dae326259e4fca8bc4fcf460dafdbc0e88a0a71a",
+  "prior_analysis_commit": "8b6a86a66e516e3763c907a1ac640c17bcd3641d",
+  "core_conformance": {
+    "synthetic_random_cases": 64,
+    "comparison": "final-P_reference + secret + key -> carrier token IDs + recovered secret",
+    "requires_original_author_file": false
+  },
+  "direct_author_conformance": {
+    "synthetic_random_cases": 64,
+    "default_checkout": "external/RRC_steganography",
+    "requires_clean_pinned_checkout": true
+  },
+  "explicit_q": {
+    "synthetic_random_cases": 128,
+    "real_steps": 25,
+    "tolerances": {
+      "max_abs_q_minus_p": 2e-15,
+      "kl_bits": 1e-12,
+      "tvd": 1e-13
+    },
+    "real_model_tolerances": {
+      "kl_bits": 1e-12,
+      "tvd": 1e-09
+    },
+    "real_model_diagnostics": {
+      "max_abs_q_minus_p_warning": 1e-10,
+      "roundoff_context": "full-vocabulary FP64 cumulative boundaries can differ from direct normalized P_reference at O(support_size * eps64)"
+    }
+  },
+  "characteristic": {
+    "payload_bits": 128,
+    "precision_margin": 40,
+    "verify_termination": true,
+    "expected_behavior": "approximately full entropy utilization with near-zero distribution distortion",
+    "paper_speed_is_not_a_target": true
+  }
+}

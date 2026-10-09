@@ -144,3 +144,20 @@ def test_experiment_config_requires_method_params(tmp_path) -> None:
     path.write_text(json.dumps(raw), encoding="utf-8")
     with pytest.raises(ConfigurationError, match="id and params"):
         ExperimentConfig.from_json(path, project_root=tmp_path)
+
+
+
+def test_stage4_rrc_example_uses_fixed_payload_termination() -> None:
+    root = Path(__file__).resolve().parents[2]
+    config = ExperimentConfig.from_json(
+        root / "configs" / "experiments" / "stage4_rrc.example.json"
+    )
+    assert config.method.method_id == "rrc"
+    assert config.method.key == 42
+    assert config.method.random_seed is None
+    assert config.method.params["precision_margin"] == 40
+    assert config.method.params["verify_termination"] is True
+    assert config.generation.top_k is None
+    assert config.termination.mode == "fixed_payload_bits"
+    assert config.termination.target_payload_bits == 128
+    assert config.termination.max_carrier_tokens == 256
