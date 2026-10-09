@@ -18,6 +18,10 @@
   `cython~=0.29.28`; Cython 3.x rejects one of the pinned source expressions
   during cythonization. The author source itself remains unchanged.
 
+## Methodology clarification
+
+ADR-0023 formalizes two independent evidence layers. Comparison with the pinned Cython implementation checks implementation conformance, while independent `Q_stego`, KL/TVD and entropy-utilization checks reproduce the publication-level characteristic behavior. The author repository does not replace the paper.
+
 ## Interpretation boundary
 
 The self-contained source oracle is strong evidence that the normalized

@@ -8,6 +8,8 @@ Stage 4 follows the roadmap chain for each modern method:
 
 `publication → pinned author implementation → normalized adapter → conformance/reproducibility check`.
 
+The reproducibility evidence is intentionally split into two layers: (1) conformance with the pinned author implementation and (2) reproduction of a characteristic scientific result from the publication. The detailed rule is frozen in `docs/decisions/0023-publication-result-vs-implementation-conformance_ru.md` and summarized in `docs/stages/stage4/reproducibility_methodology_ru.md`.
+
 The fixed Stage-4 method set is ADG, Discop, RRC and DAIRstega, in addition to the already integrated Bins, Huffman and Arithmetic Coding baselines.
 
 ## Current status
