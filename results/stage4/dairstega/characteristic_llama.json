@@ -1,0 +1,201 @@
+{
+  "status": "pass",
+  "probe_kind": "normalized-publication-characteristic-not-table-3-numerical-reproduction",
+  "reference_repository": "https://github.com/WangYH-BUPT/DAIRstega",
+  "reference_commit": "8d85edf98d48c3efa827a125b6d4e90f88141ea2",
+  "model_id": "meta-llama/Llama-3.2-3B",
+  "model_revision": "13afe5124825b4f3751f836b40dafda64c1ed062",
+  "prompt": "The history of artificial intelligence began",
+  "carrier_tokens_per_point_run": 100,
+  "repeats_per_point": 1,
+  "method_local_top_k": 100,
+  "common_generation": {
+    "top_k": null,
+    "top_p": 1.0
+  },
+  "rows": [
+    {
+      "label": "quality_a8_b1",
+      "run_index": 0,
+      "secret_id": "stage4-dairstega-characteristic-quality_a8_b1",
+      "alpha": 8,
+      "beta": 1.0,
+      "carrier_tokens": 100,
+      "payload_bits": 27,
+      "secret_bits_read": 35,
+      "bits_per_token": 0.27,
+      "raw_lm_nll_nats_per_token": 0.8119132137298584,
+      "raw_lm_ppl": 2.25221283183135,
+      "kl_ref_to_stego_infinite_steps": 100,
+      "kl_ref_to_stego_finite_mean_bits_per_token": null,
+      "kl_stego_to_ref_mean_bits_per_token": 0.8670623802690371,
+      "tvd_mean": 0.3597163657776425,
+      "q_modes": [
+        "analytic_exact"
+      ],
+      "q_sources": [
+        "independent_analytic"
+      ],
+      "token_sequence_roundtrip_exact": true,
+      "secret_roundtrip_exact": true,
+      "decoder_complete": true,
+      "stegotext": " in the 1950s, when the term was coined. Since then, a number of milestones have been achieved, and today AI is widely used in various industries and applications. In this article, we will take a look at some of the most significant milestones in the history of AI.\nThe first AI milestone was the development of the first AI program, which was called the \u201cAI-1\u201d program. This program was created by John McCarthy, a computer scientist at Stanford University, and it was"
+    },
+    {
+      "label": "beta_effect_a8_b05",
+      "run_index": 0,
+      "secret_id": "stage4-dairstega-characteristic-beta_effect_a8_b05",
+      "alpha": 8,
+      "beta": 0.5,
+      "carrier_tokens": 100,
+      "payload_bits": 161,
+      "secret_bits_read": 169,
+      "bits_per_token": 1.61,
+      "raw_lm_nll_nats_per_token": 3.022201614379883,
+      "raw_lm_ppl": 20.536455304822812,
+      "kl_ref_to_stego_infinite_steps": 100,
+      "kl_ref_to_stego_finite_mean_bits_per_token": null,
+      "kl_stego_to_ref_mean_bits_per_token": 2.7217582749350244,
+      "tvd_mean": 0.6832335357045526,
+      "q_modes": [
+        "analytic_exact"
+      ],
+      "q_sources": [
+        "independent_analytic"
+      ],
+      "token_sequence_roundtrip_exact": true,
+      "secret_roundtrip_exact": true,
+      "decoder_complete": true,
+      "stegotext": " with early pioneers of logic such as Alan Turing. AI, sometimes known as Artificial Intelligence or the science of intelligent agents. A more complete AI will include some degree of general problem solving.\nWe've created an in-depth and engaging look into some of the key figures, the concepts they studied, and what the field has to look forward. Turing developed a concept known as Turing completeness.\nA robot's perception can only work based on sensory data; however, its understanding can increase if the AI model or its"
+    },
+    {
+      "label": "alpha_effect_a32_b1",
+      "run_index": 0,
+      "secret_id": "stage4-dairstega-characteristic-alpha_effect_a32_b1",
+      "alpha": 32,
+      "beta": 1.0,
+      "carrier_tokens": 100,
+      "payload_bits": 80,
+      "secret_bits_read": 112,
+      "bits_per_token": 0.8,
+      "raw_lm_nll_nats_per_token": 1.6242477416992187,
+      "raw_lm_ppl": 5.074600190864025,
+      "kl_ref_to_stego_infinite_steps": 100,
+      "kl_ref_to_stego_finite_mean_bits_per_token": null,
+      "kl_stego_to_ref_mean_bits_per_token": 1.5158896726157165,
+      "tvd_mean": 0.5168339630545407,
+      "q_modes": [
+        "analytic_exact"
+      ],
+      "q_sources": [
+        "independent_analytic"
+      ],
+      "token_sequence_roundtrip_exact": true,
+      "secret_roundtrip_exact": true,
+      "decoder_complete": true,
+      "stegotext": " in the 1950s, when computers were beginning to learn. At that time, the name \"artificial intelligence\" was given to the field of research that aims to develop intelligent machines that operate by analyzing data, drawing conclusions and taking decisions based on them.\nNowadays, AI is an advanced field of study and a growing market, as many companies have invested in the development of this technology to make their services more efficient and user-friendly. It is important to highlight that artificial intelligence is not the"
+    },
+    {
+      "label": "capacity_a32_b05",
+      "run_index": 0,
+      "secret_id": "stage4-dairstega-characteristic-capacity_a32_b05",
+      "alpha": 32,
+      "beta": 0.5,
+      "carrier_tokens": 100,
+      "payload_bits": 335,
+      "secret_bits_read": 367,
+      "bits_per_token": 3.35,
+      "raw_lm_nll_nats_per_token": 4.831086492538452,
+      "raw_lm_ppl": 125.34707535966471,
+      "kl_ref_to_stego_infinite_steps": 100,
+      "kl_ref_to_stego_finite_mean_bits_per_token": null,
+      "kl_stego_to_ref_mean_bits_per_token": 3.6093363821593076,
+      "tvd_mean": 0.798266387103184,
+      "q_modes": [
+        "analytic_exact"
+      ],
+      "q_sources": [
+        "independent_analytic"
+      ],
+      "token_sequence_roundtrip_exact": true,
+      "secret_roundtrip_exact": true,
+      "decoder_complete": true,
+      "stegotext": " soon after John Verveen published\u00a0his essay about how his home television received orders. Although artificial cognitive development is nothing [\u2026]\nNew Age Psychology The emergence of post psychology may already, although subtly and covertly. With such major cultural, socio-psychological phenomena occurring, 9) of their true meaning; they have created confusion within all strata, within individual thought; their [\u2026] Click to post 15-minute research! https://d.ooicj.nf2v\nOn our site"
+    }
+  ],
+  "point_aggregates": {
+    "quality_a8_b1": {
+      "bits_per_token": 0.27,
+      "raw_lm_nll_nats_per_token": 0.8119132137298584,
+      "raw_lm_ppl": 2.25221283183135,
+      "kl_stego_to_ref_mean_bits_per_token": 0.8670623802690371,
+      "tvd_mean": 0.3597163657776425
+    },
+    "beta_effect_a8_b05": {
+      "bits_per_token": 1.61,
+      "raw_lm_nll_nats_per_token": 3.022201614379883,
+      "raw_lm_ppl": 20.536455304822812,
+      "kl_stego_to_ref_mean_bits_per_token": 2.7217582749350244,
+      "tvd_mean": 0.6832335357045526
+    },
+    "alpha_effect_a32_b1": {
+      "bits_per_token": 0.8,
+      "raw_lm_nll_nats_per_token": 1.6242477416992187,
+      "raw_lm_ppl": 5.074600190864025,
+      "kl_stego_to_ref_mean_bits_per_token": 1.5158896726157165,
+      "tvd_mean": 0.5168339630545407
+    },
+    "capacity_a32_b05": {
+      "bits_per_token": 3.35,
+      "raw_lm_nll_nats_per_token": 4.831086492538452,
+      "raw_lm_ppl": 125.34707535966471,
+      "kl_stego_to_ref_mean_bits_per_token": 3.6093363821593076,
+      "tvd_mean": 0.798266387103184
+    }
+  },
+  "validation": {
+    "all_text_and_secret_roundtrips_exact": true,
+    "all_q_analytic_exact_independent": true,
+    "all_reverse_kl_and_tvd_finite": true,
+    "capacity_oriented_point_has_higher_bpt": true,
+    "capacity_oriented_point_has_higher_raw_lm_ppl": true,
+    "capacity_oriented_point_has_higher_reverse_kl": true,
+    "capacity_oriented_point_has_higher_tvd": true,
+    "beta_0_5_increases_bpt_at_alpha_8": true,
+    "beta_0_5_increases_bpt_at_alpha_32": true,
+    "concealment_or_quality_cost_observed": true,
+    "publication_characteristic_observed": true
+  },
+  "paper_context": {
+    "source": "Wang et al., Applied Soft Computing 176 (2025), Table 3",
+    "reported_points": {
+      "alpha8_beta1": {
+        "alpha": 8,
+        "beta": 1.0,
+        "bpw": 1.1,
+        "ppl": 7.686
+      },
+      "alpha32_beta1": {
+        "alpha": 32,
+        "beta": 1.0,
+        "bpw": 1.11,
+        "ppl": 8.184
+      },
+      "alpha8_beta05": {
+        "alpha": 8,
+        "beta": 0.5,
+        "bpw": 1.89,
+        "ppl": 13.775
+      },
+      "alpha32_beta05": {
+        "alpha": 32,
+        "beta": 0.5,
+        "bpw": 2.56,
+        "ppl": 20.876
+      }
+    },
+    "reported_unit": "Bpw (bit per word), not benchmark BPT",
+    "characteristic_claim": "lower beta / capacity-oriented settings increase payload while paying a perceptual-quality and/or concealment cost",
+    "comparison_limitation": "Absolute Bpw/PPL values are not expected to match numerically: the publication and Stage-4 benchmark use different model/tokenization/prompting conditions, and Bpw is not the same unit as benchmark BPT."
+  }
+}

@@ -25,6 +25,7 @@ from vkr_benchmark.methods import (
     ADGMethod,
     ArithmeticMethod,
     BinsMethod,
+    DAIRMethod,
     DiscopMethod,
     HuffmanMethod,
     RRCMethod,
@@ -71,6 +72,7 @@ _METHODS: dict[str, type[StegoMethod]] = {
     "bins": BinsMethod,
     "huffman": HuffmanMethod,
     "arithmetic_coding": ArithmeticMethod,
+    "dairstega": DAIRMethod,
     "discop": DiscopMethod,
     "rrc": RRCMethod,
 }
@@ -109,6 +111,18 @@ def create_method_runtime(config: ExperimentConfig) -> MethodRuntime:
         raise ConfigurationError(
             "normalized ADG does not use method.key; use method.random_seed only"
         )
+
+
+    if method.method_id == "dairstega":
+        if seed is not None:
+            raise ConfigurationError(
+                "normalized DAIRstega is deterministic from the secret stream; "
+                "do not set method.random_seed"
+            )
+        if config.method.key is not None:
+            raise ConfigurationError(
+                "normalized DAIRstega does not use method.key"
+            )
 
     if method.method_id in {"discop", "rrc"}:
         if config.method.key is None:

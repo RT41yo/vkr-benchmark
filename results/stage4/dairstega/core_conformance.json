@@ -1,0 +1,50 @@
+{
+  "status": "pass",
+  "comparison_kind": "paper-normalized-vs-literal-public-repository",
+  "reference_repository": "https://github.com/WangYH-BUPT/DAIRstega",
+  "reference_commit": "8d85edf98d48c3efa827a125b6d4e90f88141ea2",
+  "fixture_count": 134,
+  "random_fixture_count": 128,
+  "normalized_paper_failure_count": 0,
+  "normalized_paper_failures": [],
+  "repository_allocation_divergence_count": 29,
+  "repository_allocation_divergence_fraction": 0.21641791044776118,
+  "repository_linear_allocation_divergence_count": 0,
+  "repository_sqrt_allocation_divergence_count": 29,
+  "repository_selection_divergence_count_on_diagnostic_points": 16,
+  "repository_max_boundary_delta_codes": 5273,
+  "prefix_case_count": 4,
+  "normalized_prefix_failure_count": 0,
+  "repository_prefix_mismatch_count": 1,
+  "prefix_cases": [
+    {
+      "start": 0,
+      "stop": 32,
+      "paper_prefix_bits": 3,
+      "repository_prefix_bits": 3,
+      "normalized_prefix_bits": 3
+    },
+    {
+      "start": 64,
+      "stop": 96,
+      "paper_prefix_bits": 3,
+      "repository_prefix_bits": 3,
+      "normalized_prefix_bits": 3
+    },
+    {
+      "start": 176,
+      "stop": 184,
+      "paper_prefix_bits": 5,
+      "repository_prefix_bits": 5,
+      "normalized_prefix_bits": 5
+    },
+    {
+      "start": 230,
+      "stop": 231,
+      "paper_prefix_bits": 8,
+      "repository_prefix_bits": 7,
+      "normalized_prefix_bits": 8
+    }
+  ],
+  "interpretation": "PASS requires normalized allocation/prefix semantics to match the independently implemented paper/ADR rule on every fixture. Repository divergences are diagnostic: sqrt uses four-decimal rounding and the public prefix helper under-consumes a singleton."
+}

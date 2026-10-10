@@ -109,6 +109,7 @@ def _prompts() -> PromptRegistry:
         ("huffman", {"bits_per_word": 2}, None, None),
         ("arithmetic_coding", {"precision": 8, "top_k": 8}, None, None),
         ("discop", {}, None, 12345),
+        ("dairstega", {"alpha": 8, "beta": 1.0, "top_k": 8}, None, None),
     ],
 )
 def test_normalized_methods_run_through_one_experiment_entrypoint(
@@ -191,6 +192,7 @@ def test_method_factory_resolves_all_baseline_ids() -> None:
     assert create_method("arithmetic_coding").method_id == "arithmetic_coding"
     assert create_method("discop").method_id == "discop"
     assert create_method("rrc").method_id == "rrc"
+    assert create_method("dairstega").method_id == "dairstega"
 
 
 def test_method_factory_rejects_unknown_method() -> None:
@@ -332,3 +334,22 @@ def test_create_method_resolves_adg() -> None:
     from vkr_benchmark.runner.experiment import create_method
 
     assert create_method("adg").method_id == "adg"
+
+
+def test_dairstega_runtime_rejects_method_randomness_and_key() -> None:
+    with pytest.raises(ConfigurationError, match="method.random_seed"):
+        create_method_runtime(
+            _config(
+                "dairstega",
+                {"alpha": 8, "beta": 1.0, "top_k": 8},
+                random_seed=7,
+            )
+        )
+    with pytest.raises(ConfigurationError, match="method.key"):
+        create_method_runtime(
+            _config(
+                "dairstega",
+                {"alpha": 8, "beta": 1.0, "top_k": 8},
+                key=7,
+            )
+        )

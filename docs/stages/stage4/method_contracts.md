@@ -7,7 +7,7 @@ This file freezes implementation boundaries before adapting modern methods. Exac
 | Discop | streaming, variable bits/token | shared PRNG seed; represented by `method.key` | fixed carrier | yes | explicit Q from independent exact piecewise integration | encode/decode fixture, distribution preservation, real-LM roundtrip |
 | RRC | fixed-length whole message | fresh shared PRNG offset per carrier token | fixed payload + safety cap | yes | explicit Q from independent interval-measure construction; no equality certificate | fixed-message roundtrip, termination, distribution preservation |
 | ADG | streaming variable bits/token from recursive group indices | encoder-only `MethodRandomSource` for terminal categorical sample; no shared key | fixed carrier | no public decoder | explicit Q from independent full recursion over all groups | Algorithm-1 grouping + `near()` discrepancy; Table-1 characteristic low KLD1 / high ER |
-| DAIRstega | streaming common-prefix payload from allocated interval | secret bitstream drives interval point | fixed carrier | extraction described by paper; public repo generation-focused | explicit Q from integer interval allocation | allocation/inverse tests + alpha/beta characteristic point |
+| DAIRstega | streaming common-prefix payload with overlapping `alpha`-bit look-ahead | none beyond secret stream | fixed carrier | extraction described by paper; no public decoder | exact conditional explicit Q from independent integer-interval reconstruction + secret-window posterior range | allocation/inverse tests + alpha/beta capacity–concealment characteristic points |
 
 ## Common normalized boundaries
 

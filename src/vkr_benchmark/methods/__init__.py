@@ -21,6 +21,12 @@ from vkr_benchmark.methods.bins import (
     BinsMethod,
     BinsPartition,
 )
+from vkr_benchmark.methods.dair import (
+    DAIRConfig,
+    DAIRDecoderSession,
+    DAIREncoderSession,
+    DAIRMethod,
+)
 from vkr_benchmark.methods.discop import (
     DiscopConfig,
     DiscopDecoderSession,
@@ -65,6 +71,10 @@ __all__ = [
     "BinsEncoderSession",
     "BinsMethod",
     "BinsPartition",
+    "DAIRConfig",
+    "DAIRDecoderSession",
+    "DAIREncoderSession",
+    "DAIRMethod",
     "DecodeProgress",
     "DecoderFinalization",
     "DecoderSession",
