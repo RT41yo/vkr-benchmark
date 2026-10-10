@@ -22,6 +22,12 @@ lm = [
 ]
 storage = ["pyarrow>=17,<20"]
 reference = ["bitarray==3.4.2"]
+discop-reference = [
+  "cython==0.29.37",
+  "scipy>=1.12,<2",
+  "pillow>=10,<13",
+  "tqdm>=4.66,<5",
+]
 dev = ["pytest>=8.3,<9"]
 
 [tool.setuptools.packages.find]

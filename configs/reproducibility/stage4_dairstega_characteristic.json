@@ -1,0 +1,35 @@
+{
+  "method": "dairstega",
+  "mode": "stage4-publication-characteristic",
+  "reference_repository": "https://github.com/WangYH-BUPT/DAIRstega",
+  "reference_commit": "8d85edf98d48c3efa827a125b6d4e90f88141ea2",
+  "paper": {
+    "citation": "Wang et al., Dynamically Allocated Interval-Based Generative Linguistic Steganography with Roulette Wheel, Applied Soft Computing 176 (2025), 113101",
+    "target": "Table 3 capacity-quality characteristic",
+    "reported_unit": "Bpw (bit per word)",
+    "reported_points": {
+      "alpha8_beta1": {"bpw": 1.10, "ppl": 7.686},
+      "alpha32_beta1": {"bpw": 1.11, "ppl": 8.184},
+      "alpha8_beta05": {"bpw": 1.89, "ppl": 13.775},
+      "alpha32_beta05": {"bpw": 2.56, "ppl": 20.876}
+    },
+    "characteristic": "capacity-oriented settings increase payload while paying a quality/concealment cost"
+  },
+  "normalized_probe": {
+    "model_config": "configs/models/llama-3.2-3b.local.json",
+    "carrier_tokens_per_point_run": 100,
+    "repeats_per_point": 1,
+    "method_local_top_k": 100,
+    "points": [
+      {"alpha": 8, "beta": 1.0},
+      {"alpha": 8, "beta": 0.5},
+      {"alpha": 32, "beta": 1.0},
+      {"alpha": 32, "beta": 0.5}
+    ],
+    "prompt": "The history of artificial intelligence began",
+    "secret_id": "stage4-dairstega-characteristic",
+    "common_top_k": null,
+    "common_top_p": 1.0,
+    "claim_scope": "qualitative characteristic only; Bpw and benchmark BPT are not numerically equated"
+  }
+}

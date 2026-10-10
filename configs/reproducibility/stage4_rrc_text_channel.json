@@ -1,0 +1,26 @@
+{
+  "reference_commit": "dae326259e4fca8bc4fcf460dafdbc0e88a0a71a",
+  "model_config": "configs/models/llama-3.2-3b.local.json",
+  "prompt_id": "p000001",
+  "payload_bits": 128,
+  "max_carrier_tokens": 256,
+  "samples": 100,
+  "secret_id_prefix": "stage4-rrc-text",
+  "key": 42,
+  "precision_margin": 40,
+  "generation": {
+    "temperature": 1.0,
+    "top_k": null,
+    "top_p": 1.0,
+    "exclude_special_tokens": true
+  },
+  "success_gate": {
+    "encode_failures": 0,
+    "direct_token_id_recovery_rate": 1.0,
+    "token_exact_but_secret_wrong": 0
+  },
+  "interpretation": {
+    "text_channel_recovery_is_measurement_not_gate": true,
+    "tokenization_mismatch_is_reported_separately": true
+  }
+}

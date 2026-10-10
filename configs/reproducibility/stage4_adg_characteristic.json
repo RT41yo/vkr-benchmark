@@ -1,0 +1,28 @@
+{
+  "method": "adg",
+  "mode": "stage4-publication-characteristic",
+  "reference_repository": "https://github.com/Mhzzzzz/ADG-steganography",
+  "reference_commit": "b4a7e802a97bc3a3b84d07e63f24627b16c51a10",
+  "paper": {
+    "citation": "Zhang et al., Provably Secure Generative Linguistic Steganography, Findings of ACL-IJCNLP 2021",
+    "target": "Table 1 characteristic",
+    "paper_setup": "word-level two-layer LSTM; Movie/News/Tweet corpora; 1000 stegotexts per experimental case",
+    "reported_adg": {
+      "Movie": {"embedding_rate_bits_per_token": 5.147, "kld1_bits_per_token": 0.033},
+      "News": {"embedding_rate_bits_per_token": 5.650, "kld1_bits_per_token": 0.027},
+      "Tweet": {"embedding_rate_bits_per_token": 5.411, "kld1_bits_per_token": 0.048}
+    },
+    "characteristic": "high embedding rate with small but generally non-zero D_KL(p_LM || q)"
+  },
+  "normalized_probe": {
+    "model_config": "configs/models/llama-3.2-3b.local.json",
+    "carrier_tokens_per_run": 100,
+    "repeats": 1,
+    "prompt": "The history of artificial intelligence began",
+    "secret_id": "stage4-adg-characteristic",
+    "method_seed": 42,
+    "common_top_k": null,
+    "common_top_p": 1.0,
+    "claim_scope": "qualitative characteristic only; not numerical reproduction of Table 1"
+  }
+}

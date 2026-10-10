@@ -1,7 +1,7 @@
-"""Typed configuration for one normalized Stage-2 experiment run.
+"""Typed configuration for one normalized benchmark experiment run.
 
-This is the executable launcher configuration. The storage layer added later in
-Stage 2 will materialize the canonical persisted run configuration and run_id.
+This is the executable launcher configuration. The storage layer materializes
+the canonical persisted run configuration and run_id.
 """
 
 from __future__ import annotations
@@ -108,22 +108,53 @@ class GenerationRunConfig:
 
 @dataclass(frozen=True, slots=True)
 class TerminationConfig:
-    """Run stopping rule currently supported by the three baseline methods."""
+    """Run stopping rule for streaming and fixed-payload stegomethods."""
 
     mode: str
-    target_carrier_tokens: int
+    target_carrier_tokens: int | None = None
+    target_payload_bits: int | None = None
+    max_carrier_tokens: int | None = None
 
     def __post_init__(self) -> None:
-        if self.mode != "fixed_carrier_tokens":
-            raise ConfigurationError(
-                "Stage-2 baseline runner currently supports only fixed_carrier_tokens"
-            )
-        if (
-            isinstance(self.target_carrier_tokens, bool)
-            or not isinstance(self.target_carrier_tokens, int)
-            or self.target_carrier_tokens <= 0
+        for field_name, value in (
+            ("target_carrier_tokens", self.target_carrier_tokens),
+            ("target_payload_bits", self.target_payload_bits),
+            ("max_carrier_tokens", self.max_carrier_tokens),
         ):
-            raise ConfigurationError("target_carrier_tokens must be a positive integer")
+            if value is not None and (
+                isinstance(value, bool) or not isinstance(value, int) or value <= 0
+            ):
+                raise ConfigurationError(f"{field_name} must be a positive integer or null")
+
+        if self.mode == "fixed_carrier_tokens":
+            if self.target_carrier_tokens is None:
+                raise ConfigurationError(
+                    "fixed_carrier_tokens requires target_carrier_tokens"
+                )
+            if self.target_payload_bits is not None or self.max_carrier_tokens is not None:
+                raise ConfigurationError(
+                    "fixed_carrier_tokens must not set target_payload_bits or max_carrier_tokens"
+                )
+            return
+
+        if self.mode == "fixed_payload_bits":
+            if self.target_payload_bits is None:
+                raise ConfigurationError(
+                    "fixed_payload_bits requires target_payload_bits"
+                )
+            if self.max_carrier_tokens is None:
+                raise ConfigurationError(
+                    "fixed_payload_bits requires max_carrier_tokens as a safety cap"
+                )
+            if self.target_carrier_tokens is not None:
+                raise ConfigurationError(
+                    "fixed_payload_bits must not set target_carrier_tokens"
+                )
+            return
+
+        raise ConfigurationError(
+            "termination.mode must be fixed_carrier_tokens or fixed_payload_bits"
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -247,14 +278,18 @@ class ExperimentConfig:
             "generation.kv_cache",
         )
 
-        target_carrier_tokens_raw = termination_raw.get("target_carrier_tokens")
-        if (
-            isinstance(target_carrier_tokens_raw, bool)
-            or not isinstance(target_carrier_tokens_raw, int)
-        ):
-            raise ConfigurationError(
-                "termination.target_carrier_tokens must be a positive integer"
-            )
+        target_carrier_tokens_raw = _optional_positive_int(
+            termination_raw.get("target_carrier_tokens"),
+            "termination.target_carrier_tokens",
+        )
+        target_payload_bits_raw = _optional_positive_int(
+            termination_raw.get("target_payload_bits"),
+            "termination.target_payload_bits",
+        )
+        max_carrier_tokens_raw = _optional_positive_int(
+            termination_raw.get("max_carrier_tokens"),
+            "termination.max_carrier_tokens",
+        )
 
         return cls(
             benchmark_version=_require_string(
@@ -281,6 +316,8 @@ class ExperimentConfig:
             termination=TerminationConfig(
                 mode=_require_string(termination_raw.get("mode"), "termination.mode"),
                 target_carrier_tokens=target_carrier_tokens_raw,
+                target_payload_bits=target_payload_bits_raw,
+                max_carrier_tokens=max_carrier_tokens_raw,
             ),
             source_path=config_path,
         )

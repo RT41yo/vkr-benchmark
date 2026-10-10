@@ -1,0 +1,19 @@
+{
+  "stage": 4,
+  "method": "dairstega",
+  "reference_repository": "https://github.com/WangYH-BUPT/DAIRstega",
+  "reference_commit": "8d85edf98d48c3efa827a125b6d4e90f88141ea2",
+  "author_file": "DAIRstega_t.py",
+  "synthetic_random_cases": 128,
+  "direct_author_reference_dir": "external/DAIRstega",
+  "normalized_semantics": {
+    "code_space": "2^alpha integer points",
+    "power_weights": "p^beta / sum(p^beta)",
+    "candidate_floor": "retain pinned executable threshold rule",
+    "prefix": "maximal common prefix"
+  },
+  "known_repository_differences": [
+    "sqrt mapping rounds transformed probabilities to four decimals before renormalization",
+    "num_same_from_beg under-consumes singleton interval by one bit"
+  ]
+}

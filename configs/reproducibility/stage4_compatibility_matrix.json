@@ -1,0 +1,44 @@
+{
+  "prompt": "The history of artificial intelligence began",
+  "secret_id": "000001",
+  "fixed_carrier_tokens": 16,
+  "rrc_payload_bits": 64,
+  "rrc_max_carrier_tokens": 128,
+  "common_generation": {
+    "top_k": null,
+    "top_p": 1.0
+  },
+  "models": [
+    "configs/models/llama-3.2-3b.local.json",
+    "configs/models/qwen3-4b-base.local.json"
+  ],
+  "methods": {
+    "bins": {
+      "block_size": 2,
+      "method_seed": 12345
+    },
+    "huffman": {
+      "bits_per_word": 2
+    },
+    "arithmetic": {
+      "precision": 16,
+      "top_k": 50000
+    },
+    "discop": {
+      "key": 12345
+    },
+    "rrc": {
+      "key": 42,
+      "precision_margin": 40,
+      "verify_termination": true
+    },
+    "adg": {
+      "method_seed": 42
+    },
+    "dairstega": {
+      "alpha": 8,
+      "beta": 1.0,
+      "top_k": 100
+    }
+  }
+}

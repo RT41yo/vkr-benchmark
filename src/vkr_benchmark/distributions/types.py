@@ -44,6 +44,7 @@ class QSource(StrEnum):
     ADAPTER_EXACT = "adapter_exact"
     ANALYTIC_THEORY = "analytic_theory"
     INDEPENDENT_ENUMERATION = "independent_enumeration"
+    INDEPENDENT_ANALYTIC = "independent_analytic"
     MONTE_CARLO_VALIDATION = "monte_carlo_validation"
     UNAVAILABLE = "unavailable"
 

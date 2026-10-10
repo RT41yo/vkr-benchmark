@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "comparison_kind": "paper-algorithm1-vs-public-repository-near",
+  "reference_repository": "https://github.com/Mhzzzzz/ADG-steganography",
+  "reference_commit": "b4a7e802a97bc3a3b84d07e63f24627b16c51a10",
+  "fixture_count": 132,
+  "random_fixture_count": 128,
+  "normalized_paper_failure_count": 0,
+  "normalized_paper_max_abs_q": 5.551115123125783e-17,
+  "repository_divergent_fixture_count": 109,
+  "repository_divergent_fixture_fraction": 0.8257575757575758,
+  "repository_max_tvd_vs_paper": 0.11466127557146642,
+  "repository_max_kl_paper_to_repository_bits": 0.0731456607044649,
+  "repository_max_kl_repository_to_paper_bits": 0.07458978042764394,
+  "near_witness": {
+    "values_desc": [
+      0.18,
+      0.11
+    ],
+    "target": 0.16,
+    "paper_index": 0,
+    "paper_value": 0.18,
+    "repository_index": 1,
+    "repository_value": 0.11
+  },
+  "normalized_failures": [],
+  "repository_divergence_examples": [
+    {
+      "fixture_id": "handcrafted-near-witness",
+      "tvd": 0.024725276929588588,
+      "kl_paper_to_repository_bits": 0.005473247355226845,
+      "kl_repository_to_paper_bits": 0.005345520377188037
+    },
+    {
+      "fixture_id": "handcrafted-recursive",
+      "tvd": 0.03819444254610818,
+      "kl_paper_to_repository_bits": 0.005951734685658593,
+      "kl_repository_to_paper_bits": 0.005832901214958735
+    },
+    {
+      "fixture_id": "random-0002-n32-a0.2",
+      "tvd": 0.017831272954978855,
+      "kl_paper_to_repository_bits": 0.004608048904421265,
+      "kl_repository_to_paper_bits": 0.004487390171137319
+    },
+    {
+      "fixture_id": "random-0003-n64-a0.2",
+      "tvd": 0.037183819694850746,
+      "kl_paper_to_repository_bits": 0.013039362870336208,
+      "kl_repository_to_paper_bits": 0.012873748325519426
+    },
+    {
+      "fixture_id": "random-0005-n16-a0.5",
+      "tvd": 0.029462730595828934,
+      "kl_paper_to_repository_bits": 0.004872167571729532,
+      "kl_repository_to_paper_bits": 0.0047428894376545586
+    },
+    {
+      "fixture_id": "random-0006-n32-a0.5",
+      "tvd": 0.02367498801913443,
+      "kl_paper_to_repository_bits": 0.0027176894376858916,
+      "kl_repository_to_paper_bits": 0.0027284846902936744
+    },
+    {
+      "fixture_id": "random-0007-n64-a0.5",
+      "tvd": 0.07988694404699766,
+      "kl_paper_to_repository_bits": 0.03162988509608364,
+      "kl_repository_to_paper_bits": 0.03134575470039855
+    },
+    {
+      "fixture_id": "random-0008-n8-a1",
+      "tvd": 0.038898768463387114,
+      "kl_paper_to_repository_bits": 0.006160004602523816,
+      "kl_repository_to_paper_bits": 0.00602250277742352
+    },
+    {
+      "fixture_id": "random-0009-n16-a1",
+      "tvd": 0.01165050398516181,
+      "kl_paper_to_repository_bits": 0.0008191882758756316,
+      "kl_repository_to_paper_bits": 0.0008143850405885299
+    },
+    {
+      "fixture_id": "random-0010-n32-a1",
+      "tvd": 0.029715405450720052,
+      "kl_paper_to_repository_bits": 0.008258407261861939,
+      "kl_repository_to_paper_bits": 0.008307885976738365
+    },
+    {
+      "fixture_id": "random-0011-n64-a1",
+      "tvd": 0.04495314285371285,
+      "kl_paper_to_repository_bits": 0.014775832050671098,
+      "kl_repository_to_paper_bits": 0.014112614365623628
+    },
+    {
+      "fixture_id": "random-0012-n8-a2",
+      "tvd": 0.02425657456796262,
+      "kl_paper_to_repository_bits": 0.003919386287347018,
+      "kl_repository_to_paper_bits": 0.0037449566504448167
+    }
+  ],
+  "interpretation": "PASS means normalized explicit-Q matches an independent Algorithm-1 implementation while the literal public-repository near() discrepancy is observed and quantified; repository divergence is expected here, not treated as a normalized-method failure."
+}

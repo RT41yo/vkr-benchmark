@@ -106,8 +106,9 @@ def test_q_stego_is_exact_integer_width_distribution() -> None:
         environment=env4(),
         secret_source=secret,
     )
-    decision = encoder.step(StepContext(0, ref4_dyadic()))
-    info = decision.distribution_info
+    context = StepContext(0, ref4_dyadic())
+    decision = encoder.step(context)
+    info = encoder.distribution_info(context, decision)
 
     assert info.mode == QMode.ANALYTIC_EXACT
     assert info.representation == QRepresentation.EXPLICIT_PROBABILITIES
@@ -129,7 +130,9 @@ def test_finite_precision_rounding_can_change_q() -> None:
         environment=env4(),
         secret_source=FixedSecretSource((0,) * 12),
     )
-    q = encoder.step(StepContext(0, reference)).distribution_info.probabilities
+    context = StepContext(0, reference)
+    decision = encoder.step(context)
+    q = encoder.distribution_info(context, decision).probabilities
     assert q is not None
     # threshold=1/16 excludes token 3; the first three probabilities are
     # renormalized and rounded to widths 10,4,2.
@@ -146,8 +149,9 @@ def test_internal_top_k_caps_candidates_after_p_reference() -> None:
         environment=env4(),
         secret_source=FixedSecretSource((0,) * 12),
     )
-    decision = encoder.step(StepContext(0, reference))
-    q = decision.distribution_info.probabilities
+    context = StepContext(0, reference)
+    decision = encoder.step(context)
+    q = encoder.distribution_info(context, decision).probabilities
     assert q is not None
     assert set(np.flatnonzero(q)) == {0, 1}
     assert decision.method_trace["candidate_count"] == 2
@@ -164,8 +168,9 @@ def test_rounding_overfill_removes_bottom_candidate_like_reference() -> None:
         environment=environment,
         secret_source=FixedSecretSource((0,) * 12),
     )
-    decision = encoder.step(StepContext(0, reference))
-    q = decision.distribution_info.probabilities
+    context = StepContext(0, reference)
+    decision = encoder.step(context)
+    q = encoder.distribution_info(context, decision).probabilities
     assert q is not None
     # Rounded widths are initially 3,3,3 => cumulative 9 > 8 at candidate 3.
     # The reference truncates before the overfill and assigns residual 2 to the

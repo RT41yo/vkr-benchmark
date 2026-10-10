@@ -183,6 +183,9 @@ def _execution() -> SimpleNamespace:
             decode_lm_forward_ms=4.0,
             decode_distribution_processing_ms=2.0,
             decode_stego_algorithm_ms=2.0,
+            metric_instrumentation_total_ms=7.0,
+            encode_metric_instrumentation_ms=7.0,
+            decode_metric_instrumentation_ms=0.0,
         ),
     )
 
@@ -227,6 +230,12 @@ def test_result_record_retains_benchmark_native_infinite_kl_in_memory() -> None:
     assert record["kl_mean_bits"] == math.inf
     assert record["status"] == "ok"
     assert record["error"] is None
+
+
+def test_result_record_persists_metric_instrumentation_separately() -> None:
+    record = build_result_record(_execution(), run_id="0123456789abcdef")
+    assert record["metric_instrumentation_total_ms"] == pytest.approx(7.0)
+    assert record["encode_total_ms"] == pytest.approx(10.0)
 
 
 def test_result_record_persists_both_kl_directions_explicitly() -> None:
@@ -430,3 +439,35 @@ def test_summary_backend_error_is_explicit(monkeypatch) -> None:
     monkeypatch.setattr(run_store, "_import_pyarrow", _missing)
     with pytest.raises(StorageError, match="storage extra"):
         run_store.ensure_summary_backend_available()
+
+
+def test_fixed_carrier_materialized_termination_keeps_stage2_shape() -> None:
+    materialized = materialize_run_config(_config(), _model())
+    assert materialized["termination"] == {
+        "mode": "fixed_carrier_tokens",
+        "target_carrier_tokens": 2,
+    }
+
+
+def test_fixed_payload_materialized_termination_records_target_and_safety_cap() -> None:
+    base = _config()
+    config = ExperimentConfig(
+        benchmark_version=base.benchmark_version,
+        run_kind=base.run_kind,
+        model_config_path=base.model_config_path,
+        prompt_id=base.prompt_id,
+        method=base.method,
+        generation=base.generation,
+        secret_id=base.secret_id,
+        termination=TerminationConfig(
+            mode="fixed_payload_bits",
+            target_payload_bits=128,
+            max_carrier_tokens=256,
+        ),
+    )
+    materialized = materialize_run_config(config, _model())
+    assert materialized["termination"] == {
+        "mode": "fixed_payload_bits",
+        "target_payload_bits": 128,
+        "max_carrier_tokens": 256,
+    }

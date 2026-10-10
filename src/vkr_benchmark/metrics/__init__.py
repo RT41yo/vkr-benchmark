@@ -9,6 +9,7 @@ from vkr_benchmark.metrics.distribution_distortion import (
     DistributionDistortionMetrics,
     StepDistributionDistortion,
     compute_distribution_distortion_metrics,
+    distribution_distortion_explicit_arrays,
     distribution_distortion_step,
 )
 from vkr_benchmark.metrics.quality_reliability_performance import (
@@ -35,6 +36,7 @@ __all__ = [
     "compute_performance_metrics",
     "compute_raw_lm_quality_metrics",
     "compute_reliability_metrics",
+    "distribution_distortion_explicit_arrays",
     "distribution_distortion_step",
     "raw_lm_token_nll_nats",
     "reference_entropy_bits",

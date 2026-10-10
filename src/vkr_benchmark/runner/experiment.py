@@ -1,4 +1,4 @@
-"""Unified Stage-2 experiment orchestration above the streaming runner."""
+"""Unified experiment orchestration above the streaming runner."""
 
 from __future__ import annotations
 
@@ -21,7 +21,16 @@ from vkr_benchmark.metrics import (
     compute_raw_lm_quality_metrics,
     compute_reliability_metrics,
 )
-from vkr_benchmark.methods import ArithmeticMethod, BinsMethod, HuffmanMethod, StegoMethod
+from vkr_benchmark.methods import (
+    ADGMethod,
+    ArithmeticMethod,
+    BinsMethod,
+    DAIRMethod,
+    DiscopMethod,
+    HuffmanMethod,
+    RRCMethod,
+    StegoMethod,
+)
 from vkr_benchmark.randomness import MethodRandomSource, RandomSource
 from vkr_benchmark.runner.streaming import (
     StreamingTextRoundtripResult,
@@ -42,7 +51,7 @@ class MethodRuntime:
 
 @dataclass(frozen=True, slots=True)
 class ExperimentExecution:
-    """Result of one configured run with Stage-2 normalized metrics."""
+    """Result of one configured run with normalized benchmark metrics."""
 
     config: ExperimentConfig
     prompt: PromptRecord
@@ -59,9 +68,13 @@ class ExperimentExecution:
 
 
 _METHODS: dict[str, type[StegoMethod]] = {
+    "adg": ADGMethod,
     "bins": BinsMethod,
     "huffman": HuffmanMethod,
     "arithmetic_coding": ArithmeticMethod,
+    "dairstega": DAIRMethod,
+    "discop": DiscopMethod,
+    "rrc": RRCMethod,
 }
 
 
@@ -90,12 +103,48 @@ def create_method_runtime(config: ExperimentConfig) -> MethodRuntime:
             "can reconstruct the same fixed partition"
         )
 
+    if method.method_id == "adg" and seed is None:
+        raise ConfigurationError(
+            "normalized ADG requires method.random_seed for reproducible terminal sampling"
+        )
+    if method.method_id == "adg" and config.method.key is not None:
+        raise ConfigurationError(
+            "normalized ADG does not use method.key; use method.random_seed only"
+        )
+
+
+    if method.method_id == "dairstega":
+        if seed is not None:
+            raise ConfigurationError(
+                "normalized DAIRstega is deterministic from the secret stream; "
+                "do not set method.random_seed"
+            )
+        if config.method.key is not None:
+            raise ConfigurationError(
+                "normalized DAIRstega does not use method.key"
+            )
+
+    if method.method_id in {"discop", "rrc"}:
+        if config.method.key is None:
+            label = "Discop" if method.method_id == "discop" else "RRC"
+            raise ConfigurationError(
+                f"normalized {label} requires method.key; sender and receiver "
+                "must reproduce the same method PRNG stream"
+            )
+        if seed is not None:
+            label = "Discop" if method.method_id == "discop" else "RRC"
+            raise ConfigurationError(
+                f"normalized {label} derives its synchronized PRNG from method.key; "
+                "do not also set method.random_seed"
+            )
+        seed = config.method.key
+
     if seed is None:
         encoder_rng = None
         decoder_rng = None
     else:
-        # Independent objects with the same seed: sender and receiver reproduce
-        # the same method randomness without sharing mutable RNG state.
+        # Independent objects with the same seed/key material: sender and receiver
+        # reproduce method randomness without sharing mutable RNG state.
         encoder_rng = MethodRandomSource(seed)
         decoder_rng = MethodRandomSource(seed)
 
@@ -112,7 +161,7 @@ def run_experiment(
     prompt_registry: PromptRegistry,
     lm_adapter: LMAdapter,
 ) -> ExperimentExecution:
-    """Execute one normalized Bins/Huffman/Arithmetic run from one config."""
+    """Execute one normalized benchmark method through the unified runner."""
 
     prompt = prompt_registry.get(config.prompt_id)
     builder = ReferenceDistributionBuilder(
@@ -130,6 +179,20 @@ def run_experiment(
         prompt_text=prompt.text,
     )
 
+    termination_kwargs: dict[str, int] = {}
+    if config.termination.mode == "fixed_carrier_tokens":
+        assert config.termination.target_carrier_tokens is not None
+        termination_kwargs["carrier_tokens"] = config.termination.target_carrier_tokens
+    elif config.termination.mode == "fixed_payload_bits":
+        assert config.termination.target_payload_bits is not None
+        assert config.termination.max_carrier_tokens is not None
+        termination_kwargs["target_payload_bits"] = config.termination.target_payload_bits
+        termination_kwargs["max_carrier_tokens"] = config.termination.max_carrier_tokens
+    else:  # TerminationConfig validation should make this unreachable.
+        raise ConfigurationError(
+            f"unsupported termination mode {config.termination.mode!r}"
+        )
+
     roundtrip = run_streaming_text_roundtrip(
         lm_adapter=lm_adapter,
         reference_builder=builder,
@@ -137,11 +200,11 @@ def run_experiment(
         method_config=config.method.params,
         environment=environment,
         prompt_text=prompt.text,
-        carrier_tokens=config.termination.target_carrier_tokens,
         secret_source=create_secret_source(config.secret_id),
         encoder_random_source=runtime.encoder_random_source,
         decoder_random_source=runtime.decoder_random_source,
         key=config.method.key,
+        **termination_kwargs,
     )
 
     capacity_entropy_metrics = compute_capacity_entropy_metrics(
@@ -154,9 +217,13 @@ def run_experiment(
     quality_metrics = compute_raw_lm_quality_metrics(
         roundtrip.encode.step_raw_lm_nll_nats
     )
+    diagnostic_recovered_bits = roundtrip.decode.recovered_bits
+    if len(roundtrip.decode.incremental_recovered_bits) > len(diagnostic_recovered_bits):
+        diagnostic_recovered_bits = roundtrip.decode.incremental_recovered_bits
+
     reliability_metrics = compute_reliability_metrics(
         expected_bits=roundtrip.encode.payload_secret_bits,
-        recovered_bits=roundtrip.decode.incremental_recovered_bits,
+        recovered_bits=diagnostic_recovered_bits,
         roundtrip_exact=roundtrip.roundtrip_exact,
         first_mismatch_bit=roundtrip.first_bit_mismatch,
         recovered_extra_bits=roundtrip.recovered_extra_bits,

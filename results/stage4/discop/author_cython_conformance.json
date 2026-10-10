@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "comparison_kind": "original-cython-vs-normalized",
+  "reference_repository": "https://github.com/comydream/Discop",
+  "reference_commit": "3c3a10099a242eae405b49cc4d09fba1abb148ad",
+  "reference_checkout": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/external/Discop",
+  "compiled_extension": "external/Discop/stega_cy.cpython-312-x86_64-linux-gnu.so",
+  "fixture_count": 133,
+  "failure_count": 0,
+  "failures": [],
+  "tracked_reference_files_changed": [],
+  "compatibility_note": "Original pinned Cython step functions are executed in the benchmark's modern Python environment; model/dataset code paths are not exercised by this step test."
+}

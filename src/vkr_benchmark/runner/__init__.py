@@ -13,6 +13,7 @@ from vkr_benchmark.runner.streaming import (
     StreamingTextRoundtripResult,
     decode_streaming_tokens,
     encode_fixed_carrier_tokens,
+    encode_fixed_payload_bits,
     method_environment_from_builder,
     run_streaming_text_roundtrip,
 )
@@ -27,6 +28,7 @@ __all__ = [
     "create_method_runtime",
     "decode_streaming_tokens",
     "encode_fixed_carrier_tokens",
+    "encode_fixed_payload_bits",
     "method_environment_from_builder",
     "run_experiment",
     "run_streaming_text_roundtrip",

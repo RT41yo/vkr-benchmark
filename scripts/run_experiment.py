@@ -9,6 +9,12 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import sys
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
 from vkr_benchmark.config import ExperimentConfig, LocalModelConfig
 from vkr_benchmark.inputs import PromptRegistry
@@ -89,10 +95,14 @@ def main() -> None:
     print("method:", experiment.method.method_id)
     print("method params:", dict(experiment.method.params))
     print("secret_id:", experiment.secret_id)
-    print(
-        "target carrier tokens:",
-        experiment.termination.target_carrier_tokens,
-    )
+    if experiment.termination.mode == "fixed_carrier_tokens":
+        print(
+            "target carrier tokens:",
+            experiment.termination.target_carrier_tokens,
+        )
+    else:
+        print("target payload bits:", experiment.termination.target_payload_bits)
+        print("max carrier tokens:", experiment.termination.max_carrier_tokens)
     print("Loading local model...")
 
     try:
@@ -151,6 +161,10 @@ def main() -> None:
     )
 
     print("q_mode:", distortion.q_mode.value)
+    q_sources = sorted(
+        {step.q_source.value for step in result.encode.step_distribution_distortion}
+    )
+    print("q_source:", ",".join(q_sources))
     print("KL P_ref->Q mean (bits/token):", _format_metric(distortion.kl_ref_to_stego_mean_bits))
     print("KL P_ref->Q median (bits/token):", _format_metric(distortion.kl_ref_to_stego_median_bits))
     print("KL P_ref->Q p95 (bits/token):", _format_metric(distortion.kl_ref_to_stego_p95_bits))
@@ -215,6 +229,10 @@ def main() -> None:
     print(
         "stego algorithm total (ms):",
         _format_metric(performance.stego_algorithm_total_ms, digits=3),
+    )
+    print(
+        "metric instrumentation total (ms, excluded from performance):",
+        _format_metric(performance.metric_instrumentation_total_ms, digits=3),
     )
 
     print()

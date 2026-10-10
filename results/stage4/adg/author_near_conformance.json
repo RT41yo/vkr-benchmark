@@ -1,0 +1,73 @@
+{
+  "status": "pass",
+  "comparison_kind": "direct-original-author-helper-vs-paper-rule",
+  "reference_repository": "https://github.com/Mhzzzzz/ADG-steganography",
+  "reference_commit": "b4a7e802a97bc3a3b84d07e63f24627b16c51a10",
+  "reference_dir": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/external/ADG-steganography",
+  "checkout": {
+    "head": "b4a7e802a97bc3a3b84d07e63f24627b16c51a10",
+    "tracked_diff": ""
+  },
+  "near_case_count": 5,
+  "author_vs_literal_repository_mismatches": 0,
+  "author_vs_paper_mismatches": 1,
+  "near_cases": [
+    {
+      "values_desc": [
+        0.18,
+        0.11
+      ],
+      "target": 0.16,
+      "author_index": 1,
+      "literal_repository_index": 1,
+      "paper_index": 0
+    },
+    {
+      "values_desc": [
+        0.21,
+        0.17,
+        0.08
+      ],
+      "target": 0.19,
+      "author_index": 1,
+      "literal_repository_index": 1,
+      "paper_index": 1
+    },
+    {
+      "values_desc": [
+        0.14,
+        0.1,
+        0.06,
+        0.03
+      ],
+      "target": 0.115,
+      "author_index": 1,
+      "literal_repository_index": 1,
+      "paper_index": 1
+    },
+    {
+      "values_desc": [
+        0.3,
+        0.2,
+        0.1
+      ],
+      "target": 0.2,
+      "author_index": 1,
+      "literal_repository_index": 1,
+      "paper_index": 1
+    },
+    {
+      "values_desc": [
+        0.12
+      ],
+      "target": 0.07,
+      "author_index": 0,
+      "literal_repository_index": 0,
+      "paper_index": 0
+    }
+  ],
+  "bit_conversion_failure_count": 0,
+  "bit_conversion_failures": [],
+  "author_checkout_unchanged": true,
+  "interpretation": "PASS confirms that the pinned author file executes the literal public near() behavior, that at least one diagnostic case differs from the Algorithm-1 nearest-probability rule, and that little-endian bit helpers round-trip exactly."
+}

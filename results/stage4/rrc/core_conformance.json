@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "comparison_kind": "pinned-source-oracle-vs-normalized",
+  "reference_repository": "https://github.com/ryehr/RRC_steganography",
+  "reference_commit": "dae326259e4fca8bc4fcf460dafdbc0e88a0a71a",
+  "fixture_count": 68,
+  "random_fixture_count": 64,
+  "failure_count": 0,
+  "max_generated_tokens": 27,
+  "max_termination_retries": 4,
+  "failures": [],
+  "limitation": "The oracle is an independent Python transcription of the pinned rrc_core arithmetic and does not execute the original author file. Use run_stage4_rrc_author_conformance.py for that direct check."
+}

@@ -178,8 +178,9 @@ def test_q_stego_is_exact_uniform_mass_over_bin_representatives() -> None:
         secret_source=FixedSecretSource((0, 1)),
         random_source=MethodRandomSource(123),
     )
-    decision = encoder.step(StepContext(0, reference8()))
-    info = decision.distribution_info
+    context = StepContext(0, reference8())
+    decision = encoder.step(context)
+    info = encoder.distribution_info(context, decision)
 
     assert info.mode == QMode.ANALYTIC_EXACT
     assert info.representation == QRepresentation.EXPLICIT_PROBABILITIES

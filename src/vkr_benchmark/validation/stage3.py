@@ -21,7 +21,7 @@ REQUIRED_REPOSITORY_PATHS = (
     "docs/stages/stage3/reproducibility_report.md",
     "docs/stages/stage3/stage_3.typ",
     "docs/decisions/0012-dual-kl-for-reproducibility.md",
-    "docs/decisions/0016-stage3-reproducibility-closeout.md",
+    "docs/decisions/0016-stage3-reproducibility-closeout_ru.md",
     "configs/reproducibility/figure3_full_run.json",
     "configs/reproducibility/figure3_interpretation.json",
     "configs/reproducibility/matched_author_normalized.json",

@@ -1,0 +1,73 @@
+{
+  "status": "pass",
+  "comparison_kind": "direct-original-author-helpers-and-source-guard",
+  "reference_repository": "https://github.com/WangYH-BUPT/DAIRstega",
+  "reference_commit": "8d85edf98d48c3efa827a125b6d4e90f88141ea2",
+  "reference_dir": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/external/DAIRstega",
+  "checkout": {
+    "head": "8d85edf98d48c3efa827a125b6d4e90f88141ea2",
+    "tracked_diff": ""
+  },
+  "bit_conversion_failure_count": 0,
+  "bit_conversion_failures": [],
+  "prefix_case_count": 3,
+  "author_vs_literal_prefix_mismatch_count": 0,
+  "singleton_author_vs_paper_mismatch_count": 1,
+  "prefix_cases": [
+    {
+      "left": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "right": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "author": 2,
+      "literal": 2,
+      "paper": 2
+    },
+    {
+      "left": [
+        1,
+        0,
+        1,
+        0
+      ],
+      "right": [
+        1,
+        0,
+        1,
+        1
+      ],
+      "author": 3,
+      "literal": 3,
+      "paper": 3
+    },
+    {
+      "left": [
+        1,
+        1,
+        0,
+        1
+      ],
+      "right": [
+        1,
+        1,
+        0,
+        1
+      ],
+      "author": 3,
+      "literal": 3,
+      "paper": 4
+    }
+  ],
+  "required_source_fragment_count": 12,
+  "missing_source_fragments": [],
+  "author_checkout_unchanged": true,
+  "interpretation": "PASS confirms the directly executed pinned bit/prefix helpers, the singleton-prefix off-by-one behavior, and the exact source statements used by the separate literal allocation conformance implementation."
+}

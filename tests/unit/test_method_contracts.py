@@ -62,8 +62,9 @@ class FixedMessageMethod(StegoMethod):
         secret_source: SecretSource,
         random_source: RandomSource | None = None,
         key: bytes | str | int | None = None,
+        target_payload_bits: int | None = None,
     ) -> EncoderSession:
-        del environment
+        del environment, target_payload_bits
         return FixedMessageEncoder()
 
     def create_decoder(

@@ -314,3 +314,130 @@ def test_streaming_runner_keeps_read_and_payload_bits_equal_for_bins() -> None:
     assert result.encode.secret_bits_read == result.encode.payload_bits
     assert result.encode.consumed_secret_bits == result.encode.payload_secret_bits
     assert result.roundtrip_exact is True
+
+
+def test_finalize_only_decoder_is_supported_by_fixed_payload_runner() -> None:
+    from typing import Any, Mapping
+
+    from vkr_benchmark.methods import (
+        DecodeProgress,
+        DecoderFinalization,
+        DecoderSession,
+        EncodeDecision,
+        EncoderFinalization,
+        EncoderSession,
+        MethodEnvironment,
+        StegoMethod,
+    )
+    from vkr_benchmark.randomness import RandomSource, SecretSource
+
+    class _Encoder(EncoderSession):
+        def __init__(self, source: SecretSource, target: int) -> None:
+            self.bits = source.read_bits(target)
+            self.target = target
+            self.steps = 0
+            self._finalized = False
+
+        @property
+        def done(self) -> bool:
+            return self.steps >= 2
+
+        def step(self, context):
+            self.steps += 1
+            return EncodeDecision(
+                token_id=int(context.reference.token_order[0]),
+                bits_consumed=None,
+            )
+
+        def finalize(self):
+            self._finalized = True
+            return EncoderFinalization(
+                payload_bits=self.target,
+                termination_reason="fixed_payload_bits",
+            )
+
+    class _Decoder(DecoderSession):
+        def __init__(self, expected: int) -> None:
+            self.expected = expected
+            self.steps = 0
+            self._finalized = False
+
+        @property
+        def done(self) -> bool:
+            return self.steps >= 2
+
+        def observe(self, context, observed_token_id):
+            del context, observed_token_id
+            self.steps += 1
+            # RRC-like behavior: no bits are recovered until finalize().
+            return DecodeProgress()
+
+        def finalize(self):
+            self._finalized = True
+            return DecoderFinalization(
+                recovered_bits=tuple(expected_bits),
+                complete=True,
+            )
+
+    class _Method(StegoMethod):
+        method_id = "synthetic_finalize_only"
+
+        def create_encoder(
+            self,
+            *,
+            config: Mapping[str, Any],
+            environment: MethodEnvironment,
+            secret_source: SecretSource,
+            random_source: RandomSource | None = None,
+            key=None,
+            target_payload_bits: int | None = None,
+        ) -> EncoderSession:
+            del config, environment, random_source, key
+            assert target_payload_bits is not None
+            return _Encoder(secret_source, target_payload_bits)
+
+        def create_decoder(
+            self,
+            *,
+            config: Mapping[str, Any],
+            environment: MethodEnvironment,
+            random_source: RandomSource | None = None,
+            key=None,
+            expected_payload_bits: int | None = None,
+        ) -> DecoderSession:
+            del config, environment, random_source, key
+            assert expected_payload_bits is not None
+            return _Decoder(expected_payload_bits)
+
+    lm = _DeterministicFakeLM()
+    builder = ReferenceDistributionBuilder(
+        token_space=lm.token_space,
+        policy=GenerationPolicy(),
+    )
+    environment = method_environment_from_builder(builder)
+    secret = Shake256SecretSource("finalize-only")
+    # Capture the expected prefix independently, then create a fresh source for
+    # the actual run so the encoder reads the same bits from position zero.
+    expected_bits = secret.read_bits(8)
+
+    result = run_streaming_text_roundtrip(
+        lm_adapter=lm,
+        reference_builder=builder,
+        method=_Method(),
+        method_config={},
+        environment=environment,
+        prompt_text="prompt",
+        target_payload_bits=8,
+        max_carrier_tokens=4,
+        secret_source=Shake256SecretSource("finalize-only"),
+        encoder_random_source=None,
+        decoder_random_source=None,
+    )
+
+    assert result.encode.carrier_tokens == 2
+    assert result.encode.payload_bits == 8
+    assert result.decode.incremental_recovered_bits == ()
+    assert result.decode.recovered_bits == expected_bits
+    assert result.recovered_length_bits == 8
+    assert result.recovered_extra_bits == 0
+    assert result.roundtrip_exact is True

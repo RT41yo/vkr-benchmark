@@ -140,8 +140,9 @@ def test_candidate_set_is_top_power_of_two_from_canonical_token_order() -> None:
         secret_source=FixedSecretSource((0, 0, 0, 0)),
     )
     reference = ref6()
-    decision = encoder.step(StepContext(0, reference))
-    q = decision.distribution_info.probabilities
+    context = StepContext(0, reference)
+    decision = encoder.step(context)
+    q = encoder.distribution_info(context, decision).probabilities
     assert q is not None
     # Top four probabilities belong to token IDs 0, 2, 4, 5.
     assert set(np.flatnonzero(q)) == {0, 2, 4, 5}
@@ -153,8 +154,9 @@ def test_q_stego_is_exact_dyadic_distribution_from_code_lengths() -> None:
         environment=env4(),
         secret_source=FixedSecretSource((0,)),
     )
-    decision = encoder.step(StepContext(0, ref4_unequal()))
-    info = decision.distribution_info
+    context = StepContext(0, ref4_unequal())
+    decision = encoder.step(context)
+    info = encoder.distribution_info(context, decision)
 
     assert info.mode == QMode.ANALYTIC_EXACT
     assert info.representation == QRepresentation.EXPLICIT_PROBABILITIES
@@ -177,7 +179,9 @@ def test_q_stego_can_differ_from_reference() -> None:
         environment=env4(),
         secret_source=FixedSecretSource((0,)),
     )
-    q = encoder.step(StepContext(0, reference)).distribution_info.probabilities
+    context = StepContext(0, reference)
+    decision = encoder.step(context)
+    q = encoder.distribution_info(context, decision).probabilities
     assert q is not None
     assert not np.allclose(q, reference.probabilities, rtol=0.0, atol=1e-12)
 

@@ -92,6 +92,29 @@ def test_q_zero_where_p_is_zero_does_not_force_infinite_kl() -> None:
     assert result.tvd == pytest.approx(0.1)
 
 
+
+def test_explicit_q_metrics_remove_only_fp32_reference_sum_residual() -> None:
+    values = np.array(
+        [0.19987243, 0.00200908, 0.04928793, 0.16364169, 0.06653175,
+         0.29817462, 0.09925370, 0.12122876, 0.0],
+        dtype=np.float32,
+    )
+    reference = ReferenceDistribution(values)
+    p64 = reference.probabilities.astype(np.float64)
+    q = p64 / p64.sum(dtype=np.float64)
+    result = distribution_distortion_step(
+        reference,
+        DistributionInfo.explicit(
+            q,
+            mode=QMode.EXACT_ENUMERATION,
+            source=QSource.INDEPENDENT_ENUMERATION,
+        ),
+    )
+
+    assert result.kl_ref_to_stego_bits == pytest.approx(0.0, abs=1e-15)
+    assert result.kl_stego_to_ref_bits == pytest.approx(0.0, abs=1e-15)
+    assert result.tvd == pytest.approx(0.0, abs=1e-15)
+
 def test_reference_equality_certificate_is_exact_zero_distortion() -> None:
     result = distribution_distortion_step(
         _reference([0.7, 0.2, 0.1]),

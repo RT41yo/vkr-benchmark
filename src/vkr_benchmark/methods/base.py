@@ -5,7 +5,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any, Mapping
 
-from vkr_benchmark.distributions import StepContext
+from vkr_benchmark.distributions import DistributionInfo, StepContext
 from vkr_benchmark.methods.types import (
     DecodeProgress,
     DecoderFinalization,
@@ -30,6 +30,21 @@ class EncoderSession(ABC):
     @abstractmethod
     def step(self, context: StepContext) -> EncodeDecision:
         """Choose the next carrier token for the current P_reference."""
+
+    def distribution_info(
+        self, context: StepContext, decision: EncodeDecision
+    ) -> DistributionInfo:
+        """Return induced-distribution metadata for benchmark metrics.
+
+        This hook is intentionally separate from :meth:`step` so expensive
+        metric instrumentation (for example explicit construction of
+        ``Q_stego``) can be timed outside the steganographic algorithm itself.
+        Implementations that already return cheap distribution metadata from
+        ``step`` may rely on this default.
+        """
+
+        del context
+        return decision.distribution_info
 
     @abstractmethod
     def finalize(self) -> EncoderFinalization:
@@ -67,8 +82,13 @@ class StegoMethod(ABC):
         secret_source: SecretSource,
         random_source: RandomSource | None = None,
         key: KeyMaterial = None,
+        target_payload_bits: int | None = None,
     ) -> EncoderSession:
-        """Create an encoder session isolated from LM/tokenizer ownership."""
+        """Create an encoder session isolated from LM/tokenizer ownership.
+
+        ``target_payload_bits`` is populated only for fixed-payload termination.
+        Streaming fixed-carrier methods receive ``None``.
+        """
 
     @abstractmethod
     def create_decoder(

@@ -1,0 +1,16 @@
+# Stage 4 method contracts
+
+This file freezes implementation boundaries before adapting modern methods. Exact external revisions are in `reference/reference_sources.json` and ADR-0017.
+
+| Method | Secret semantics | Shared randomness | Termination | Decoder in pinned repo | Normalized Q strategy | Stage-4 characteristic check |
+|---|---|---|---|---|---|---|
+| Discop | streaming, variable bits/token | shared PRNG seed; represented by `method.key` | fixed carrier | yes | explicit Q from independent exact piecewise integration | encode/decode fixture, distribution preservation, real-LM roundtrip |
+| RRC | fixed-length whole message | fresh shared PRNG offset per carrier token | fixed payload + safety cap | yes | explicit Q from independent interval-measure construction; no equality certificate | fixed-message roundtrip, termination, distribution preservation |
+| ADG | streaming variable bits/token from recursive group indices | encoder-only `MethodRandomSource` for terminal categorical sample; no shared key | fixed carrier | no public decoder | explicit Q from independent full recursion over all groups | Algorithm-1 grouping + `near()` discrepancy; Table-1 characteristic low KLD1 / high ER |
+| DAIRstega | streaming common-prefix payload with overlapping `alpha`-bit look-ahead | none beyond secret stream | fixed carrier | extraction described by paper; no public decoder | exact conditional explicit Q from independent integer-interval reconstruction + secret-window posterior range | allocation/inverse tests + alpha/beta capacity–concealment characteristic points |
+
+## Common normalized boundaries
+
+All four adapters receive the already constructed canonical `P_reference`. They do not own the LM, tokenizer, common temperature/top-k/top-p policy, KV-cache path, ordinary-text transport, or benchmark metrics. Method-internal candidate restrictions that are part of the published algorithm remain inside the method and therefore affect `Q_stego`.
+
+Direct token-ID decoding is an algorithm-conformance diagnostic. Benchmark reliability is still measured through `token IDs → text → retokenized token IDs → decoder`.

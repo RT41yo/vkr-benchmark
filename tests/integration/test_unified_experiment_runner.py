@@ -74,7 +74,7 @@ class _ExperimentFakeLM(LMAdapter):
         return updated.pending_logits, updated
 
 
-def _config(method_id: str, params: dict, *, random_seed=None) -> ExperimentConfig:
+def _config(method_id: str, params: dict, *, random_seed=None, key=None) -> ExperimentConfig:
     return ExperimentConfig(
         benchmark_version="0.1",
         run_kind="normalized",
@@ -85,6 +85,7 @@ def _config(method_id: str, params: dict, *, random_seed=None) -> ExperimentConf
             params=params,
             implementation_revision="test",
             random_seed=random_seed,
+            key=key,
         ),
         generation=GenerationRunConfig(),
         secret_id="000001",
@@ -102,20 +103,23 @@ def _prompts() -> PromptRegistry:
 
 
 @pytest.mark.parametrize(
-    ("method_id", "params", "random_seed"),
+    ("method_id", "params", "random_seed", "key"),
     [
-        ("bins", {"block_size": 2}, 12345),
-        ("huffman", {"bits_per_word": 2}, None),
-        ("arithmetic_coding", {"precision": 8, "top_k": 8}, None),
+        ("bins", {"block_size": 2}, 12345, None),
+        ("huffman", {"bits_per_word": 2}, None, None),
+        ("arithmetic_coding", {"precision": 8, "top_k": 8}, None, None),
+        ("discop", {}, None, 12345),
+        ("dairstega", {"alpha": 8, "beta": 1.0, "top_k": 8}, None, None),
     ],
 )
-def test_all_three_baselines_run_through_one_experiment_entrypoint(
+def test_normalized_methods_run_through_one_experiment_entrypoint(
     method_id: str,
     params: dict,
     random_seed,
+    key,
 ) -> None:
     execution = run_experiment(
-        config=_config(method_id, params, random_seed=random_seed),
+        config=_config(method_id, params, random_seed=random_seed, key=key),
         prompt_registry=_prompts(),
         lm_adapter=_ExperimentFakeLM(),
     )
@@ -144,7 +148,8 @@ def test_all_three_baselines_run_through_one_experiment_entrypoint(
     )
 
     distortion = execution.distribution_distortion_metrics
-    assert distortion.q_mode.value == "analytic_exact"
+    expected_q_mode = "exact_enumeration" if method_id == "discop" else "analytic_exact"
+    assert distortion.q_mode.value == expected_q_mode
     assert len(execution.roundtrip.encode.step_distribution_distortion) == 8
     assert distortion.kl_infinite_steps + distortion.kl_finite_steps == 8
     assert distortion.tvd_mean is not None
@@ -185,6 +190,9 @@ def test_method_factory_resolves_all_baseline_ids() -> None:
     assert create_method("bins").method_id == "bins"
     assert create_method("huffman").method_id == "huffman"
     assert create_method("arithmetic_coding").method_id == "arithmetic_coding"
+    assert create_method("discop").method_id == "discop"
+    assert create_method("rrc").method_id == "rrc"
+    assert create_method("dairstega").method_id == "dairstega"
 
 
 def test_method_factory_rejects_unknown_method() -> None:
@@ -209,6 +217,23 @@ def test_bins_sender_receiver_rng_are_independent_but_reproducible() -> None:
     ]
 
 
+def test_discop_runtime_uses_key_as_shared_prng_seed() -> None:
+    runtime = create_method_runtime(_config("discop", {}, key=12345))
+    assert runtime.encoder_random_source is not runtime.decoder_random_source
+    assert runtime.encoder_random_source is not None
+    assert runtime.decoder_random_source is not None
+    assert [runtime.encoder_random_source.random() for _ in range(5)] == [
+        runtime.decoder_random_source.random() for _ in range(5)
+    ]
+
+
+def test_discop_runtime_requires_key_and_rejects_ambiguous_random_seed() -> None:
+    with pytest.raises(ConfigurationError, match="method.key"):
+        create_method_runtime(_config("discop", {}))
+    with pytest.raises(ConfigurationError, match="do not also set"):
+        create_method_runtime(_config("discop", {}, random_seed=7, key=12345))
+
+
 def test_unified_runner_resolves_prompt_by_id() -> None:
     config = _config("huffman", {"bits_per_word": 2})
     missing = PromptRegistry([PromptRecord("other", "unit", "r1", "prompt", "en")])
@@ -217,4 +242,114 @@ def test_unified_runner_resolves_prompt_by_id() -> None:
             config=config,
             prompt_registry=missing,
             lm_adapter=_ExperimentFakeLM(),
+        )
+
+
+def test_discop_unified_runner_uses_explicit_q_metrics() -> None:
+    execution = run_experiment(
+        config=_config("discop", {}, key=12345),
+        prompt_registry=_prompts(),
+        lm_adapter=_ExperimentFakeLM(),
+    )
+    distortion = execution.distribution_distortion_metrics
+    assert distortion.q_mode.value == "exact_enumeration"
+    assert distortion.kl_ref_to_stego_mean_bits is not None
+    assert distortion.kl_stego_to_ref_mean_bits is not None
+    assert distortion.tvd_mean is not None
+    assert distortion.kl_ref_to_stego_mean_bits < 1e-6
+    assert distortion.kl_stego_to_ref_mean_bits < 1e-6
+    assert distortion.tvd_mean < 1e-6
+    first_step = execution.roundtrip.encode.step_distribution_distortion[0]
+    assert first_step.q_source.value == "independent_enumeration"
+    assert execution.roundtrip.roundtrip_exact is True
+
+
+
+def _rrc_config(*, key=42, random_seed=None) -> ExperimentConfig:
+    return ExperimentConfig(
+        benchmark_version="0.1",
+        run_kind="normalized",
+        model_config_path=Path("unused.json"),
+        prompt_id="p000001",
+        method=MethodRunConfig(
+            method_id="rrc",
+            params={"precision_margin": 40, "verify_termination": True},
+            implementation_revision="test",
+            random_seed=random_seed,
+            key=key,
+        ),
+        generation=GenerationRunConfig(),
+        secret_id="000001",
+        termination=TerminationConfig(
+            mode="fixed_payload_bits",
+            target_payload_bits=16,
+            max_carrier_tokens=64,
+        ),
+    )
+
+
+def test_rrc_runtime_uses_key_as_shared_prng_seed() -> None:
+    runtime = create_method_runtime(_rrc_config(key=42))
+    assert runtime.encoder_random_source is not runtime.decoder_random_source
+    assert runtime.encoder_random_source is not None
+    assert runtime.decoder_random_source is not None
+    assert [runtime.encoder_random_source.random() for _ in range(5)] == [
+        runtime.decoder_random_source.random() for _ in range(5)
+    ]
+
+
+def test_rrc_runtime_requires_key_and_rejects_ambiguous_random_seed() -> None:
+    with pytest.raises(ConfigurationError, match="method.key"):
+        create_method_runtime(_rrc_config(key=None))
+    with pytest.raises(ConfigurationError, match="do not also set"):
+        create_method_runtime(_rrc_config(key=42, random_seed=7))
+
+
+def test_rrc_runs_through_fixed_payload_unified_entrypoint() -> None:
+    execution = run_experiment(
+        config=_rrc_config(),
+        prompt_registry=_prompts(),
+        lm_adapter=_ExperimentFakeLM(),
+    )
+    assert execution.method_id == "rrc"
+    assert execution.roundtrip.encode.payload_bits == 16
+    assert execution.roundtrip.encode.secret_bits_read == 16
+    assert execution.roundtrip.encode.carrier_tokens <= 64
+    assert execution.roundtrip.roundtrip_exact is True
+    assert execution.reliability_metrics.ber == 0.0
+    assert execution.roundtrip.decode.incremental_recovered_bits == ()
+    assert execution.roundtrip.decode.finalization.complete is True
+    distortion = execution.distribution_distortion_metrics
+    assert distortion.q_mode.value == "analytic_exact"
+    assert distortion.kl_ref_to_stego_mean_bits is not None
+    assert distortion.kl_ref_to_stego_mean_bits < 1e-6
+    assert distortion.kl_stego_to_ref_mean_bits is not None
+    assert distortion.kl_stego_to_ref_mean_bits < 1e-6
+    assert distortion.tvd_mean is not None and distortion.tvd_mean < 1e-6
+    first = execution.roundtrip.encode.step_distribution_distortion[0]
+    assert first.q_source.value == "independent_analytic"
+
+
+def test_create_method_resolves_adg() -> None:
+    from vkr_benchmark.runner.experiment import create_method
+
+    assert create_method("adg").method_id == "adg"
+
+
+def test_dairstega_runtime_rejects_method_randomness_and_key() -> None:
+    with pytest.raises(ConfigurationError, match="method.random_seed"):
+        create_method_runtime(
+            _config(
+                "dairstega",
+                {"alpha": 8, "beta": 1.0, "top_k": 8},
+                random_seed=7,
+            )
+        )
+    with pytest.raises(ConfigurationError, match="method.key"):
+        create_method_runtime(
+            _config(
+                "dairstega",
+                {"alpha": 8, "beta": 1.0, "top_k": 8},
+                key=7,
+            )
         )

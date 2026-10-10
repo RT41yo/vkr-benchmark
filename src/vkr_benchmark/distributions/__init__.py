@@ -1,6 +1,17 @@
 """Canonical and method-induced probability distribution types."""
 
+from vkr_benchmark.distributions.adg_q import explicit_adg_q
+from vkr_benchmark.distributions.dair_q import (
+    DAIRInterval,
+    allocate_dair_intervals,
+    explicit_dair_q,
+)
+from vkr_benchmark.distributions.discop_q import (
+    branch_selection_probabilities,
+    explicit_discop_q,
+)
 from vkr_benchmark.distributions.ordering import deterministic_token_order
+from vkr_benchmark.distributions.rrc_q import explicit_rrc_q
 from vkr_benchmark.distributions.reference import (
     GenerationPolicy,
     ReferenceDistributionBuilder,
@@ -15,7 +26,14 @@ from vkr_benchmark.distributions.types import (
 )
 
 __all__ = [
+    "DAIRInterval",
     "DistributionInfo",
+    "allocate_dair_intervals",
+    "explicit_dair_q",
+    "explicit_adg_q",
+    "branch_selection_probabilities",
+    "explicit_discop_q",
+    "explicit_rrc_q",
     "GenerationPolicy",
     "QMode",
     "QRepresentation",
