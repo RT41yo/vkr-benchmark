@@ -18,6 +18,7 @@ The fixed Stage-4 method set is ADG, Discop, RRC and DAIRstega, in addition to t
 - RRC: Stage-4 reproducibility/conformance closed; direct token-ID recovery 100/100, ordinary-text recovery 98/100 on the fixed Llama series.
 - ADG: Stage-4 reproducibility/conformance closed; Algorithm-1 conformance, direct author `near()` check and Table-1 characteristic probe complete.
 - DAIRstega: Stage-4 method-level reproducibility/conformance closed; real-LM smoke, synthetic paper/repository conformance, direct author source/helper conformance and publication-characteristic trade-off probe all PASS.
+- Cross-model compatibility: closed; all 14 method × model/tokenizer combinations pass the direct and ordinary-text round-trip gates. Llama is 7/7 `PASS`; Qwen is 7/7 `PASS_WITH_ADAPTATION` due only to the frozen common exclusion of 267 output-only IDs.
 
 ## Implementation order
 
@@ -64,4 +65,10 @@ Pinned `DAIRstega_t.py` direct gate passed: original bit conversion helpers matc
 
 The 100-token Llama probe reproduced the characteristic capacity–quality/concealment trade-off. `alpha=8,beta=1.0` produced BPT `0.2700`, raw-LM PPL `2.2522`, mean reverse KL `0.867062` and TVD `0.359716`; `alpha=32,beta=0.5` produced BPT `3.3500`, PPL `125.3471`, mean reverse KL `3.609336` and TVD `0.798266`. `beta=0.5` increased BPT at both tested alpha values. All four probe points preserved exact token/text and secret round-trip and used independent state-aware analytic Q.
 
-This reproduces the publication's qualitative family of operating points without claiming numerical Table-3 reproduction. DAIRstega is therefore closed at method level; remaining Stage-4 work is the cross-model compatibility matrix and consolidated v0.3 closeout.
+This reproduces the publication's qualitative family of operating points without claiming numerical Table-3 reproduction. DAIRstega is therefore closed at method level.
+
+## Cross-model compatibility matrix
+
+A dedicated compatibility runner now covers all 14 combinations `7 methods × {Llama-3.2-3B, Qwen3-4B-Base}` under one fixed prompt/secret and the canonical `P_reference` path. It checks direct secret recovery, ordinary-text token round-trip and ordinary-text secret recovery. Expensive explicit-Q/KL/TVD instrumentation is deliberately disabled because the matrix is a technical compatibility gate rather than a comparative experiment. Qwen output IDs without tokenizer mappings are handled only by the already frozen common `V_allowed` normalization and are reported as `PASS_WITH_ADAPTATION` when the full round-trip succeeds.
+
+The real compatibility matrix run is complete. Remaining Stage-4 work is the Typst presentation and formal consolidated v0.3 closeout.
