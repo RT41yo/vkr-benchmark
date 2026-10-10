@@ -326,3 +326,9 @@ def test_rrc_runs_through_fixed_payload_unified_entrypoint() -> None:
     assert distortion.tvd_mean is not None and distortion.tvd_mean < 1e-6
     first = execution.roundtrip.encode.step_distribution_distortion[0]
     assert first.q_source.value == "independent_analytic"
+
+
+def test_create_method_resolves_adg() -> None:
+    from vkr_benchmark.runner.experiment import create_method
+
+    assert create_method("adg").method_id == "adg"

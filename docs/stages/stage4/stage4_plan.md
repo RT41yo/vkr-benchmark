@@ -16,7 +16,8 @@ The fixed Stage-4 method set is ADG, Discop, RRC and DAIRstega, in addition to t
 
 - Discop: Stage-4 reproducibility/conformance closed.
 - RRC: Stage-4 reproducibility/conformance closed; direct token-ID recovery 100/100, ordinary-text recovery 98/100 on the fixed Llama series.
-- Next: ADG.
+- ADG: Stage-4 reproducibility/conformance closed; Algorithm-1 conformance, direct author `near()` check and Table-1 characteristic probe complete.
+- Next: DAIRstega foundation and reproducibility validation.
 
 ## Implementation order
 
@@ -31,3 +32,10 @@ Parameter sweeps and final operating-point grids remain Stage 5 work.
 ## Completion gate
 
 Stage 4 closes only when all four modern methods have a normalized encoder/decoder, synthetic algorithm tests, ordinary-text round-trip evidence, at least one documented author/paper-level conformance target, compatibility status for Llama-3.2-3B and Qwen3-4B-Base, and a reproducibility report.
+
+
+## ADG closeout
+
+ADG Stage-4 reproducibility is closed. The 100-token Llama characteristic probe produced BPT `4.6300`, mean `D_KL(P_ref || Q) = 0.009936`, mean `D_KL(Q || P_ref) = 0.010232` and mean TVD `0.028920`, with exact token and secret round-trip. This reproduces the Table-1 qualitative pattern (substantial embedding rate with small but non-zero distribution distortion) without claiming numerical reproduction across different LM/tokenization/corpora.
+
+The normalized adapter follows Algorithm 1 of the paper. The pinned public repository's `near()` discrepancy is retained as explicit provenance/conformance evidence rather than silently copied into normalized semantics.

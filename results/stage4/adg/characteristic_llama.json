@@ -1,0 +1,100 @@
+{
+  "status": "pass",
+  "probe_kind": "normalized-publication-characteristic-not-table-1-numerical-reproduction",
+  "reference_repository": "https://github.com/Mhzzzzz/ADG-steganography",
+  "reference_commit": "b4a7e802a97bc3a3b84d07e63f24627b16c51a10",
+  "model_id": "meta-llama/Llama-3.2-3B",
+  "model_revision": "13afe5124825b4f3751f836b40dafda64c1ed062",
+  "prompt": "The history of artificial intelligence began",
+  "carrier_tokens_per_run": 100,
+  "repeats": 1,
+  "common_generation": {
+    "top_k": null,
+    "top_p": 1.0
+  },
+  "rows": [
+    {
+      "run_index": 0,
+      "secret_id": "stage4-adg-characteristic",
+      "method_seed": 42,
+      "carrier_tokens": 100,
+      "payload_bits": 463,
+      "bits_per_token": 4.63,
+      "reference_entropy_mean_bits_per_token": 5.077563468132095,
+      "reference_entropy_sum_bits": 507.7563468132095,
+      "entropy_utilization": 0.9118546777522128,
+      "q_modes": [
+        "exact_enumeration"
+      ],
+      "q_sources": [
+        "independent_enumeration"
+      ],
+      "kl_ref_to_stego_bits_per_token": {
+        "mean": 0.009936392436484458,
+        "median": 0.008887752843096126,
+        "p95": 0.023183899047933408,
+        "max": 0.06077699980754097
+      },
+      "kl_stego_to_ref_bits_per_token": {
+        "mean": 0.010232160876972034,
+        "median": 0.009080585641635951,
+        "p95": 0.024337113832158395,
+        "max": 0.06393584323816633
+      },
+      "tvd": {
+        "mean": 0.028920413760780993,
+        "median": 0.029286322994486844,
+        "p95": 0.06553892635313842,
+        "max": 0.1402736268570994
+      },
+      "all_distortion_metrics_finite": true,
+      "token_sequence_roundtrip_exact": true,
+      "secret_roundtrip_exact": true,
+      "decoder_complete": true,
+      "encode_stego_algorithm_ms": 22287.608700920828,
+      "decode_stego_algorithm_ms": 22292.133950977586,
+      "metric_instrumentation_ms": 395797.05060008564,
+      "stegotext": ", Perhaps, as most other technological developments, with namesake history. At least, in the discovery and use of methods and concepts, before scientists can try to understand, interpret and systematize the:\n\u2018how\u2019 and \u2018why\u2019 behind it. But even this seemingly detailed and historically shaped approach will only result in speculation about the origin of the field. And the discussion works true for sentences as general as Historical view of artificial information.\nThe field of artificial information is soon explicitly entered in NIK"
+    }
+  ],
+  "aggregate": {
+    "total_carrier_tokens": 100,
+    "total_payload_bits": 463,
+    "aggregate_bits_per_token": 4.63,
+    "mean_run_kl_ref_to_stego_bits_per_token": 0.009936392436484458,
+    "mean_run_kl_stego_to_ref_bits_per_token": 0.010232160876972034,
+    "mean_run_tvd": 0.028920413760780993,
+    "all_text_and_secret_roundtrips_exact": true,
+    "all_distortion_metrics_finite": true,
+    "all_q_exact_independent_enumeration": true,
+    "nonzero_forward_distortion_observed": true
+  },
+  "paper_context": {
+    "source": "Zhang et al., Findings of ACL-IJCNLP 2021, Table 1",
+    "paper_setup": "word-level two-layer LSTM; Movie/News/Tweet corpora; 1000 stegotexts per experimental case",
+    "reported_adg": {
+      "Movie": {
+        "embedding_rate_bits_per_token": 5.147,
+        "kld1_bits_per_token": 0.033
+      },
+      "News": {
+        "embedding_rate_bits_per_token": 5.65,
+        "kld1_bits_per_token": 0.027
+      },
+      "Tweet": {
+        "embedding_rate_bits_per_token": 5.411,
+        "kld1_bits_per_token": 0.048
+      }
+    },
+    "reported_er_range_bits_per_token": [
+      5.147,
+      5.65
+    ],
+    "reported_kld1_range_bits_per_token": [
+      0.027,
+      0.048
+    ],
+    "characteristic_claim": "high embedding rate together with small but generally non-zero KLD1 = D_KL(p_LM || q)",
+    "comparison_limitation": "Absolute ER/KLD1 values are not expected to numerically match Table 1: this probe uses the pinned modern benchmark LM, subword tokens, the benchmark prompt and canonical P_reference rather than the paper's separately trained word-level LSTMs and corpora."
+  }
+}

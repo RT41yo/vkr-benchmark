@@ -22,6 +22,7 @@ from vkr_benchmark.metrics import (
     compute_reliability_metrics,
 )
 from vkr_benchmark.methods import (
+    ADGMethod,
     ArithmeticMethod,
     BinsMethod,
     DiscopMethod,
@@ -66,6 +67,7 @@ class ExperimentExecution:
 
 
 _METHODS: dict[str, type[StegoMethod]] = {
+    "adg": ADGMethod,
     "bins": BinsMethod,
     "huffman": HuffmanMethod,
     "arithmetic_coding": ArithmeticMethod,
@@ -97,6 +99,15 @@ def create_method_runtime(config: ExperimentConfig) -> MethodRuntime:
         raise ConfigurationError(
             "normalized Bins requires method.random_seed so sender and receiver "
             "can reconstruct the same fixed partition"
+        )
+
+    if method.method_id == "adg" and seed is None:
+        raise ConfigurationError(
+            "normalized ADG requires method.random_seed for reproducible terminal sampling"
+        )
+    if method.method_id == "adg" and config.method.key is not None:
+        raise ConfigurationError(
+            "normalized ADG does not use method.key; use method.random_seed only"
         )
 
     if method.method_id in {"discop", "rrc"}:

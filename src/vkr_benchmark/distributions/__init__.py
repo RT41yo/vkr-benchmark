@@ -1,5 +1,6 @@
 """Canonical and method-induced probability distribution types."""
 
+from vkr_benchmark.distributions.adg_q import explicit_adg_q
 from vkr_benchmark.distributions.discop_q import (
     branch_selection_probabilities,
     explicit_discop_q,
@@ -21,6 +22,7 @@ from vkr_benchmark.distributions.types import (
 
 __all__ = [
     "DistributionInfo",
+    "explicit_adg_q",
     "branch_selection_probabilities",
     "explicit_discop_q",
     "explicit_rrc_q",
