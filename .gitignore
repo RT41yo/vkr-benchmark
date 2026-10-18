@@ -26,3 +26,6 @@ environment/**/hf.txt
 # Incomplete/failed Stage-3 full-sweep shard diagnostics are local only.
 /results/stage3/paper_reproduction/figure3_full/**/*.tmp
 /results/stage3/paper_reproduction/figure3_full/**/*.failed.jsonl
+
+# Stage-5 pilot prompt text is regenerated from the pinned Stage-3 CNN/DailyMail contexts.
+/data/stage5/pilot_prompts.jsonl
