@@ -1,0 +1,474 @@
+{
+  "schema_version": "stage5.operating_point_selection.v1",
+  "source_sweep_id": "stage5-pilot-a-streaming-llama-v1",
+  "source_execution_log_sha256": "e55675aa8d9466477c2571ea80f8679eabeabf3022dee87d09d56a871f80c5b2",
+  "selection_target": "stage5-pilot-b-streaming-llama-v1",
+  "selection_principle": "Preserve representative quality/security anchors, intermediate trade-off regions, and capacity-oriented endpoints; remove redundant or clearly weak points without using a single composite score.",
+  "pilot_a_method_point_count": 45,
+  "retained_point_count": 21,
+  "rejected_point_count": 24,
+  "rrc_status": "excluded_from_streaming_selection_pending_separate_boundary_precision_investigation_and_fixed_payload_calibration",
+  "points": [
+    {
+      "method_id": "bins",
+      "point_id": "b1",
+      "method_params": {
+        "block_size": 1
+      },
+      "decision": "retained",
+      "reason": "Retained as the lowest-capacity/quality anchor; 8/8 exact in Pilot A.",
+      "pilot_b_role": "quality_anchor"
+    },
+    {
+      "method_id": "bins",
+      "point_id": "b2",
+      "method_params": {
+        "block_size": 2
+      },
+      "decision": "retained",
+      "reason": "Retained as a low-capacity intermediate point between b1 and more distorted regimes.",
+      "pilot_b_role": "low_capacity_intermediate"
+    },
+    {
+      "method_id": "bins",
+      "point_id": "b3",
+      "method_params": {
+        "block_size": 3
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as redundant between retained b2 and b4; Pilot-A raw result remains available."
+    },
+    {
+      "method_id": "bins",
+      "point_id": "b4",
+      "method_params": {
+        "block_size": 4
+      },
+      "decision": "retained",
+      "reason": "Retained as a mid-capacity point representing the onset of strong quality degradation.",
+      "pilot_b_role": "mid_capacity_intermediate"
+    },
+    {
+      "method_id": "bins",
+      "point_id": "b5",
+      "method_params": {
+        "block_size": 5
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as redundant between retained b4 and b6."
+    },
+    {
+      "method_id": "bins",
+      "point_id": "b6",
+      "method_params": {
+        "block_size": 6
+      },
+      "decision": "retained",
+      "reason": "Retained as a documented high-capacity endpoint despite poor PPL; useful to preserve the capacity extreme.",
+      "pilot_b_role": "capacity_endpoint"
+    },
+    {
+      "method_id": "bins",
+      "point_id": "b7",
+      "method_params": {
+        "block_size": 7
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B: very poor PPL and only 4/8 exact; b6 already preserves the high-capacity regime."
+    },
+    {
+      "method_id": "bins",
+      "point_id": "b8",
+      "method_params": {
+        "block_size": 8
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B: extreme PPL and only 3/8 exact; adds little beyond the documented Pilot-A endpoint."
+    },
+    {
+      "method_id": "huffman",
+      "point_id": "e1",
+      "method_params": {
+        "bits_per_word": 1
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B: low capacity and only 5/8 exact; e2 provides a more informative low-capacity point."
+    },
+    {
+      "method_id": "huffman",
+      "point_id": "e2",
+      "method_params": {
+        "bits_per_word": 2
+      },
+      "decision": "retained",
+      "reason": "Retained as the low-capacity/quality-side representative.",
+      "pilot_b_role": "quality_side"
+    },
+    {
+      "method_id": "huffman",
+      "point_id": "e3",
+      "method_params": {
+        "bits_per_word": 3
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as close to retained e4; e4 has higher BPT with lower measured distortion."
+    },
+    {
+      "method_id": "huffman",
+      "point_id": "e4",
+      "method_params": {
+        "bits_per_word": 4
+      },
+      "decision": "retained",
+      "reason": "Retained as the strongest stable intermediate point in Pilot A (8/8 exact).",
+      "pilot_b_role": "stable_intermediate"
+    },
+    {
+      "method_id": "huffman",
+      "point_id": "e5",
+      "method_params": {
+        "bits_per_word": 5
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B: reliability weakened and e4/e6 bracket the same region."
+    },
+    {
+      "method_id": "huffman",
+      "point_id": "e6",
+      "method_params": {
+        "bits_per_word": 6
+      },
+      "decision": "retained",
+      "reason": "Retained as a higher-capacity intermediate point.",
+      "pilot_b_role": "higher_capacity_intermediate"
+    },
+    {
+      "method_id": "huffman",
+      "point_id": "e7",
+      "method_params": {
+        "bits_per_word": 7
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B: only 4/8 exact; e8 is a cleaner capacity endpoint."
+    },
+    {
+      "method_id": "huffman",
+      "point_id": "e8",
+      "method_params": {
+        "bits_per_word": 8
+      },
+      "decision": "retained",
+      "reason": "Retained as the capacity-oriented endpoint; 7/8 exact in Pilot A.",
+      "pilot_b_role": "capacity_endpoint"
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p16-k128",
+      "method_params": {
+        "precision": 16,
+        "top_k": 128
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B: precision effect is probed at k=50000, while top_k effect is probed at precision=32."
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p16-k512",
+      "method_params": {
+        "precision": 16,
+        "top_k": 512
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as redundant outside the two planned AC cross-sections."
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p16-k2048",
+      "method_params": {
+        "precision": 16,
+        "top_k": 2048
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as redundant outside the two planned AC cross-sections."
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p16-k8192",
+      "method_params": {
+        "precision": 16,
+        "top_k": 8192
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as redundant outside the two planned AC cross-sections."
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p16-k50000",
+      "method_params": {
+        "precision": 16,
+        "top_k": 50000
+      },
+      "decision": "retained",
+      "reason": "Retained as the low-precision anchor at the largest candidate pool.",
+      "pilot_b_role": "precision_low_anchor"
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p32-k128",
+      "method_params": {
+        "precision": 32,
+        "top_k": 128
+      },
+      "decision": "retained",
+      "reason": "Retained as the low-top_k anchor at the central precision.",
+      "pilot_b_role": "top_k_low_anchor"
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p32-k512",
+      "method_params": {
+        "precision": 32,
+        "top_k": 512
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as redundant between retained k128 and k2048."
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p32-k2048",
+      "method_params": {
+        "precision": 32,
+        "top_k": 2048
+      },
+      "decision": "retained",
+      "reason": "Retained as an intermediate top_k point at precision=32.",
+      "pilot_b_role": "top_k_intermediate"
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p32-k8192",
+      "method_params": {
+        "precision": 32,
+        "top_k": 8192
+      },
+      "decision": "retained",
+      "reason": "Retained as a high top_k point before the near-full candidate pool.",
+      "pilot_b_role": "top_k_high_intermediate"
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p32-k50000",
+      "method_params": {
+        "precision": 32,
+        "top_k": 50000
+      },
+      "decision": "retained",
+      "reason": "Retained as the near-full candidate-pool endpoint and central precision point.",
+      "pilot_b_role": "top_k_full_pool_endpoint"
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p48-k128",
+      "method_params": {
+        "precision": 48,
+        "top_k": 128
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B: precision effect is isolated at k=50000 rather than repeated over the full matrix."
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p48-k512",
+      "method_params": {
+        "precision": 48,
+        "top_k": 512
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as redundant outside the two planned AC cross-sections."
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p48-k2048",
+      "method_params": {
+        "precision": 48,
+        "top_k": 2048
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as redundant outside the two planned AC cross-sections."
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p48-k8192",
+      "method_params": {
+        "precision": 48,
+        "top_k": 8192
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as redundant outside the two planned AC cross-sections."
+    },
+    {
+      "method_id": "arithmetic_coding",
+      "point_id": "p48-k50000",
+      "method_params": {
+        "precision": 48,
+        "top_k": 50000
+      },
+      "decision": "retained",
+      "reason": "Retained as the high-precision check at the largest candidate pool.",
+      "pilot_b_role": "precision_high_check"
+    },
+    {
+      "method_id": "adg",
+      "point_id": "default",
+      "method_params": {},
+      "decision": "retained",
+      "reason": "Retained: ADG exposes no artificial method-local trade-off parameter in the normalized benchmark.",
+      "pilot_b_role": "intrinsic_point"
+    },
+    {
+      "method_id": "discop",
+      "point_id": "default",
+      "method_params": {},
+      "decision": "retained",
+      "reason": "Retained: Discop exposes no artificial method-local trade-off parameter in the normalized benchmark.",
+      "pilot_b_role": "intrinsic_point"
+    },
+    {
+      "method_id": "dairstega",
+      "point_id": "a8-b1-k100",
+      "method_params": {
+        "alpha": 8,
+        "beta": 1.0,
+        "top_k": 100
+      },
+      "decision": "retained",
+      "reason": "Retained as the low-capacity/quality anchor.",
+      "pilot_b_role": "quality_anchor"
+    },
+    {
+      "method_id": "dairstega",
+      "point_id": "a8-b075-k100",
+      "method_params": {
+        "alpha": 8,
+        "beta": 0.75,
+        "top_k": 100
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as redundant with retained neighboring moderate points."
+    },
+    {
+      "method_id": "dairstega",
+      "point_id": "a8-b05-k100",
+      "method_params": {
+        "alpha": 8,
+        "beta": 0.5,
+        "top_k": 100
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B: a32-b075 gives similar BPT with slightly better Pilot-A PPL/distortion; raw result remains available."
+    },
+    {
+      "method_id": "dairstega",
+      "point_id": "a16-b1-k100",
+      "method_params": {
+        "alpha": 16,
+        "beta": 1.0,
+        "top_k": 100
+      },
+      "decision": "retained",
+      "reason": "Retained to preserve the beta=1 alpha progression.",
+      "pilot_b_role": "alpha_progression"
+    },
+    {
+      "method_id": "dairstega",
+      "point_id": "a16-b075-k100",
+      "method_params": {
+        "alpha": 16,
+        "beta": 0.75,
+        "top_k": 100
+      },
+      "decision": "retained",
+      "reason": "Retained as a moderate trade-off point.",
+      "pilot_b_role": "moderate_tradeoff"
+    },
+    {
+      "method_id": "dairstega",
+      "point_id": "a16-b05-k100",
+      "method_params": {
+        "alpha": 16,
+        "beta": 0.5,
+        "top_k": 100
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B: high PPL, 2/8 hard failures, and dominated by the chosen a32-b05 capacity extreme on key Pilot-A signals."
+    },
+    {
+      "method_id": "dairstega",
+      "point_id": "a32-b1-k100",
+      "method_params": {
+        "alpha": 32,
+        "beta": 1.0,
+        "top_k": 100
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as redundant within the beta=1 family."
+    },
+    {
+      "method_id": "dairstega",
+      "point_id": "a32-b075-k100",
+      "method_params": {
+        "alpha": 32,
+        "beta": 0.75,
+        "top_k": 100
+      },
+      "decision": "retained",
+      "reason": "Retained as a higher-capacity moderate-beta trade-off point.",
+      "pilot_b_role": "higher_capacity_tradeoff"
+    },
+    {
+      "method_id": "dairstega",
+      "point_id": "a32-b05-k100",
+      "method_params": {
+        "alpha": 32,
+        "beta": 0.5,
+        "top_k": 100
+      },
+      "decision": "retained",
+      "reason": "Retained as the documented capacity extreme among aggressive beta=0.5 points.",
+      "pilot_b_role": "capacity_extreme"
+    },
+    {
+      "method_id": "dairstega",
+      "point_id": "a48-b1-k100",
+      "method_params": {
+        "alpha": 48,
+        "beta": 1.0,
+        "top_k": 100
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as redundant within the beta=1 family."
+    },
+    {
+      "method_id": "dairstega",
+      "point_id": "a48-b075-k100",
+      "method_params": {
+        "alpha": 48,
+        "beta": 0.75,
+        "top_k": 100
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B as redundant with retained a16/a32 beta=0.75 points."
+    },
+    {
+      "method_id": "dairstega",
+      "point_id": "a48-b05-k100",
+      "method_params": {
+        "alpha": 48,
+        "beta": 0.5,
+        "top_k": 100
+      },
+      "decision": "rejected",
+      "reason": "Rejected from Pilot B: high PPL, 2/8 hard failures, and no clear advantage over retained a32-b05."
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "schema_version": "stage5.sweep.v1",
+  "sweep_id": "stage5-rrc-precision-margin-calibration-llama-v1",
+  "purpose": "Technical RRC precision-margin calibration at the largest planned payload candidate before choosing the normalized Stage-6 RRC regime.",
+  "benchmark_version": "0.1",
+  "run_kind": "normalized",
+  "model_config": "configs/models/llama-3.2-3b.local.json",
+  "prompts_file": "data/stage5/pilot_prompts.jsonl",
+  "prompt_ids": [
+    "s5p0001",
+    "s5p0002",
+    "s5p0003",
+    "s5p0004"
+  ],
+  "replicates": [
+    {
+      "id": "r01",
+      "secret_id": "stage5-rrc-margin-0001"
+    },
+    {
+      "id": "r02",
+      "secret_id": "stage5-rrc-margin-0002"
+    }
+  ],
+  "generation_points": [
+    {
+      "id": "main",
+      "temperature": 1.0,
+      "top_k": null,
+      "top_p": 1.0,
+      "exclude_special_tokens": true,
+      "kv_cache": true
+    }
+  ],
+  "methods": [
+    {
+      "id": "rrc",
+      "implementation_revision": "stage4-rrc-normalized-v1",
+      "points": [
+        {
+          "id": "margin20",
+          "params": {
+            "precision_margin": 20,
+            "verify_termination": true
+          }
+        },
+        {
+          "id": "margin40",
+          "params": {
+            "precision_margin": 40,
+            "verify_termination": true
+          }
+        },
+        {
+          "id": "margin60",
+          "params": {
+            "precision_margin": 60,
+            "verify_termination": true
+          }
+        }
+      ],
+      "termination": {
+        "mode": "fixed_payload_bits",
+        "target_payload_bits": 1024,
+        "max_carrier_tokens": 2048
+      }
+    }
+  ]
+}

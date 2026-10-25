@@ -1,0 +1,17 @@
+{
+  "all_replayed_errors_match_source": true,
+  "by_classification": {
+    "text_transport_induced": 13
+  },
+  "by_method": {
+    "dairstega": 5,
+    "huffman": 8
+  },
+  "diagnosed_runs": 13,
+  "direct_token_decode_exact_count": 13,
+  "schema_version": "stage5.hard_failure_diagnostics.v1",
+  "source_execution_log": "/home/matmul/Documents/ITMO/VKR/projects/vkr-benchmark/results/stage5/sweeps/stage5-pilot-a-streaming-llama-v1/execution.jsonl",
+  "source_execution_log_sha256": "e55675aa8d9466477c2571ea80f8679eabeabf3022dee87d09d56a871f80c5b2",
+  "source_sweep_id": "stage5-pilot-a-streaming-llama-v1",
+  "transport_mismatch_count": 13
+}

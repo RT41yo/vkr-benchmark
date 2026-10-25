@@ -38,3 +38,9 @@ def test_stage5_prompt_prepare_script_bootstraps_without_installing_package() ->
     completed = _help("prepare_stage5_pilot_prompts.py")
     assert completed.returncode == 0, completed.stderr
     assert "usage:" in completed.stdout.lower()
+
+
+def test_stage5_hard_failure_diagnostic_script_bootstraps_without_installing_package() -> None:
+    completed = _help("diagnose_stage5_hard_failures.py")
+    assert completed.returncode == 0, completed.stderr
+    assert "usage:" in completed.stdout.lower()
