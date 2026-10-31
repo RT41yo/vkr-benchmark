@@ -117,7 +117,7 @@ max_carrier_tokens = 2048
 
 RRC calibration отвечает на вопрос «какие технические настройки фиксировать дальше?», а не создает искусственную trade-off curve RRC.
 
-## 5. Pilot B — confirmation — manifest подготовлен
+## 5. Pilot B — confirmation — sweep завершен, Decoder Audit pending
 
 Согласованный streaming Pilot B содержит 21 retained point:
 
@@ -140,7 +140,11 @@ RRC calibration отвечает на вопрос «какие техничес
 - тот же common generation regime из ADR-0027;
 - **504 planned streaming runs**.
 
-Pilot B оценивает prompt/secret variance, стабильность trade-off/rank conclusions и фактическую стоимость запуска перед окончательной фиксацией Stage 6. RRC в эти 504 runs не входит: его fixed-payload regime определяется отдельно после boundary-precision investigation.
+Pilot B завершен: execution log содержит все 504 запланированных run. Runner outcome: 466 process-successful, 38 hard failures; среди process-successful еще 62 run имеют `roundtrip_exact=false`, поэтому exact end-to-end recovery получено в 404/504 run. Полный checkpoint: `docs/stages/stage5/pilot_b_checkpoint.md`.
+
+Причина 100 non-exact run **не считается установленной**. Перед финальной интерпретацией Pilot B и выбором Stage-6 operating points проводится отдельный **Stage 5 Decoder Audit**: direct-token replay всех 504 run и author/paper conformance проверка decoder logic. Pilot-A text-transport conclusion не переносится автоматически на новые Pilot-B failures.
+
+RRC в эти 504 runs не входит: его fixed-payload regime определяется отдельно после boundary-precision investigation.
 
 ## 6. Критерии отбора
 
