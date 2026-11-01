@@ -117,7 +117,7 @@ max_carrier_tokens = 2048
 
 RRC calibration отвечает на вопрос «какие технические настройки фиксировать дальше?», а не создает искусственную trade-off curve RRC.
 
-## 5. Pilot B — confirmation — sweep завершен, Decoder Audit pending
+## 5. Pilot B — подтверждающий sweep и Decoder Audit завершены
 
 Согласованный streaming Pilot B содержит 21 retained point:
 
@@ -140,11 +140,20 @@ RRC calibration отвечает на вопрос «какие техничес
 - тот же common generation regime из ADR-0027;
 - **504 planned streaming runs**.
 
-Pilot B завершен: execution log содержит все 504 запланированных run. Runner outcome: 466 process-successful, 38 hard failures; среди process-successful еще 62 run имеют `roundtrip_exact=false`, поэтому exact end-to-end recovery получено в 404/504 run. Полный checkpoint: `docs/stages/stage5/pilot_b_checkpoint.md`.
+Pilot B завершен: execution log содержит все 504 запланированных запуска. Из них 466 завершились без программной ошибки, 38 завершились `hard failure`; среди 466 завершившихся запусков еще 62 имеют `roundtrip_exact=false`. Таким образом, точное восстановление секрета по полному текстовому пути получено в 404/504 случаях. Полный checkpoint: `docs/stages/stage5/pilot_b_checkpoint.md`.
 
-Причина 100 non-exact run **не считается установленной**. Перед финальной интерпретацией Pilot B и выбором Stage-6 operating points проводится отдельный **Stage 5 Decoder Audit**: direct-token replay всех 504 run и author/paper conformance проверка decoder logic. Pilot-A text-transport conclusion не переносится автоматически на новые Pilot-B failures.
+После Pilot B проведен отдельный Decoder Audit. Он дал следующие результаты:
 
-RRC в эти 504 runs не входит: его fixed-payload regime определяется отдельно после boundary-precision investigation.
+- прямое декодирование токенов отправителя: **504/504 exact**;
+- независимая проверка шести декодеров: **3533 проверки, 0 расхождений**;
+- все **62/62** случаев с `roundtrip_exact=false` после успешного завершения связаны с изменением токеновой последовательности после `token IDs → text → retokenization`;
+- все **38/38** исходных `hard failure` воспроизведены после того же текстового канала на детерминированно восстановленных последовательностях отправителя.
+
+Аудит не выявил дефектов декодеров. Наблюдавшиеся 100 неточных результатов остаются реальными результатами end-to-end надежности Pilot B, потому что нормативный путь бенчмарка включает передачу через обычный текст. Однако их причина теперь локализована в потере исходного разбиения текста на токены при повторной токенизации.
+
+Полный отчет: `docs/stages/stage5/decoder_audit_report.md`.
+
+RRC в эти 504 запуска не входит: его fixed-payload режим определяется отдельно после исследования численной точности границ вероятностных интервалов.
 
 ## 6. Критерии отбора
 

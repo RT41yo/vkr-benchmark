@@ -1,0 +1,44 @@
+{
+  "all_38_attributed": true,
+  "all_checkpointed_attributed": true,
+  "attributed_count": 38,
+  "by_method": {
+    "arithmetic_coding": {
+      "checkpointed": 3,
+      "source_error_reproduced_exactly": 3,
+      "text_transport_reproduced_on_reconstructed_sender": 3,
+      "transport_changed": 3
+    },
+    "dairstega": {
+      "checkpointed": 13,
+      "source_error_reproduced_exactly": 13,
+      "text_transport_reproduced_on_reconstructed_sender": 13,
+      "transport_changed": 13
+    },
+    "discop": {
+      "checkpointed": 2,
+      "source_error_reproduced_exactly": 2,
+      "text_transport_reproduced_on_reconstructed_sender": 2,
+      "transport_changed": 2
+    },
+    "huffman": {
+      "checkpointed": 20,
+      "source_error_reproduced_exactly": 20,
+      "text_transport_reproduced_on_reconstructed_sender": 20,
+      "transport_changed": 20
+    }
+  },
+  "checkpointed_count": 38,
+  "classification_counts": {
+    "text_transport_reproduced_on_reconstructed_sender": 38
+  },
+  "direct_audit_sha256": "17b4076a7be0b89b04aa827c49b8f303832f8befe2138b9cec9ddc4f432acafc",
+  "direct_gate_exact_count": 38,
+  "interpretation_caveat": "Original sender token IDs were not persisted for Pilot-B hard failures; attribution is based on deterministic re-encoding of canonical configs.",
+  "remaining_count": 0,
+  "schema_version": "stage5.hard_failure_attribution.summary.v1",
+  "source_error_exact_reproduction_count": 38,
+  "source_execution_sha256": "381853d6bc7bab0fac9c67313d7db7c01024736e951abda23ecd668231674942",
+  "source_hard_failure_count": 38,
+  "transport_mismatch_count": 38
+}

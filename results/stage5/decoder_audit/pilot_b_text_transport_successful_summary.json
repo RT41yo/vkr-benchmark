@@ -1,0 +1,220 @@
+{
+  "by_method": {
+    "adg": {
+      "exact_controls_transport_changed": 0,
+      "silent_inexact_text_transport_attributed": 1,
+      "silent_inexact_transport_changed": 1,
+      "source_exact": 23,
+      "source_silent_inexact": 1,
+      "successful_runs": 24,
+      "transport_changed_total": 1
+    },
+    "arithmetic_coding": {
+      "exact_controls_transport_changed": 0,
+      "silent_inexact_text_transport_attributed": 7,
+      "silent_inexact_transport_changed": 7,
+      "source_exact": 134,
+      "source_silent_inexact": 7,
+      "successful_runs": 141,
+      "transport_changed_total": 7
+    },
+    "bins": {
+      "exact_controls_transport_changed": 1,
+      "silent_inexact_text_transport_attributed": 45,
+      "silent_inexact_transport_changed": 45,
+      "source_exact": 51,
+      "source_silent_inexact": 45,
+      "successful_runs": 96,
+      "transport_changed_total": 46
+    },
+    "dairstega": {
+      "exact_controls_transport_changed": 0,
+      "silent_inexact_text_transport_attributed": 0,
+      "silent_inexact_transport_changed": 0,
+      "source_exact": 107,
+      "source_silent_inexact": 0,
+      "successful_runs": 107,
+      "transport_changed_total": 0
+    },
+    "discop": {
+      "exact_controls_transport_changed": 0,
+      "silent_inexact_text_transport_attributed": 0,
+      "silent_inexact_transport_changed": 0,
+      "source_exact": 22,
+      "source_silent_inexact": 0,
+      "successful_runs": 22,
+      "transport_changed_total": 0
+    },
+    "huffman": {
+      "exact_controls_transport_changed": 0,
+      "silent_inexact_text_transport_attributed": 9,
+      "silent_inexact_transport_changed": 9,
+      "source_exact": 67,
+      "source_silent_inexact": 9,
+      "successful_runs": 76,
+      "transport_changed_total": 9
+    }
+  },
+  "by_operating_point": {
+    "adg:default": {
+      "silent_inexact_text_transport_attributed": 1,
+      "silent_inexact_transport_changed": 1,
+      "source_silent_inexact": 1,
+      "successful_runs": 24
+    },
+    "arithmetic_coding:p16-k50000": {
+      "silent_inexact_text_transport_attributed": 1,
+      "silent_inexact_transport_changed": 1,
+      "source_silent_inexact": 1,
+      "successful_runs": 24
+    },
+    "arithmetic_coding:p32-k128": {
+      "silent_inexact_text_transport_attributed": 1,
+      "silent_inexact_transport_changed": 1,
+      "source_silent_inexact": 1,
+      "successful_runs": 24
+    },
+    "arithmetic_coding:p32-k2048": {
+      "silent_inexact_text_transport_attributed": 1,
+      "silent_inexact_transport_changed": 1,
+      "source_silent_inexact": 1,
+      "successful_runs": 23
+    },
+    "arithmetic_coding:p32-k50000": {
+      "silent_inexact_text_transport_attributed": 1,
+      "silent_inexact_transport_changed": 1,
+      "source_silent_inexact": 1,
+      "successful_runs": 24
+    },
+    "arithmetic_coding:p32-k8192": {
+      "silent_inexact_text_transport_attributed": 3,
+      "silent_inexact_transport_changed": 3,
+      "source_silent_inexact": 3,
+      "successful_runs": 22
+    },
+    "arithmetic_coding:p48-k50000": {
+      "silent_inexact_text_transport_attributed": 0,
+      "silent_inexact_transport_changed": 0,
+      "source_silent_inexact": 0,
+      "successful_runs": 24
+    },
+    "bins:b1": {
+      "silent_inexact_text_transport_attributed": 10,
+      "silent_inexact_transport_changed": 10,
+      "source_silent_inexact": 10,
+      "successful_runs": 24
+    },
+    "bins:b2": {
+      "silent_inexact_text_transport_attributed": 12,
+      "silent_inexact_transport_changed": 12,
+      "source_silent_inexact": 12,
+      "successful_runs": 24
+    },
+    "bins:b4": {
+      "silent_inexact_text_transport_attributed": 11,
+      "silent_inexact_transport_changed": 11,
+      "source_silent_inexact": 11,
+      "successful_runs": 24
+    },
+    "bins:b6": {
+      "silent_inexact_text_transport_attributed": 12,
+      "silent_inexact_transport_changed": 12,
+      "source_silent_inexact": 12,
+      "successful_runs": 24
+    },
+    "dairstega:a16-b075-k100": {
+      "silent_inexact_text_transport_attributed": 0,
+      "silent_inexact_transport_changed": 0,
+      "source_silent_inexact": 0,
+      "successful_runs": 22
+    },
+    "dairstega:a16-b1-k100": {
+      "silent_inexact_text_transport_attributed": 0,
+      "silent_inexact_transport_changed": 0,
+      "source_silent_inexact": 0,
+      "successful_runs": 24
+    },
+    "dairstega:a32-b05-k100": {
+      "silent_inexact_text_transport_attributed": 0,
+      "silent_inexact_transport_changed": 0,
+      "source_silent_inexact": 0,
+      "successful_runs": 17
+    },
+    "dairstega:a32-b075-k100": {
+      "silent_inexact_text_transport_attributed": 0,
+      "silent_inexact_transport_changed": 0,
+      "source_silent_inexact": 0,
+      "successful_runs": 20
+    },
+    "dairstega:a8-b1-k100": {
+      "silent_inexact_text_transport_attributed": 0,
+      "silent_inexact_transport_changed": 0,
+      "source_silent_inexact": 0,
+      "successful_runs": 24
+    },
+    "discop:default": {
+      "silent_inexact_text_transport_attributed": 0,
+      "silent_inexact_transport_changed": 0,
+      "source_silent_inexact": 0,
+      "successful_runs": 22
+    },
+    "huffman:e2": {
+      "silent_inexact_text_transport_attributed": 0,
+      "silent_inexact_transport_changed": 0,
+      "source_silent_inexact": 0,
+      "successful_runs": 17
+    },
+    "huffman:e4": {
+      "silent_inexact_text_transport_attributed": 0,
+      "silent_inexact_transport_changed": 0,
+      "source_silent_inexact": 0,
+      "successful_runs": 20
+    },
+    "huffman:e6": {
+      "silent_inexact_text_transport_attributed": 5,
+      "silent_inexact_transport_changed": 5,
+      "source_silent_inexact": 5,
+      "successful_runs": 20
+    },
+    "huffman:e8": {
+      "silent_inexact_text_transport_attributed": 4,
+      "silent_inexact_transport_changed": 4,
+      "source_silent_inexact": 4,
+      "successful_runs": 19
+    }
+  },
+  "classification_counts": {
+    "exact_control_transport_changed": 1,
+    "exact_control_transport_exact": 403,
+    "text_transport_attributed": 62
+  },
+  "exact_controls_transport_changed_count": 1,
+  "interpretation_gate": {
+    "all_silent_inexact_attributed_to_text_transport": true,
+    "all_silent_inexact_have_direct_exact": true,
+    "all_silent_inexact_have_transport_change": true
+  },
+  "process_successful_count": 466,
+  "schema_version": "stage5.text_transport_successful_artifact_analysis.v1",
+  "silent_first_token_mismatch": {
+    "max": 253,
+    "median": 93.0,
+    "min": 1
+  },
+  "silent_inexact_text_transport_attributed_count": 62,
+  "silent_inexact_transport_changed_count": 62,
+  "silent_inexact_transport_exact_count": 0,
+  "silent_receiver_changed_middle_tokens": {
+    "max": 204,
+    "median": 2.0,
+    "min": 1
+  },
+  "silent_sender_changed_middle_tokens": {
+    "max": 206,
+    "median": 2.0,
+    "min": 1
+  },
+  "source_exact_count": 404,
+  "source_execution_sha256": "381853d6bc7bab0fac9c67313d7db7c01024736e951abda23ecd668231674942",
+  "source_silent_inexact_count": 62
+}
