@@ -1,0 +1,86 @@
+{
+  "by_prompt_replicate": {
+    "s5p0001:r01": {
+      "carrier_tokens": 284,
+      "first_support_loss_step": 170,
+      "max_step_lost_reference_mass": 4.477499362838665e-15,
+      "max_zero_width_count_on_one_step": 67,
+      "run_id": "78a5b7b0acd7e89c",
+      "source_forward_kl_infinite_steps": 1,
+      "support_loss_steps": 1
+    },
+    "s5p0001:r02": {
+      "carrier_tokens": 258,
+      "first_support_loss_step": null,
+      "max_step_lost_reference_mass": 0.0,
+      "max_zero_width_count_on_one_step": 0,
+      "run_id": "08cb150da167b816",
+      "source_forward_kl_infinite_steps": 0,
+      "support_loss_steps": 0
+    },
+    "s5p0002:r01": {
+      "carrier_tokens": 282,
+      "first_support_loss_step": 63,
+      "max_step_lost_reference_mass": 6.758188492883787e-15,
+      "max_zero_width_count_on_one_step": 101,
+      "run_id": "0ecec92b44433320",
+      "source_forward_kl_infinite_steps": 1,
+      "support_loss_steps": 1
+    },
+    "s5p0002:r02": {
+      "carrier_tokens": 262,
+      "first_support_loss_step": 26,
+      "max_step_lost_reference_mass": 9.741370310693399e-17,
+      "max_zero_width_count_on_one_step": 2,
+      "run_id": "7c0e33a9cd93f7f0",
+      "source_forward_kl_infinite_steps": 2,
+      "support_loss_steps": 2
+    },
+    "s5p0003:r01": {
+      "carrier_tokens": 247,
+      "first_support_loss_step": 117,
+      "max_step_lost_reference_mass": 1.708073711419017e-16,
+      "max_zero_width_count_on_one_step": 2,
+      "run_id": "b6fd554a8f8023db",
+      "source_forward_kl_infinite_steps": 1,
+      "support_loss_steps": 1
+    },
+    "s5p0003:r02": {
+      "carrier_tokens": 255,
+      "first_support_loss_step": null,
+      "max_step_lost_reference_mass": 0.0,
+      "max_zero_width_count_on_one_step": 0,
+      "run_id": "ef1a9edf61f73250",
+      "source_forward_kl_infinite_steps": 0,
+      "support_loss_steps": 0
+    },
+    "s5p0004:r01": {
+      "carrier_tokens": 263,
+      "first_support_loss_step": null,
+      "max_step_lost_reference_mass": 0.0,
+      "max_zero_width_count_on_one_step": 0,
+      "run_id": "79240de968d8c2f1",
+      "source_forward_kl_infinite_steps": 0,
+      "support_loss_steps": 0
+    },
+    "s5p0004:r02": {
+      "carrier_tokens": 284,
+      "first_support_loss_step": null,
+      "max_step_lost_reference_mass": 0.0,
+      "max_zero_width_count_on_one_step": 0,
+      "run_id": "3760deb5e2ded43c",
+      "source_forward_kl_infinite_steps": 0,
+      "support_loss_steps": 0
+    }
+  },
+  "completed_count": 8,
+  "interpretation": "The probe only diagnoses the current FP64 boundary construction. It does not change the production RRC algorithm or select a new Stage-6 implementation.",
+  "remaining_count": 0,
+  "root_cause_gate": true,
+  "run_level_inf_matches_support_loss": true,
+  "schema_version": "stage5.rrc_boundary_precision_probe.summary.v1",
+  "selected_count": 8,
+  "source_forward_kl_infinite_runs": 4,
+  "step_level_inf_matches_support_loss": true,
+  "support_loss_runs": 4
+}
