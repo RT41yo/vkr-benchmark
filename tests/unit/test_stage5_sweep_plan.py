@@ -20,6 +20,10 @@ RRC_MARGIN_MANIFEST = (
 RRC_DECIMAL_VALIDATION_MANIFEST = (
     REPO_ROOT / "configs/pilots/stage5/rrc_decimal_boundary_validation_llama.json"
 )
+RRC_PAYLOAD_MANIFESTS = {
+    payload: REPO_ROOT / f"configs/pilots/stage5/rrc_payload_calibration_{payload}_llama.json"
+    for payload in (128, 256, 512, 1024)
+}
 
 
 def test_top_p_calibration_manifest_expands_to_42_paired_runs() -> None:
@@ -216,6 +220,45 @@ def test_rrc_decimal_boundary_validation_expands_to_8_fixed_payload_runs() -> No
     assert all(run.config.termination.mode == "fixed_payload_bits" for run in runs)
     assert all(run.config.termination.target_payload_bits == 1024 for run in runs)
     assert all(run.config.termination.max_carrier_tokens == 2048 for run in runs)
+
+def test_rrc_payload_calibration_manifests_form_32_paired_fixed_payload_runs() -> None:
+    expanded = {}
+    all_runs = []
+    for payload, path in RRC_PAYLOAD_MANIFESTS.items():
+        sweep = SweepManifest.from_json(path, project_root=REPO_ROOT)
+        runs = sweep.expand()
+        expanded[payload] = (sweep, runs)
+        all_runs.extend(runs)
+
+        assert sweep.sweep_id == "stage5-rrc-payload-calibration-llama-v1"
+        assert sweep.planned_run_count() == 8
+        assert len(runs) == 8
+        assert {run.method_point_id for run in runs} == {f"payload{payload}"}
+        assert {run.config.method.implementation_revision for run in runs} == {
+            "stage5-rrc-decimal-boundaries-v2"
+        }
+        assert all(run.config.method.params["precision_margin"] == 40 for run in runs)
+        assert all(run.config.termination.mode == "fixed_payload_bits" for run in runs)
+        assert all(run.config.termination.target_payload_bits == payload for run in runs)
+        assert all(run.config.termination.max_carrier_tokens == 2048 for run in runs)
+
+    assert len(all_runs) == 32
+    assert len({run.run_id for run in all_runs}) == 32
+
+    paired = []
+    for payload in (128, 256, 512, 1024):
+        _, runs = expanded[payload]
+        match = [
+            run for run in runs
+            if run.config.prompt_id == "s5p0001" and run.replicate_id == "r01"
+        ]
+        assert len(match) == 1
+        paired.append(match[0])
+
+    assert len({run.config.method.key for run in paired}) == 1
+    assert len({run.config.secret_id for run in paired}) == 1
+    assert paired[0].config.method.key is not None
+
 
 def test_pilot_b_streaming_manifest_expands_to_504_runs() -> None:
     sweep = SweepManifest.from_json(PILOT_B_MANIFEST, project_root=REPO_ROOT)

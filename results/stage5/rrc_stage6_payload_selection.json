@@ -1,0 +1,31 @@
+{
+  "schema_version": "stage5.rrc_stage6_payload_selection.v1",
+  "selected_payload_bits": 1024,
+  "precision_margin": 40,
+  "verify_termination": true,
+  "selection_status": "selected_for_stage6",
+  "comparison_reference_carrier_tokens": 256,
+  "selected_payload_carrier_tokens": {
+    "min": 197.0,
+    "mean": 253.0,
+    "median": 256.0,
+    "max": 299.0
+  },
+  "selected_payload_bits_per_token": {
+    "min": 3.4247491638795986,
+    "mean": 4.107401754310764,
+    "median": 4.00054939185374,
+    "max": 5.197969543147208
+  },
+  "selected_payload_roundtrip_exact_count": 7,
+  "selected_payload_transport_exact_count": 7,
+  "selected_payload_run_count": 8,
+  "all_payloads_numeric_clean": true,
+  "rationale": [
+    "1024 bits gives a median of 256 carrier tokens and a mean of 253, matching the scale of the 256-token streaming experiments.",
+    "BPT remains stable at about 4 bits per token.",
+    "Both KL directions and TVD remain at numerical zero after the Decimal-boundary fix.",
+    "512 bits has the same 7/8 end-to-end result but only a 130-token median, so it does not provide a reliability advantage that justifies the shorter comparison scale."
+  ],
+  "source_summary": "results/stage5/rrc_payload_calibration/summary.json"
+}
