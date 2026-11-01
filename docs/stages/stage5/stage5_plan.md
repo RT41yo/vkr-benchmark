@@ -89,15 +89,13 @@ Screening после Pilot A завершен. Из 45 method-local points в Pi
 
 DAIRstega candidate-pool sensitivity, если потребуется для Stage 6, выполняется отдельным targeted probe и не расширяет Pilot B неявно.
 
-## 4. RRC calibration — precision-margin sweep завершен, numerical issue открыт
+## 4. RRC calibration — численный вопрос границ закрыт, payload calibration остается
 
 RRC не принуждается к fixed-carrier lifecycle.
 
-Первый executable calibration:
+Первый calibration использовал:
 
 `configs/pilots/stage5/rrc_precision_margin_calibration_llama.json`
-
-Параметры:
 
 ```text
 precision_margin = {20,40,60}
@@ -107,13 +105,25 @@ max_carrier_tokens = 2048
 4 prompts × 2 paired replicates
 ```
 
-1024 bits — самый большой предварительный payload candidate и потому stress-case для numerical precision. Sweep `{20,40,60}` завершен: 24/24 exact, `BER=0`, содержательные метрики и carrier length совпадают между margins. Для Decimal range-state arithmetic наблюдается plateau; `precision_margin=40` остается консервативным кандидатом.
+Все 24/24 запуска завершились с точным восстановлением секрета. Для Decimal range-state arithmetic значения `20`, `40` и `60` дали одинаковые траектории и метрики. Поэтому `precision_margin=40` сохраняется как консервативная рабочая настройка.
 
-Одновременно обнаружен отдельный numerical issue: в части runs forward KL равен `+inf` при reverse KL около `1e-16` и TVD около `1e-12`. Текущая рабочая диагностика связывает это с FP64 cumulative boundaries до Decimal arithmetic; отдельный high-precision boundary probe еще не выполнен. Поэтому окончательный RRC regime для Stage 6 пока не заморожен.
+Во время этой калибровки в части запусков наблюдалась `forward KL = +inf`. Отдельная диагностика на 8 запусках `margin40` показала точную причину: очень маленькие положительные вероятности терялись при последовательном накоплении границ в FP64. Во всех 4 запусках с `+inf` была найдена такая потеря поддержки, а в остальных 4 её не было.
 
-Отчет: `docs/stages/stage5/rrc_precision_calibration_report.md`.
+После этого построение границ RRC было переведено на Decimal. Проверка исправленной реализации дала:
 
-После решения boundary-precision вопроса выполняется отдельный payload calibration по `{128,256,512,1024}` для выбора normalized RRC regime с сопоставимой carrier length.
+- 8/8 запусков завершились успешно;
+- обе KL конечны в 8/8;
+- максимальная `forward KL` = `1.3798816980502983e-16` бит;
+- максимальная TVD = `1.0284529972686038e-16`;
+- 7/8 полных текстовых циклов восстановили секрет точно.
+
+Единственный неточный полный цикл отдельно проверен. После текстового преобразования число токенов изменилось с 249 до 250, первое расхождение появилось на позиции 41. Прямое декодирование сохраненных `sender_token_ids` восстановило все 1024 бита точно, `BER=0`. Поэтому этот случай относится к текстовому каналу, а не к численной реализации RRC.
+
+Численный вопрос границ RRC считается закрытым. Итоговый отчет:
+
+`docs/stages/stage5/rrc_decimal_boundary_validation_report.md`
+
+Следующий и последний отдельный шаг RRC перед окончательным Stage-6 freeze — payload calibration по `{128,256,512,1024}` для выбора фиксированного размера секрета с разумной длиной стеготекста.
 
 RRC calibration отвечает на вопрос «какие технические настройки фиксировать дальше?», а не создает искусственную trade-off curve RRC.
 
@@ -153,7 +163,7 @@ Pilot B завершен: execution log содержит все 504 заплан
 
 Полный отчет: `docs/stages/stage5/decoder_audit_report.md`.
 
-RRC в эти 504 запуска не входит: его fixed-payload режим определяется отдельно после исследования численной точности границ вероятностных интервалов.
+RRC в эти 504 запуска не входит. Численный вопрос границ RRC уже закрыт; отдельно остается выбрать финальный fixed-payload режим для Stage 6.
 
 Итоговый отбор потоковых точек для Stage 6 завершен. Из 21 точки Pilot B сохраняются 14:
 
