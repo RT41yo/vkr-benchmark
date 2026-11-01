@@ -11,7 +11,7 @@ The analysis is CPU-only and reads existing artifacts:
 - `results/stage5/sweeps/stage5-pilot-b-streaming-llama-v1/execution.jsonl`;
 - `results/runs/<run_id>/token_ids.json`;
 - `results/runs/<run_id>/result.json`;
-- the completed direct-token audit `decoder_audit_local_full/direct_token_replay.jsonl` and its sibling `summary.json`.
+- the completed direct-token audit `results/stage5/decoder_audit/direct_token_replay/direct_token_replay.jsonl` and its sibling `summary.json`.
 
 No LM weights, tokenizer, GPU, encoder rerun or decoder rerun are used.
 

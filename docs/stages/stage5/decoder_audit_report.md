@@ -58,7 +58,7 @@ sender token IDs
 
 Агрегированный результат прямой проверки хранится в:
 
-`decoder_audit_local_full/summary.json`.
+`results/stage5/decoder_audit/direct_token_replay/summary.json`.
 
 ## 3. Независимая проверка декодеров
 

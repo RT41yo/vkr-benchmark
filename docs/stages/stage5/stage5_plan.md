@@ -155,6 +155,17 @@ Pilot B завершен: execution log содержит все 504 заплан
 
 RRC в эти 504 запуска не входит: его fixed-payload режим определяется отдельно после исследования численной точности границ вероятностных интервалов.
 
+Итоговый отбор потоковых точек для Stage 6 завершен. Из 21 точки Pilot B сохраняются 14:
+
+- Bins: `b1`, `b4`, `b6`;
+- Huffman: `e2`, `e4`, `e8`;
+- Arithmetic Coding: `p32-k128`, `p32-k2048`, `p32-k50000`;
+- ADG: `default`;
+- Discop: `default`;
+- DAIRstega: `a8-b1-k100`, `a16-b075-k100`, `a32-b05-k100`.
+
+Полное обоснование: `docs/stages/stage5/pilot_b_stage6_operating_point_selection.md`. Машиночитаемое решение: `results/stage5/pilot_b_stage6_operating_point_selection.json`.
+
 ## 6. Критерии отбора
 
 Каждая точка сохраняет полный benchmark vector; единой агрегированной оценки «лучший метод» нет.

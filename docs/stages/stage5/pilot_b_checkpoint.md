@@ -102,7 +102,7 @@ Decoder Audit завершен.
 
 Основные агрегированные результаты аудита:
 
-- `decoder_audit_local_full/summary.json`;
+- `results/stage5/decoder_audit/direct_token_replay/summary.json`;
 - `results/stage5/decoder_audit/decoder_conformance.json`;
 - `results/stage5/decoder_audit/pilot_b_text_transport_successful_summary.json`;
 - `results/stage5/decoder_audit/hard_failure_attribution/summary.json`.
@@ -115,7 +115,7 @@ Decoder Audit завершен.
 
 ## 7. Статус после закрытия аудита
 
-После Decoder Audit можно переходить к следующей задаче Stage 5 — выбору рабочих точек потоковых методов для Stage 6.
+После Decoder Audit выполнен итоговый выбор рабочих точек потоковых методов для Stage 6. Из 21 точки Pilot B сохраняются 14. Полное решение зафиксировано в `docs/stages/stage5/pilot_b_stage6_operating_point_selection.md`; машиночитаемая версия — `results/stage5/pilot_b_stage6_operating_point_selection.json`.
 
 Отдельно остаются:
 

@@ -1,0 +1,295 @@
+{
+  "schema_version": "stage5.pilot_b_stage6_operating_point_selection.v1",
+  "source_sweep_id": "stage5-pilot-b-streaming-llama-v1",
+  "source_execution_sha256": "381853d6bc7bab0fac9c67313d7db7c01024736e951abda23ecd668231674942",
+  "pilot_b_point_count": 21,
+  "selected_point_count": 14,
+  "selected": {
+    "bins": [
+      "b1",
+      "b4",
+      "b6"
+    ],
+    "huffman": [
+      "e2",
+      "e4",
+      "e8"
+    ],
+    "arithmetic_coding": [
+      "p32-k128",
+      "p32-k2048",
+      "p32-k50000"
+    ],
+    "adg": [
+      "default"
+    ],
+    "discop": [
+      "default"
+    ],
+    "dairstega": [
+      "a8-b1-k100",
+      "a16-b075-k100",
+      "a32-b05-k100"
+    ]
+  },
+  "rejected": {
+    "bins": {
+      "b2": "redundant_between_quality_and_mid_capacity"
+    },
+    "huffman": {
+      "e6": "redundant_between_e4_and_e8"
+    },
+    "arithmetic_coding": {
+      "p16-k50000": "precision_probe_not_main_stage6_point",
+      "p32-k8192": "redundant_between_k2048_and_k50000",
+      "p48-k50000": "precision_probe_not_main_stage6_point"
+    },
+    "adg": {},
+    "discop": {},
+    "dairstega": {
+      "a16-b1-k100": "redundant_with_quality_anchor",
+      "a32-b075-k100": "redundant_with_a16_b075"
+    }
+  },
+  "selected_metrics": {
+    "bins": {
+      "b1": {
+        "planned_runs": 24,
+        "process_successful_runs": 24,
+        "roundtrip_exact_runs": 14,
+        "silent_inexact_runs": 10,
+        "hard_failure_runs": 0,
+        "bits_per_token_mean": 1.0,
+        "entropy_utilization_mean": 0.30586026750810963,
+        "ppl_raw_lm_mean": 7.102963115038732,
+        "kl_ref_to_stego_mean_bits": null,
+        "kl_ref_to_stego_all_successful_infinite": true,
+        "kl_stego_to_ref_mean_bits": 1.7995405566471434,
+        "tvd_mean": 0.5263278442329188,
+        "wall_seconds_median": 9.622550056500017,
+        "stego_algorithm_seconds_median": 0.05918861500089179
+      },
+      "b4": {
+        "planned_runs": 24,
+        "process_successful_runs": 24,
+        "roundtrip_exact_runs": 13,
+        "silent_inexact_runs": 11,
+        "hard_failure_runs": 0,
+        "bits_per_token_mean": 4.0,
+        "entropy_utilization_mean": 0.723252150198377,
+        "ppl_raw_lm_mean": 97.02055064459194,
+        "kl_ref_to_stego_mean_bits": null,
+        "kl_ref_to_stego_all_successful_infinite": true,
+        "kl_stego_to_ref_mean_bits": 2.5114437296897427,
+        "tvd_mean": 0.666845704682104,
+        "wall_seconds_median": 9.664170743,
+        "stego_algorithm_seconds_median": 0.06140659100043422
+      },
+      "b6": {
+        "planned_runs": 24,
+        "process_successful_runs": 24,
+        "roundtrip_exact_runs": 12,
+        "silent_inexact_runs": 12,
+        "hard_failure_runs": 0,
+        "bits_per_token_mean": 6.0,
+        "entropy_utilization_mean": 0.7844127598773025,
+        "ppl_raw_lm_mean": 336.15193767627215,
+        "kl_ref_to_stego_mean_bits": null,
+        "kl_ref_to_stego_all_successful_infinite": true,
+        "kl_stego_to_ref_mean_bits": 2.3437345266298273,
+        "tvd_mean": 0.6646794956673294,
+        "wall_seconds_median": 9.640237376000073,
+        "stego_algorithm_seconds_median": 0.06965246650008794
+      }
+    },
+    "huffman": {
+      "e2": {
+        "planned_runs": 24,
+        "process_successful_runs": 17,
+        "roundtrip_exact_runs": 17,
+        "silent_inexact_runs": 0,
+        "hard_failure_runs": 7,
+        "bits_per_token_mean": 1.7941176470588236,
+        "entropy_utilization_mean": 0.5249387193595115,
+        "ppl_raw_lm_mean": 7.5276305454299495,
+        "kl_ref_to_stego_mean_bits": null,
+        "kl_ref_to_stego_all_successful_infinite": true,
+        "kl_stego_to_ref_mean_bits": 1.0814056020693723,
+        "tvd_mean": 0.40280483036762593,
+        "wall_seconds_median": 9.621413771999869,
+        "stego_algorithm_seconds_median": 0.029156378999914523
+      },
+      "e4": {
+        "planned_runs": 24,
+        "process_successful_runs": 20,
+        "roundtrip_exact_runs": 20,
+        "silent_inexact_runs": 0,
+        "hard_failure_runs": 4,
+        "bits_per_token_mean": 2.775,
+        "entropy_utilization_mean": 0.7538118776453124,
+        "ppl_raw_lm_mean": 10.572045400035863,
+        "kl_ref_to_stego_mean_bits": null,
+        "kl_ref_to_stego_all_successful_infinite": true,
+        "kl_stego_to_ref_mean_bits": 0.6123928097493248,
+        "tvd_mean": 0.2769358044676222,
+        "wall_seconds_median": 9.652680975500061,
+        "stego_algorithm_seconds_median": 0.0505891745003737
+      },
+      "e8": {
+        "planned_runs": 24,
+        "process_successful_runs": 19,
+        "roundtrip_exact_runs": 15,
+        "silent_inexact_runs": 4,
+        "hard_failure_runs": 5,
+        "bits_per_token_mean": 4.090460526315789,
+        "entropy_utilization_mean": 0.9805551036445048,
+        "ppl_raw_lm_mean": 22.463009229529728,
+        "kl_ref_to_stego_mean_bits": null,
+        "kl_ref_to_stego_all_successful_infinite": true,
+        "kl_stego_to_ref_mean_bits": 0.3387024449489652,
+        "tvd_mean": 0.17889846252743127,
+        "wall_seconds_median": 10.368952043999798,
+        "stego_algorithm_seconds_median": 0.48793860899832
+      }
+    },
+    "arithmetic_coding": {
+      "p32-k128": {
+        "planned_runs": 24,
+        "process_successful_runs": 24,
+        "roundtrip_exact_runs": 23,
+        "silent_inexact_runs": 1,
+        "hard_failure_runs": 0,
+        "bits_per_token_mean": 3.11767578125,
+        "entropy_utilization_mean": 0.8709736619317628,
+        "ppl_raw_lm_mean": 9.683252320759333,
+        "kl_ref_to_stego_mean_bits": null,
+        "kl_ref_to_stego_all_successful_infinite": true,
+        "kl_stego_to_ref_mean_bits": 0.07674794635421271,
+        "tvd_mean": 0.04855636391549484,
+        "wall_seconds_median": 46.210709947499936,
+        "stego_algorithm_seconds_median": 22.798414479503435
+      },
+      "p32-k2048": {
+        "planned_runs": 24,
+        "process_successful_runs": 23,
+        "roundtrip_exact_runs": 22,
+        "silent_inexact_runs": 1,
+        "hard_failure_runs": 1,
+        "bits_per_token_mean": 3.7542459239130435,
+        "entropy_utilization_mean": 0.9665891079111644,
+        "ppl_raw_lm_mean": 14.21124873380391,
+        "kl_ref_to_stego_mean_bits": null,
+        "kl_ref_to_stego_all_successful_infinite": true,
+        "kl_stego_to_ref_mean_bits": 0.012522062141638698,
+        "tvd_mean": 0.008516882217533776,
+        "wall_seconds_median": 46.59457051000027,
+        "stego_algorithm_seconds_median": 23.0083266589927
+      },
+      "p32-k50000": {
+        "planned_runs": 24,
+        "process_successful_runs": 24,
+        "roundtrip_exact_runs": 23,
+        "silent_inexact_runs": 1,
+        "hard_failure_runs": 0,
+        "bits_per_token_mean": 3.81982421875,
+        "entropy_utilization_mean": 0.9938550273673844,
+        "ppl_raw_lm_mean": 16.361336019713203,
+        "kl_ref_to_stego_mean_bits": null,
+        "kl_ref_to_stego_all_successful_infinite": true,
+        "kl_stego_to_ref_mean_bits": 0.00018721328492615264,
+        "tvd_mean": 0.00013582211631440018,
+        "wall_seconds_median": 51.582922080499884,
+        "stego_algorithm_seconds_median": 25.515851229999043
+      }
+    },
+    "adg": {
+      "default": {
+        "planned_runs": 24,
+        "process_successful_runs": 24,
+        "roundtrip_exact_runs": 23,
+        "silent_inexact_runs": 1,
+        "hard_failure_runs": 0,
+        "bits_per_token_mean": 2.9930013020833335,
+        "entropy_utilization_mean": 0.719591298937751,
+        "ppl_raw_lm_mean": 21.334759838558423,
+        "kl_ref_to_stego_mean_bits": 0.0066982738645307354,
+        "kl_ref_to_stego_all_successful_infinite": false,
+        "kl_stego_to_ref_mean_bits": 0.006888965487899432,
+        "tvd_mean": 0.02071167472794564,
+        "wall_seconds_median": 899.0477978485014,
+        "stego_algorithm_seconds_median": 61.912903051998
+      }
+    },
+    "discop": {
+      "default": {
+        "planned_runs": 24,
+        "process_successful_runs": 22,
+        "roundtrip_exact_runs": 22,
+        "silent_inexact_runs": 0,
+        "hard_failure_runs": 2,
+        "bits_per_token_mean": 3.5181107954545454,
+        "entropy_utilization_mean": 0.9352895914516111,
+        "ppl_raw_lm_mean": 14.827323719717564,
+        "kl_ref_to_stego_mean_bits": 9.359375858558864e-17,
+        "kl_ref_to_stego_all_successful_infinite": false,
+        "kl_stego_to_ref_mean_bits": 9.443767251684423e-17,
+        "tvd_mean": 9.930331579643992e-17,
+        "wall_seconds_median": 342.24969400650116,
+        "stego_algorithm_seconds_median": 143.7062608375927
+      }
+    },
+    "dairstega": {
+      "a8-b1-k100": {
+        "planned_runs": 24,
+        "process_successful_runs": 24,
+        "roundtrip_exact_runs": 24,
+        "silent_inexact_runs": 0,
+        "hard_failure_runs": 0,
+        "bits_per_token_mean": 0.5403645833333334,
+        "entropy_utilization_mean": 0.17219499528749854,
+        "ppl_raw_lm_mean": 3.9668907906367723,
+        "kl_ref_to_stego_mean_bits": null,
+        "kl_ref_to_stego_all_successful_infinite": true,
+        "kl_stego_to_ref_mean_bits": 1.3639565220414305,
+        "tvd_mean": 0.4684433822373284,
+        "wall_seconds_median": 26.092138972497196,
+        "stego_algorithm_seconds_median": 16.28103466247194
+      },
+      "a16-b075-k100": {
+        "planned_runs": 24,
+        "process_successful_runs": 22,
+        "roundtrip_exact_runs": 22,
+        "silent_inexact_runs": 0,
+        "hard_failure_runs": 2,
+        "bits_per_token_mean": 1.5717329545454546,
+        "entropy_utilization_mean": 0.4423421629964756,
+        "ppl_raw_lm_mean": 12.61679836285707,
+        "kl_ref_to_stego_mean_bits": null,
+        "kl_ref_to_stego_all_successful_infinite": true,
+        "kl_stego_to_ref_mean_bits": 1.9971677121715148,
+        "tvd_mean": 0.5718610176816702,
+        "wall_seconds_median": 26.46455645700189,
+        "stego_algorithm_seconds_median": 16.62802887295038
+      },
+      "a32-b05-k100": {
+        "planned_runs": 24,
+        "process_successful_runs": 17,
+        "roundtrip_exact_runs": 17,
+        "silent_inexact_runs": 0,
+        "hard_failure_runs": 7,
+        "bits_per_token_mean": 3.138327205882353,
+        "entropy_utilization_mean": 0.5506898749359317,
+        "ppl_raw_lm_mean": 133.96572253553992,
+        "kl_ref_to_stego_mean_bits": null,
+        "kl_ref_to_stego_all_successful_infinite": true,
+        "kl_stego_to_ref_mean_bits": 3.895215034788128,
+        "tvd_mean": 0.8178519902486985,
+        "wall_seconds_median": 26.224453050999728,
+        "stego_algorithm_seconds_median": 16.378037160982785
+      }
+    }
+  },
+  "rrc_included": false,
+  "rrc_note": "RRC uses a separate fixed-payload lifecycle and is selected after numerical boundary investigation.",
+  "decoder_audit_interpretation": "End-to-end reliability remains a benchmark metric; Decoder Audit found 504/504 direct-token exact recovery and no decoder conformance mismatch."
+}
