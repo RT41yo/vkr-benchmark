@@ -232,3 +232,18 @@ Total: 1800 stego runs
 - Stage-5 Typst presentation;
 - machine-readable sweep manifests и execution logs;
 - `stage5_closeout.md`.
+
+## 9. Статус закрытия Этапа 5
+
+Содержательная экспериментальная часть Этапа 5 завершена.
+
+Подготовлены:
+
+- единый итоговый отчёт: `docs/stages/stage5/stage5_final_report.md`;
+- спецификация основных экспериментов: `specification/benchmark_specification_v1.0.md`;
+- четыре исполняемые конфигурации Stage 6 в `configs/experiments/stage6_main_*.json`;
+- документ закрытия: `docs/stages/stage5/stage5_closeout.md`.
+
+Новые пилотные GPU-запуски перед Stage 6 не требуются.
+
+Остаётся последняя оформительская задача Этапа 5 — итоговая презентация. Она подготавливается отдельно после проверки текстовых документов.

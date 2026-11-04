@@ -1,0 +1,79 @@
+{
+  "schema_version": "stage5.sweep.v1",
+  "sweep_id": "stage6-main-rrc-llama-v1",
+  "purpose": "Stage-6 main normalized RRC fixed-payload comparison on llama.",
+  "benchmark_version": "1.0",
+  "run_kind": "normalized",
+  "model_config": "configs/models/llama-3.2-3b.local.json",
+  "prompts_file": "data/stage6/main_prompts.jsonl",
+  "prompt_ids": [
+    "s6p0001",
+    "s6p0002",
+    "s6p0003",
+    "s6p0004",
+    "s6p0005",
+    "s6p0006",
+    "s6p0007",
+    "s6p0008",
+    "s6p0009",
+    "s6p0010",
+    "s6p0011",
+    "s6p0012",
+    "s6p0013",
+    "s6p0014",
+    "s6p0015",
+    "s6p0016",
+    "s6p0017",
+    "s6p0018",
+    "s6p0019",
+    "s6p0020",
+    "s6p0021",
+    "s6p0022",
+    "s6p0023",
+    "s6p0024"
+  ],
+  "replicates": [
+    {
+      "id": "r01",
+      "secret_id": "stage6-main-0001"
+    },
+    {
+      "id": "r02",
+      "secret_id": "stage6-main-0002"
+    },
+    {
+      "id": "r03",
+      "secret_id": "stage6-main-0003"
+    }
+  ],
+  "generation_points": [
+    {
+      "id": "main",
+      "temperature": 1.0,
+      "top_k": null,
+      "top_p": 1.0,
+      "exclude_special_tokens": true,
+      "kv_cache": true
+    }
+  ],
+  "methods": [
+    {
+      "id": "rrc",
+      "implementation_revision": "stage5-rrc-decimal-boundaries-v2",
+      "points": [
+        {
+          "id": "payload1024-margin40",
+          "params": {
+            "precision_margin": 40,
+            "verify_termination": true
+          }
+        }
+      ],
+      "termination": {
+        "mode": "fixed_payload_bits",
+        "target_payload_bits": 1024,
+        "max_carrier_tokens": 2048
+      }
+    }
+  ]
+}

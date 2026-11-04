@@ -76,6 +76,12 @@ def _successful_run_exists(results_root: Path, run_id: str) -> bool:
     return isinstance(raw, dict) and raw.get("status") == "ok"
 
 
+def _sweep_log_stage(sweep_id: str) -> str:
+    if sweep_id.startswith("stage6-"):
+        return "stage6"
+    return "stage5"
+
+
 def _append_log(path: Path, record: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as handle:
@@ -137,9 +143,10 @@ def main() -> None:
         manifest.model_config_path,
         project_root=REPO_ROOT,
     )
-    log_path = results_root / "stage5" / "sweeps" / manifest.sweep_id / "execution.jsonl"
+    log_stage = _sweep_log_stage(manifest.sweep_id)
+    log_path = results_root / log_stage / "sweeps" / manifest.sweep_id / "execution.jsonl"
 
-    print("Stage-5 sweep runner")
+    print("Benchmark sweep runner")
     print("sweep_id:", manifest.sweep_id)
     print("selected runs:", len(planned))
     print("model:", model_config.model_id)

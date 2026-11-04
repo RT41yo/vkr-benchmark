@@ -172,9 +172,9 @@ class ExperimentConfig:
     source_path: Path | None = None
 
     def __post_init__(self) -> None:
-        if self.benchmark_version != "0.1":
+        if self.benchmark_version not in {"0.1", "1.0"}:
             raise ConfigurationError(
-                "Stage-2 launcher currently implements benchmark_version=0.1"
+                "unified runner supports benchmark_version=0.1 or 1.0"
             )
         if self.run_kind != "normalized":
             raise ConfigurationError(

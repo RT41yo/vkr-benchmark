@@ -119,12 +119,21 @@ def test_experiment_config_loads_fixed_payload_termination(tmp_path) -> None:
     assert config.termination.target_carrier_tokens is None
 
 
-def test_experiment_config_rejects_wrong_benchmark_version(tmp_path) -> None:
+def test_experiment_config_accepts_benchmark_version_1_0(tmp_path) -> None:
     raw = _raw_config()
     raw["benchmark_version"] = "1.0"
     path = tmp_path / "run.json"
     path.write_text(json.dumps(raw), encoding="utf-8")
-    with pytest.raises(ConfigurationError, match="benchmark_version=0.1"):
+    config = ExperimentConfig.from_json(path, project_root=tmp_path)
+    assert config.benchmark_version == "1.0"
+
+
+def test_experiment_config_rejects_unknown_benchmark_version(tmp_path) -> None:
+    raw = _raw_config()
+    raw["benchmark_version"] = "2.0"
+    path = tmp_path / "run.json"
+    path.write_text(json.dumps(raw), encoding="utf-8")
+    with pytest.raises(ConfigurationError, match="benchmark_version=0.1 or 1.0"):
         ExperimentConfig.from_json(path, project_root=tmp_path)
 
 
