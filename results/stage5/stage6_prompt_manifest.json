@@ -1,0 +1,238 @@
+{
+  "prompt_count": 24,
+  "prompt_records": [
+    {
+      "article_id": "6a3b2f671ea5aa7fdabc9a80fd0dcb940d9db8b0",
+      "context_char_count": 225,
+      "context_sha256": "bad21db3b51d1a6570e59c54552dd3d59356bcc04c2629b4ee289b34c50a1492",
+      "prompt_id": "s6p0001",
+      "row_index": 1702,
+      "stage3_selection_rank": 8
+    },
+    {
+      "article_id": "eac10f52d0b198e68f8718170183e17cac2ec6f2",
+      "context_char_count": 510,
+      "context_sha256": "92e1ac5c0b1a013c91034811aa48745082c3fdbee43ac2148e1a87ab0329491b",
+      "prompt_id": "s6p0002",
+      "row_index": 2999,
+      "stage3_selection_rank": 9
+    },
+    {
+      "article_id": "6844d57594cb13bf399548e0b6a5aaa89a346d3c",
+      "context_char_count": 308,
+      "context_sha256": "7006d8e38ec347f471f71696c59a591e19edc269ebc05ea0bc7e33411aa6e237",
+      "prompt_id": "s6p0003",
+      "row_index": 9655,
+      "stage3_selection_rank": 10
+    },
+    {
+      "article_id": "83168024389dbcadb536ed5020b542b1aeaeaad3",
+      "context_char_count": 419,
+      "context_sha256": "b2fd709c500abb30eeef530e284b50c2c5e9415786ff5ada85afce4e6b02154e",
+      "prompt_id": "s6p0004",
+      "row_index": 5612,
+      "stage3_selection_rank": 11
+    },
+    {
+      "article_id": "a30e9ed2f977694add8b3706e092a4402ef420fd",
+      "context_char_count": 382,
+      "context_sha256": "a2a86ff4476c5e3d284c6b337febad7670399e36a384307b16c8399460823968",
+      "prompt_id": "s6p0005",
+      "row_index": 10773,
+      "stage3_selection_rank": 12
+    },
+    {
+      "article_id": "716f9547c35193f27f2b8d6f4e4d4f899eda17c2",
+      "context_char_count": 490,
+      "context_sha256": "8d7fae9007d6d0532f0efbb47c74385638a59b619b9f7edcd463aed929017ff4",
+      "prompt_id": "s6p0006",
+      "row_index": 8556,
+      "stage3_selection_rank": 13
+    },
+    {
+      "article_id": "2df202fc6bfd639f30798b8369ab5140fcfe51d2",
+      "context_char_count": 590,
+      "context_sha256": "ce52b833c4ab05bed630cd5d7b2761cfcd7496e236e1361c338e311d03bb7d9a",
+      "prompt_id": "s6p0007",
+      "row_index": 10515,
+      "stage3_selection_rank": 14
+    },
+    {
+      "article_id": "0e2c5d0587400565defcf2bdbaeef05297395014",
+      "context_char_count": 527,
+      "context_sha256": "c94ea4049765a399ce787fba4f92e4f2a6038ddea051aa62dc9747ceb5f8f452",
+      "prompt_id": "s6p0008",
+      "row_index": 726,
+      "stage3_selection_rank": 15
+    },
+    {
+      "article_id": "5a8e0d95022f72db2c8966b1780732d56902060b",
+      "context_char_count": 699,
+      "context_sha256": "426c6a119e8531880fe463a67281f216e068c677915ef7bbcc788080981d24bd",
+      "prompt_id": "s6p0009",
+      "row_index": 3174,
+      "stage3_selection_rank": 16
+    },
+    {
+      "article_id": "32db4740a93d047b420e6ddbf03b35efc1479b8a",
+      "context_char_count": 641,
+      "context_sha256": "6ca0a61dd18435cba117971c5abb7d2224d426803ae63354568faaeaf34dd6b1",
+      "prompt_id": "s6p0010",
+      "row_index": 3566,
+      "stage3_selection_rank": 17
+    },
+    {
+      "article_id": "ec71c98fe6585e971039144aa70e8a4c94c1839d",
+      "context_char_count": 336,
+      "context_sha256": "96ad03126509ed4025c65ae118cfe668ce1ca48f27666c2811649f8d2f8fdd16",
+      "prompt_id": "s6p0011",
+      "row_index": 619,
+      "stage3_selection_rank": 18
+    },
+    {
+      "article_id": "5617874d0fbb6098d93fe8e9dbd9408c7818be6d",
+      "context_char_count": 522,
+      "context_sha256": "03e7f9fee66bff050e8f5bb4ddbab6422b288ef31eb85775356a3f9492a0d69c",
+      "prompt_id": "s6p0012",
+      "row_index": 5821,
+      "stage3_selection_rank": 19
+    },
+    {
+      "article_id": "95f10632700d42d92da36376e9ae7ba80f13941b",
+      "context_char_count": 435,
+      "context_sha256": "c3de9b4f508ea3b7a5bd47f01d45ad0bdb1f7694530eea977964dd3d59afe40f",
+      "prompt_id": "s6p0013",
+      "row_index": 5020,
+      "stage3_selection_rank": 20
+    },
+    {
+      "article_id": "58bb98a63a5e96561eb19cbf5893e6645005c41f",
+      "context_char_count": 538,
+      "context_sha256": "04eb47552f61479d2d0ba7a5b95a458a619cb1ec9a3bd1eb1817edcddb39845e",
+      "prompt_id": "s6p0014",
+      "row_index": 5827,
+      "stage3_selection_rank": 21
+    },
+    {
+      "article_id": "85c2eec66bfa24414bc9b8ad7337aca6254f186f",
+      "context_char_count": 484,
+      "context_sha256": "140ae1ffaf89256c97547e59980a925feb054f121b93a426bcfc74df62e13136",
+      "prompt_id": "s6p0015",
+      "row_index": 7981,
+      "stage3_selection_rank": 22
+    },
+    {
+      "article_id": "9b5117ce299e1ae21141809563adcfb5308a0c97",
+      "context_char_count": 297,
+      "context_sha256": "01a6ae387b1957f409494cebab503bfb07f198c0bb58bd12ea10ca292a377879",
+      "prompt_id": "s6p0016",
+      "row_index": 5708,
+      "stage3_selection_rank": 23
+    },
+    {
+      "article_id": "eb47dc0668b13268d515d85867d63251285a2634",
+      "context_char_count": 382,
+      "context_sha256": "54831e556d013a0e8715e38c0f1f5c60ae2100f4041d66ec22ff5de1e4099b9c",
+      "prompt_id": "s6p0017",
+      "row_index": 11392,
+      "stage3_selection_rank": 24
+    },
+    {
+      "article_id": "f5a93446fdb6830bdd619bfeb3c61ef4dc05bf98",
+      "context_char_count": 328,
+      "context_sha256": "26b8e42c9a492b2c2949166e16c7db93fd4c29949c1b8a23caba7903846d586a",
+      "prompt_id": "s6p0018",
+      "row_index": 2338,
+      "stage3_selection_rank": 25
+    },
+    {
+      "article_id": "b02719b2685c9e345b24393885bc90e8a3c105b2",
+      "context_char_count": 546,
+      "context_sha256": "a9c0a25c89f9c54d649dd66db1b6d4a1f14d6667a5f3d2fbcfa754e9c5d02c96",
+      "prompt_id": "s6p0019",
+      "row_index": 8629,
+      "stage3_selection_rank": 26
+    },
+    {
+      "article_id": "cb40f01b4f8f5ce2b715ad606b5f3f2704fa9bac",
+      "context_char_count": 498,
+      "context_sha256": "39c13dbfdb7a56e5b04e0d4a93706544797cd399496212963374e528dcb4f5b1",
+      "prompt_id": "s6p0020",
+      "row_index": 11415,
+      "stage3_selection_rank": 27
+    },
+    {
+      "article_id": "c9a1a96a3b216532c56c869d81dd16c5103664cb",
+      "context_char_count": 456,
+      "context_sha256": "b2f45170e12dea1ccabe5fb86dc1d0397107ae8d0c8455b8798ae54c25aa8fbc",
+      "prompt_id": "s6p0021",
+      "row_index": 9182,
+      "stage3_selection_rank": 28
+    },
+    {
+      "article_id": "29e88f0083405bd6b85594e55a5a47a06214673c",
+      "context_char_count": 528,
+      "context_sha256": "1a4b343d26b2fa3f5427b6d2677a1aac53f1626bdf8527ae0f1b99d36f913cb6",
+      "prompt_id": "s6p0022",
+      "row_index": 11226,
+      "stage3_selection_rank": 29
+    },
+    {
+      "article_id": "8d68351a4e27455eea5c6af510feecdb1ae511a4",
+      "context_char_count": 291,
+      "context_sha256": "0ce010f49b6bddeb87046590271bceb03a3f665f8a4ce853a564547877293e1b",
+      "prompt_id": "s6p0023",
+      "row_index": 9953,
+      "stage3_selection_rank": 30
+    },
+    {
+      "article_id": "07bd9b385482709912c01a77e5f7a8d86e4839c2",
+      "context_char_count": 479,
+      "context_sha256": "3bd2d859cbbb274df3c6d4e63afc04acb0c43f5f057a33817ec20a895a381598",
+      "prompt_id": "s6p0024",
+      "row_index": 9015,
+      "stage3_selection_rank": 31
+    }
+  ],
+  "schema_version": "stage6.main_prompts.v1",
+  "selection_rule": "use the next 24 deterministic Stage-3 records after the Stage-5 pilot: selection_rank 8..31; none may be marked pilot",
+  "source": "abisee/cnn_dailymail|config=3.0.0|split=test",
+  "source_file": "data/stage3/cnndm/generated_contexts.jsonl",
+  "source_revision": "3adf6249f0cc8409a97a4d38471529ef5f7dc496",
+  "stage5_pilot_selection_ranks": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "stage6_selection_ranks": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ]
+}

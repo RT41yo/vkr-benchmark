@@ -194,18 +194,31 @@ RRC в эти 504 запуска не входит. Его отдельная к
 
 Точка может быть исключена как технически некорректная или стабильно доминируемая соседней точкой того же метода. При этом для параметризованного метода желательно сохранить security/quality anchor, промежуточную область и capacity-oriented endpoint, если они содержательно различаются.
 
-## 7. Вычислительный бюджет Stage 6
+## 7. Масштаб и вычислительный бюджет Stage 6 — зафиксированы
 
-Для каждого retained operating point Pilot B дает как минимум median и p90 wall-clock/run. Оцениваются два разных бюджета:
+Итоговый масштаб основных экспериментов:
 
 ```text
-algorithmic cost = LM + P_ref processing + stego algorithm
-wall-clock cost  = algorithmic cost + metric instrumentation + storage/I/O
+Stage-6 prompts: 24 held-out contexts, Stage-3 selection_rank 8..31
+streaming carrier: 256 tokens
+RRC payload: 1024 bits, precision_margin=40
+
+Llama-3.2-3B:
+  24 prompts × 3 replicates × 15 regimes = 1080 runs
+
+Qwen3-4B-Base:
+  те же 24 prompts × 2 replicates × 15 regimes = 720 runs
+
+Total: 1800 stego runs
 ```
 
-Stage-6 estimate вычисляется как сумма фактической стоимости по всем method points × prompts × replicates с дополнительным резервом на warm-up, I/O и reruns.
+Промпты Stage 6 не пересекаются с восемью pilot prompts Stage 5. Они детерминированно выбираются из того же зафиксированного CNN/DailyMail источника как следующие 24 записи `selection_rank=8..31`. Машиночитаемый список: `results/stage5/stage6_prompt_manifest.json`.
 
-Qwen используется для ключевых сравнений, а не обязательно для полного Llama grid. Для Qwen сохраняется уже зафиксированная общая политика: 267 output-only IDs исключаются до `P_reference`, затем распределение перенормируется.
+По фактическим временам Pilot B и RRC один полный набор из 15 режимов занимает около 26.34 минуты по сумме медиан. Для Llama прогноз составляет около 31.6 часа. Для Qwen используется консервативный коэффициент 1.4 относительно Llama на основании измерений скорости Stage 1; прогноз составляет около 29.5 часа. Суммарная медианная оценка — около 61 часа, консервативная оценка — около 71 часа, верхний ориентир с резервом 20% — около 85 часов последовательного GPU-времени.
+
+Полное обоснование: `docs/stages/stage5/stage6_scale_and_budget_report.md`. Машиночитаемое решение: `results/stage5/stage6_scale_decision.json`.
+
+После этого число промптов, повторов, объем генерации, объем проверки на Qwen и вычислительный бюджет Stage 6 считаются зафиксированными.
 
 ## 8. Выходные артефакты Stage 5
 

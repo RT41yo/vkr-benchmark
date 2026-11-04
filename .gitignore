@@ -29,3 +29,6 @@ environment/**/hf.txt
 
 # Stage-5 pilot prompt text is regenerated from the pinned Stage-3 CNN/DailyMail contexts.
 /data/stage5/pilot_prompts.jsonl
+
+# Stage-6 main prompt text is regenerated from the pinned Stage-3 CNN/DailyMail contexts.
+/data/stage6/main_prompts.jsonl

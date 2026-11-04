@@ -1,0 +1,253 @@
+{
+  "budget_hours": {
+    "combined_conservative_with_reserve": 84.66480972004355,
+    "combined_median_projection": 61.10539063506816,
+    "combined_p90_projection": 70.5540081000363,
+    "llama_median_projection": 31.606236535380084,
+    "llama_p90_projection": 36.49345246553602,
+    "qwen_median_projection": 29.499154099688077,
+    "qwen_p90_projection": 34.06055563450028,
+    "reserve_multiplier": 1.2
+  },
+  "common": {
+    "rrc_payload_bits": 1024,
+    "rrc_precision_margin": 40,
+    "rrc_verify_termination": true,
+    "streaming_carrier_tokens": 256,
+    "streaming_operating_point_count": 14,
+    "total_method_points_per_prompt_replicate": 15
+  },
+  "controls_note": "Matched ordinary-generation controls are required by the benchmark methodology but are not included in this Stage-6 stego-run count; their dataset is formed in Stage 7 according to the roadmap and budgeted separately.",
+  "llama": {
+    "model": "meta-llama/Llama-3.2-3B",
+    "prompt_count": 24,
+    "replicate_count": 3,
+    "replicate_ids": [
+      "r01",
+      "r02",
+      "r03"
+    ],
+    "rrc_run_count": 72,
+    "streaming_run_count": 1008,
+    "total_stego_run_count": 1080
+  },
+  "measured_llama_cost_basis": {
+    "full_15_point_combo_wall_seconds_median": 1580.3118267690043,
+    "full_15_point_combo_wall_seconds_p90_sum": 1824.6726232768012,
+    "rrc_cost": {
+      "method_id": "rrc",
+      "method_point_id": "payload1024-margin40",
+      "sample_count": 8,
+      "wall_seconds_mean": 56.727953479123244,
+      "wall_seconds_median": 57.5650500615011,
+      "wall_seconds_p90": 63.73258304329647
+    },
+    "streaming_point_costs": [
+      {
+        "method_id": "adg",
+        "method_point_id": "default",
+        "sample_count": 24,
+        "wall_seconds_mean": 912.5641254271667,
+        "wall_seconds_median": 899.0477978485014,
+        "wall_seconds_p90": 1134.5052189929004
+      },
+      {
+        "method_id": "arithmetic_coding",
+        "method_point_id": "p32-k128",
+        "sample_count": 24,
+        "wall_seconds_mean": 46.21263923441662,
+        "wall_seconds_median": 46.210709947499936,
+        "wall_seconds_p90": 46.462854310799685
+      },
+      {
+        "method_id": "arithmetic_coding",
+        "method_point_id": "p32-k2048",
+        "sample_count": 24,
+        "wall_seconds_mean": 46.51343220483329,
+        "wall_seconds_median": 46.584284836500046,
+        "wall_seconds_p90": 46.65041064539982
+      },
+      {
+        "method_id": "arithmetic_coding",
+        "method_point_id": "p32-k50000",
+        "sample_count": 24,
+        "wall_seconds_mean": 51.44682104824998,
+        "wall_seconds_median": 51.582922080499884,
+        "wall_seconds_p90": 51.93607497830017
+      },
+      {
+        "method_id": "bins",
+        "method_point_id": "b1",
+        "sample_count": 24,
+        "wall_seconds_mean": 10.242182934250003,
+        "wall_seconds_median": 9.622550056500017,
+        "wall_seconds_p90": 9.691847063800015
+      },
+      {
+        "method_id": "bins",
+        "method_point_id": "b4",
+        "sample_count": 24,
+        "wall_seconds_mean": 9.656847982416679,
+        "wall_seconds_median": 9.664170743,
+        "wall_seconds_p90": 9.70718354100004
+      },
+      {
+        "method_id": "bins",
+        "method_point_id": "b6",
+        "sample_count": 24,
+        "wall_seconds_mean": 9.643233013000033,
+        "wall_seconds_median": 9.640237376000073,
+        "wall_seconds_p90": 9.696361638900157
+      },
+      {
+        "method_id": "dairstega",
+        "method_point_id": "a16-b075-k100",
+        "sample_count": 24,
+        "wall_seconds_mean": 25.870681430458415,
+        "wall_seconds_median": 26.435580340501474,
+        "wall_seconds_p90": 26.710987562297667
+      },
+      {
+        "method_id": "dairstega",
+        "method_point_id": "a32-b05-k100",
+        "sample_count": 24,
+        "wall_seconds_mean": 24.442234080750193,
+        "wall_seconds_median": 26.18606970050314,
+        "wall_seconds_p90": 26.324919005302945
+      },
+      {
+        "method_id": "dairstega",
+        "method_point_id": "a8-b1-k100",
+        "sample_count": 24,
+        "wall_seconds_mean": 26.106770519333924,
+        "wall_seconds_median": 26.092138972497196,
+        "wall_seconds_p90": 26.261550246302797
+      },
+      {
+        "method_id": "discop",
+        "method_point_id": "default",
+        "sample_count": 24,
+        "wall_seconds_mean": 341.0165839381255,
+        "wall_seconds_median": 342.07978702750006,
+        "wall_seconds_p90": 343.1832658922009
+      },
+      {
+        "method_id": "huffman",
+        "method_point_id": "e2",
+        "sample_count": 24,
+        "wall_seconds_mean": 9.128141380791684,
+        "wall_seconds_median": 9.606061347500031,
+        "wall_seconds_p90": 9.67020260029999
+      },
+      {
+        "method_id": "huffman",
+        "method_point_id": "e4",
+        "sample_count": 24,
+        "wall_seconds_mean": 9.302322619166668,
+        "wall_seconds_median": 9.643587417999925,
+        "wall_seconds_p90": 9.716423811200093
+      },
+      {
+        "method_id": "huffman",
+        "method_point_id": "e8",
+        "sample_count": 24,
+        "wall_seconds_mean": 9.653910659625012,
+        "wall_seconds_median": 10.350879012499945,
+        "wall_seconds_p90": 10.422739944800105
+      }
+    ]
+  },
+  "pilot_b_stability_evidence": {
+    "four_of_eight_prompts": {
+      "median_relative_deviation": 0.01992755916363315,
+      "p90_relative_deviation": 0.09309921956355213,
+      "p95_relative_deviation": 0.13412278556038842,
+      "sample_count": 4760
+    },
+    "one_of_three_replicates": {
+      "median_relative_deviation": 0.03285838800383071,
+      "p90_relative_deviation": 0.13863293275028163,
+      "p95_relative_deviation": 0.19411147799465642,
+      "sample_count": 204
+    },
+    "six_of_eight_prompts": {
+      "median_relative_deviation": 0.011732249680096257,
+      "p90_relative_deviation": 0.05479731453018184,
+      "p95_relative_deviation": 0.0717370176567679,
+      "sample_count": 1904
+    },
+    "two_of_three_replicates": {
+      "median_relative_deviation": 0.01642919400191535,
+      "p90_relative_deviation": 0.06931646637514095,
+      "p95_relative_deviation": 0.09705573899732818,
+      "sample_count": 204
+    }
+  },
+  "prompt_source": {
+    "held_out_from_stage5_pilot": true,
+    "manifest": "results/stage5/stage6_prompt_manifest.json",
+    "source": "abisee/cnn_dailymail|config=3.0.0|split=test",
+    "source_revision": "3adf6249f0cc8409a97a4d38471529ef5f7dc496",
+    "stage5_pilot_selection_ranks": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "stage6_main_selection_ranks": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "stage6_prompt_count": 24
+  },
+  "qwen": {
+    "model": "Qwen/Qwen3-4B-Base",
+    "operating_points": "same full 14 streaming points plus RRC as Llama",
+    "projection_basis": "conservative rounded factor from Stage-1 measured decode throughput ratios (about 1.35-1.39x slower than Llama depending on context length)",
+    "prompt_count": 24,
+    "replicate_count": 2,
+    "replicate_ids": [
+      "r01",
+      "r02"
+    ],
+    "rrc_run_count": 48,
+    "streaming_run_count": 672,
+    "total_stego_run_count": 720,
+    "wall_clock_projection_multiplier_vs_llama": 1.4
+  },
+  "schema_version": "stage5.stage6_scale_decision.v1",
+  "selection_rationale": [
+    "Stage-6 prompts are held out from the eight Stage-5 pilot prompts to avoid evaluating final settings on the same contexts used for selection.",
+    "Twenty-four prompts triple the prompt sample relative to Pilot B while keeping the measured budget practical.",
+    "Three Llama replicates retain the Pilot-B paired protocol; Pilot-B resampling shows that reducing from three to two replicates can still change some aggregate metrics materially.",
+    "Qwen uses the same prompts and the first two paired replicates. The full final operating-point set is repeated because ADG and Discop dominate runtime, so omitting the other inexpensive points would save little while introducing another subjective subset."
+  ],
+  "status": "selected",
+  "total_stego_run_count": 1800
+}
