@@ -36,7 +36,7 @@ def test_rrc_explicit_q_preserves_sparse_support() -> None:
     )
 
 
-def test_rrc_large_vocab_roundoff_is_tiny_but_not_small_support_ulp_scale() -> None:
+def test_rrc_large_vocab_decimal_partition_preserves_reference_distribution() -> None:
     vocab_size = 128_256
     probs = np.full(vocab_size, 0.1 / (vocab_size - 1), dtype=np.float64)
     probs[0] = 0.9
@@ -49,7 +49,9 @@ def test_rrc_large_vocab_roundoff_is_tiny_but_not_small_support_ulp_scale() -> N
     assert result.distortion.tvd is not None
     assert np.isfinite(result.distortion.kl_ref_to_stego_bits)
     assert np.isfinite(result.distortion.kl_stego_to_ref_bits)
-    # Sequential FP64 cumulative boundaries across a full vocabulary leave a
-    # visible aggregate residue even though the distortion is negligible.
-    assert result.distortion.tvd > 1e-13
-    assert result.distortion.tvd < 1e-9
+    # Stage 5 moved RRC boundary accumulation to Decimal.  Independent Q now
+    # uses the corresponding interval widths directly, so the old cumulative
+    # FP64 residue is no longer part of the practical distribution.
+    assert result.distortion.tvd < 1e-15
+    assert result.distortion.kl_ref_to_stego_bits < 1e-15
+    assert result.distortion.kl_stego_to_ref_bits < 1e-15

@@ -193,3 +193,53 @@ def test_rrc_explicit_q_matches_random_interval_partitions() -> None:
             assert np.array_equal(q > 0.0, p > 0.0)
             assert np.allclose(q, p, rtol=0.0, atol=2e-15)
     assert max_abs < 2e-15
+
+
+def test_rrc_decimal_boundaries_preserve_tiny_positive_tail() -> None:
+    from vkr_benchmark.methods.rrc import _StepDistribution
+
+    reference = ReferenceDistribution(
+        np.asarray([0.9, 0.1, 1e-17], dtype=np.float32)
+    )
+    environment = MethodEnvironment(
+        output_vocab_size=3,
+        allowed_token_ids=(0, 1, 2),
+    )
+    dist = _StepDistribution.from_context(
+        StepContext(0, reference), environment, precision=80
+    )
+
+    assert len(dist.cumulative_weights) == 4
+    assert all(
+        right > left
+        for left, right in zip(
+            dist.cumulative_weights, dist.cumulative_weights[1:]
+        )
+    )
+    assert dist.cumulative_weights[-1] == dist.total_weight
+
+
+def test_rrc_decimal_boundaries_fail_loudly_if_precision_is_insufficient() -> None:
+    from vkr_benchmark.methods.rrc import _StepDistribution, RRCPrecisionError
+
+    reference = ReferenceDistribution(
+        np.asarray([0.9, 0.1, 1e-30], dtype=np.float32)
+    )
+    environment = MethodEnvironment(
+        output_vocab_size=3,
+        allowed_token_ids=(0, 1, 2),
+    )
+
+    with pytest.raises(RRCPrecisionError, match="positive probability increment"):
+        _StepDistribution.from_context(
+            StepContext(0, reference), environment, precision=20
+        )
+
+
+def test_rrc_explicit_q_keeps_positive_tail_below_fp64_cumsum_resolution() -> None:
+    reference = ReferenceDistribution(
+        np.asarray([0.9, 0.1, 1e-17], dtype=np.float32)
+    )
+    q = explicit_rrc_q(reference)
+    assert q[2] > 0.0
+    assert np.array_equal(q > 0.0, reference.probabilities > 0.0)

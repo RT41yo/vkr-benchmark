@@ -1,0 +1,151 @@
+{
+  "ber": 0.0,
+  "bits_per_token": 3.6056338028169015,
+  "boundary_summary": {
+    "all_forward_infinite_steps_have_support_loss": true,
+    "carrier_tokens": 284,
+    "first_support_loss_step": 170,
+    "forward_infinite_steps": 1,
+    "max_step_lost_reference_mass": 4.477499362838665e-15,
+    "max_zero_width_count_on_one_step": 67,
+    "replay_metric_classification_mismatches": 0,
+    "support_loss_steps": 1,
+    "total_lost_reference_mass_across_steps": 4.477499362838665e-15
+  },
+  "entropy_utilization": 0.9815081207902353,
+  "method_params": {
+    "precision_margin": 40,
+    "verify_termination": true
+  },
+  "method_point_id": "margin40",
+  "prompt_id": "s5p0001",
+  "replicate_id": "r01",
+  "roundtrip_exact": true,
+  "run_id": "78a5b7b0acd7e89c",
+  "schema_version": "stage5.rrc_boundary_precision_probe.record.v1",
+  "source_forward_kl_infinite_steps": 1,
+  "source_forward_kl_mean_bits": "+inf",
+  "source_reverse_kl_mean_bits": 2.0455026522852052e-16,
+  "source_tvd_mean": 2.5488998941214315e-12,
+  "status": "ok",
+  "support_loss_step_records": [
+    {
+      "first_lost_rank": 128187,
+      "ideal_support_preserving_forward_kl_bits": 0.0,
+      "ideal_support_preserving_reverse_kl_bits": 1.335495478314485e-21,
+      "ideal_support_preserving_tvd": 4.873379996794009e-22,
+      "lost_intervals": [
+        {
+          "collapse_stage": "fp64_cumsum",
+          "normalized_left_boundary": 1.0,
+          "normalized_right_boundary": 1.0,
+          "probability_to_spacing_ratio": 0.49343883991241455,
+          "rank": 128187,
+          "raw_boundary_spacing": 2.220446049250313e-16,
+          "raw_left_boundary": 1.0000000513503087,
+          "raw_right_boundary": 1.0000000513503087,
+          "reference_probability": 1.0956543226301786e-16,
+          "token_id": 46190
+        },
+        {
+          "collapse_stage": "fp64_cumsum",
+          "normalized_left_boundary": 1.0,
+          "normalized_right_boundary": 1.0,
+          "probability_to_spacing_ratio": 0.49343883991241455,
+          "rank": 128188,
+          "raw_boundary_spacing": 2.220446049250313e-16,
+          "raw_left_boundary": 1.0000000513503087,
+          "raw_right_boundary": 1.0000000513503087,
+          "reference_probability": 1.0956543226301786e-16,
+          "token_id": 57602
+        },
+        {
+          "collapse_stage": "fp64_cumsum",
+          "normalized_left_boundary": 1.0,
+          "normalized_right_boundary": 1.0,
+          "probability_to_spacing_ratio": 0.49343883991241455,
+          "rank": 128189,
+          "raw_boundary_spacing": 2.220446049250313e-16,
+          "raw_left_boundary": 1.0000000513503087,
+          "raw_right_boundary": 1.0000000513503087,
+          "reference_probability": 1.0956543226301786e-16,
+          "token_id": 80214
+        },
+        {
+          "collapse_stage": "fp64_cumsum",
+          "normalized_left_boundary": 1.0,
+          "normalized_right_boundary": 1.0,
+          "probability_to_spacing_ratio": 0.49343883991241455,
+          "rank": 128190,
+          "raw_boundary_spacing": 2.220446049250313e-16,
+          "raw_left_boundary": 1.0000000513503087,
+          "raw_right_boundary": 1.0000000513503087,
+          "reference_probability": 1.0956543226301786e-16,
+          "token_id": 85454
+        },
+        {
+          "collapse_stage": "fp64_cumsum",
+          "normalized_left_boundary": 1.0,
+          "normalized_right_boundary": 1.0,
+          "probability_to_spacing_ratio": 0.4635428786277771,
+          "rank": 128191,
+          "raw_boundary_spacing": 2.220446049250313e-16,
+          "raw_left_boundary": 1.0000000513503087,
+          "raw_right_boundary": 1.0000000513503087,
+          "reference_probability": 1.029271953507165e-16,
+          "token_id": 13811
+        },
+        {
+          "collapse_stage": "fp64_cumsum",
+          "normalized_left_boundary": 1.0,
+          "normalized_right_boundary": 1.0,
+          "probability_to_spacing_ratio": 0.4635428786277771,
+          "rank": 128192,
+          "raw_boundary_spacing": 2.220446049250313e-16,
+          "raw_left_boundary": 1.0000000513503087,
+          "raw_right_boundary": 1.0000000513503087,
+          "reference_probability": 1.029271953507165e-16,
+          "token_id": 18546
+        },
+        {
+          "collapse_stage": "fp64_cumsum",
+          "normalized_left_boundary": 1.0,
+          "normalized_right_boundary": 1.0,
+          "probability_to_spacing_ratio": 0.4635428786277771,
+          "rank": 128193,
+          "raw_boundary_spacing": 2.220446049250313e-16,
+          "raw_left_boundary": 1.0000000513503087,
+          "raw_right_boundary": 1.0000000513503087,
+          "reference_probability": 1.029271953507165e-16,
+          "token_id": 58264
+        },
+        {
+          "collapse_stage": "fp64_cumsum",
+          "normalized_left_boundary": 1.0,
+          "normalized_right_boundary": 1.0,
+          "probability_to_spacing_ratio": 0.4635428786277771,
+          "rank": 128194,
+          "raw_boundary_spacing": 2.220446049250313e-16,
+          "raw_left_boundary": 1.0000000513503087,
+          "raw_right_boundary": 1.0000000513503087,
+          "reference_probability": 1.029271953507165e-16,
+          "token_id": 80401
+        }
+      ],
+      "lost_reference_mass": 4.477499362838665e-15,
+      "max_lost_reference_probability": 1.0956543226301786e-16,
+      "min_lost_reference_probability": 8.993678374299178e-18,
+      "original_forward_kl_bits": "+inf",
+      "original_reverse_kl_bits": 2.042014690261157e-14,
+      "original_tvd": 3.54607881981592e-12,
+      "replayed_forward_kl_bits": "+inf",
+      "replayed_reverse_kl_bits": 2.042014690261157e-14,
+      "replayed_tvd": 3.54607881981592e-12,
+      "selected_token_id": 478,
+      "step_index": 170,
+      "support_size": 128254,
+      "zero_width_count": 67
+    }
+  ],
+  "target_payload_bits": 1024
+}

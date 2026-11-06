@@ -1,0 +1,74 @@
+{
+  "prompt_count": 8,
+  "prompt_records": [
+    {
+      "article_id": "3572dee55c511d5fd647c1bec89dd866d4ea8644",
+      "context_char_count": 312,
+      "context_sha256": "58d74ac7adf0d0bc2d4cdfe4063adc37231148acdda34147d2221b85c1fa5f4d",
+      "prompt_id": "s5p0001",
+      "row_index": 11404,
+      "stage3_selection_rank": 0
+    },
+    {
+      "article_id": "5a13f25d4bb68e27b681fe1c966478c55869f62c",
+      "context_char_count": 295,
+      "context_sha256": "b4da8e06ca2530df2b33dbaad8d20f748614aa4cb39a41f05a6defe0ebb5c066",
+      "prompt_id": "s5p0002",
+      "row_index": 4791,
+      "stage3_selection_rank": 1
+    },
+    {
+      "article_id": "b06808437cf8b6f41b7888001ebecdcfe7de6d34",
+      "context_char_count": 510,
+      "context_sha256": "383e800cf08e672431ea9a0658142b98c33c570b04997a223cffdaf7895cbe55",
+      "prompt_id": "s5p0003",
+      "row_index": 6498,
+      "stage3_selection_rank": 2
+    },
+    {
+      "article_id": "9a176cc351281d5446fbebbccaf7469df672c7f0",
+      "context_char_count": 721,
+      "context_sha256": "c2d71ccfbeecc7a0e60d4871886d7adece6f0d711b4e69cb348883abc3e98996",
+      "prompt_id": "s5p0004",
+      "row_index": 6721,
+      "stage3_selection_rank": 3
+    },
+    {
+      "article_id": "f2585a9406b45744f8c8bd6fec5c5803113d92d7",
+      "context_char_count": 500,
+      "context_sha256": "4e51ccce7fcd09b38c78a4b14d9dd7094c20174080302426bac420ab51ac7ab2",
+      "prompt_id": "s5p0005",
+      "row_index": 11343,
+      "stage3_selection_rank": 4
+    },
+    {
+      "article_id": "29f9f723eb8331ddaeb798d2d3b37d0177b458f2",
+      "context_char_count": 690,
+      "context_sha256": "11edcc7b649d32afc9e47cffc27b1826866a49d7d6c77743586a9c4ad2bc5ee5",
+      "prompt_id": "s5p0006",
+      "row_index": 3988,
+      "stage3_selection_rank": 5
+    },
+    {
+      "article_id": "79c0344c18cee238e68a67e322e6d4099e2fff23",
+      "context_char_count": 498,
+      "context_sha256": "6014a1abdb3316ba4489180d3b05dd9d8f6f31420fc629dac000b5cd73d4a236",
+      "prompt_id": "s5p0007",
+      "row_index": 4266,
+      "stage3_selection_rank": 6
+    },
+    {
+      "article_id": "784e465cecdbb5d9bafb6940374682cf8295721c",
+      "context_char_count": 361,
+      "context_sha256": "030736d8d2034dfbaf8b2b66d4363866825a0d435fcdd63df73c3d5e5d134ee1",
+      "prompt_id": "s5p0008",
+      "row_index": 1281,
+      "stage3_selection_rank": 7
+    }
+  ],
+  "schema_version": "stage5.pilot_prompts.v1",
+  "selection_rule": "reuse exactly the eight Stage-3 records with pilot=true, selection_rank 0..7",
+  "source": "abisee/cnn_dailymail|config=3.0.0|split=test",
+  "source_file": "data/stage3/cnndm/generated_contexts.jsonl",
+  "source_revision": "3adf6249f0cc8409a97a4d38471529ef5f7dc496"
+}

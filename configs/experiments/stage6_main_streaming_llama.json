@@ -1,0 +1,210 @@
+{
+  "schema_version": "stage5.sweep.v1",
+  "sweep_id": "stage6-main-streaming-llama-v1",
+  "purpose": "Stage-6 main normalized comparison of the 14 final streaming operating points on llama.",
+  "benchmark_version": "1.0",
+  "run_kind": "normalized",
+  "model_config": "configs/models/llama-3.2-3b.local.json",
+  "prompts_file": "data/stage6/main_prompts.jsonl",
+  "prompt_ids": [
+    "s6p0001",
+    "s6p0002",
+    "s6p0003",
+    "s6p0004",
+    "s6p0005",
+    "s6p0006",
+    "s6p0007",
+    "s6p0008",
+    "s6p0009",
+    "s6p0010",
+    "s6p0011",
+    "s6p0012",
+    "s6p0013",
+    "s6p0014",
+    "s6p0015",
+    "s6p0016",
+    "s6p0017",
+    "s6p0018",
+    "s6p0019",
+    "s6p0020",
+    "s6p0021",
+    "s6p0022",
+    "s6p0023",
+    "s6p0024"
+  ],
+  "replicates": [
+    {
+      "id": "r01",
+      "secret_id": "stage6-main-0001"
+    },
+    {
+      "id": "r02",
+      "secret_id": "stage6-main-0002"
+    },
+    {
+      "id": "r03",
+      "secret_id": "stage6-main-0003"
+    }
+  ],
+  "generation_points": [
+    {
+      "id": "main",
+      "temperature": 1.0,
+      "top_k": null,
+      "top_p": 1.0,
+      "exclude_special_tokens": true,
+      "kv_cache": true
+    }
+  ],
+  "methods": [
+    {
+      "id": "bins",
+      "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+      "points": [
+        {
+          "id": "b1",
+          "params": {
+            "block_size": 1
+          }
+        },
+        {
+          "id": "b4",
+          "params": {
+            "block_size": 4
+          }
+        },
+        {
+          "id": "b6",
+          "params": {
+            "block_size": 6
+          }
+        }
+      ],
+      "termination": {
+        "mode": "fixed_carrier_tokens",
+        "target_carrier_tokens": 256
+      }
+    },
+    {
+      "id": "huffman",
+      "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+      "points": [
+        {
+          "id": "e2",
+          "params": {
+            "bits_per_word": 2
+          }
+        },
+        {
+          "id": "e4",
+          "params": {
+            "bits_per_word": 4
+          }
+        },
+        {
+          "id": "e8",
+          "params": {
+            "bits_per_word": 8
+          }
+        }
+      ],
+      "termination": {
+        "mode": "fixed_carrier_tokens",
+        "target_carrier_tokens": 256
+      }
+    },
+    {
+      "id": "arithmetic_coding",
+      "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+      "points": [
+        {
+          "id": "p32-k128",
+          "params": {
+            "precision": 32,
+            "top_k": 128
+          }
+        },
+        {
+          "id": "p32-k2048",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        {
+          "id": "p32-k50000",
+          "params": {
+            "precision": 32,
+            "top_k": 50000
+          }
+        }
+      ],
+      "termination": {
+        "mode": "fixed_carrier_tokens",
+        "target_carrier_tokens": 256
+      }
+    },
+    {
+      "id": "adg",
+      "implementation_revision": "b4a7e802a97bc3a3b84d07e63f24627b16c51a10",
+      "points": [
+        {
+          "id": "default",
+          "params": {}
+        }
+      ],
+      "termination": {
+        "mode": "fixed_carrier_tokens",
+        "target_carrier_tokens": 256
+      }
+    },
+    {
+      "id": "discop",
+      "implementation_revision": "stage4-discop-normalized-v1",
+      "points": [
+        {
+          "id": "default",
+          "params": {}
+        }
+      ],
+      "termination": {
+        "mode": "fixed_carrier_tokens",
+        "target_carrier_tokens": 256
+      }
+    },
+    {
+      "id": "dairstega",
+      "implementation_revision": "8d85edf98d48c3efa827a125b6d4e90f88141ea2",
+      "points": [
+        {
+          "id": "a8-b1-k100",
+          "params": {
+            "alpha": 8,
+            "beta": 1.0,
+            "top_k": 100
+          }
+        },
+        {
+          "id": "a16-b075-k100",
+          "params": {
+            "alpha": 16,
+            "beta": 0.75,
+            "top_k": 100
+          }
+        },
+        {
+          "id": "a32-b05-k100",
+          "params": {
+            "alpha": 32,
+            "beta": 0.5,
+            "top_k": 100
+          }
+        }
+      ],
+      "termination": {
+        "mode": "fixed_carrier_tokens",
+        "target_carrier_tokens": 256
+      }
+    }
+  ]
+}

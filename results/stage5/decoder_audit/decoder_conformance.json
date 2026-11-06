@@ -1,0 +1,63 @@
+{
+  "schema_version": "stage5.decoder_conformance.v1",
+  "status": "pass",
+  "purpose": "independent decoder correctness/conformance gate after Stage-5 Pilot-B direct-token replay",
+  "cpu_only": true,
+  "production_method_sources_modified": false,
+  "method_count": 6,
+  "failed_methods": [],
+  "methods": {
+    "bins": {
+      "status": "pass",
+      "check_count": 405,
+      "failure_count": 0,
+      "failures": [],
+      "oracle": "independent Python Fisher-Yates + floor bin boundaries + MSB bin bits"
+    },
+    "huffman": {
+      "status": "pass",
+      "fixture_count": 35,
+      "check_count": 256,
+      "failure_count": 0,
+      "failures": [],
+      "oracle": "independent deterministic (weight, min-token-id) Huffman tree"
+    },
+    "arithmetic_coding": {
+      "status": "pass",
+      "configuration_count": 5,
+      "steps_per_configuration": 30,
+      "check_count": 150,
+      "failure_count": 0,
+      "failures": [],
+      "oracle": "independent ADR-0007 integer allocation, common-prefix and renormalization"
+    },
+    "adg": {
+      "status": "pass",
+      "fixture_count": 36,
+      "check_count": 994,
+      "failure_count": 0,
+      "failures": [],
+      "oracle": "independent Stage-4 paper Algorithm-1 partition + little-endian group-index inverse"
+    },
+    "discop": {
+      "status": "pass",
+      "sequence_count": 12,
+      "steps_per_sequence": 32,
+      "check_count": 384,
+      "failure_count": 0,
+      "failures": [],
+      "oracle": "independent pinned Cython translation with persistent sender/receiver PRNG state"
+    },
+    "dairstega": {
+      "status": "pass",
+      "configuration_count": 7,
+      "sequence_count_per_configuration": 8,
+      "steps_per_sequence": 24,
+      "check_count": 1344,
+      "failure_count": 0,
+      "failures": [],
+      "oracle": "independent paper/ADR interval allocation + posterior-window state transition"
+    }
+  },
+  "interpretation": "PASS means each normalized streaming decoder agrees with a decoder oracle implemented outside the production method helpers on deterministic synthetic fixtures. It complements, but does not replace, the 504-run direct-token replay."
+}

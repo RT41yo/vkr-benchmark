@@ -12,6 +12,7 @@ boundaries explicit:
   are not repeated inside the method;
 * the whole fixed-length secret is read before the first carrier token;
 * a fresh synchronized PRNG offset rotates the secret point at every step;
+* token-interval boundaries are accumulated in Decimal before range arithmetic;
 * Decimal precision scales with payload length;
 * verified termination replays the receiver's reverse rotation before stopping;
 * decoding is finalize-only, matching Algorithm 4;
@@ -130,16 +131,25 @@ class RRCConfig:
 
 @dataclass(frozen=True, slots=True)
 class _StepDistribution:
-    """FP64 interval partition derived only from the current P_reference."""
+    """Decimal interval partition derived only from the current P_reference.
+
+    P_reference is stored in float32 by the common benchmark path.  Each
+    positive stored probability is converted to Decimal *before* cumulative
+    accumulation.  This avoids losing a tiny positive interval merely because
+    a sequential FP64 cumulative sum can no longer represent the increment.
+    """
 
     token_ids: np.ndarray
-    boundaries: np.ndarray
+    cumulative_weights: tuple[Decimal, ...]
+    total_weight: Decimal
 
     @classmethod
     def from_context(
         cls,
         context: StepContext,
         environment: MethodEnvironment,
+        *,
+        precision: int,
     ) -> "_StepDistribution":
         reference = context.reference
         if reference.vocab_size != environment.output_vocab_size:
@@ -155,15 +165,36 @@ class _StepDistribution:
                     f"P_reference support token {int(token_id)} lies outside V_allowed"
                 )
 
-        support = reference.probabilities[order].astype(np.float64, copy=True)
-        boundaries = np.empty(order.size + 1, dtype=np.float64)
-        boundaries[0] = 0.0
-        np.cumsum(support, dtype=np.float64, out=boundaries[1:])
-        total = float(boundaries[-1])
-        if not np.isfinite(total) or total <= 0.0:
-            raise MethodError(f"RRC candidate probability total is invalid: {total!r}")
-        boundaries[1:] /= total
-        return cls(token_ids=order, boundaries=boundaries)
+        if isinstance(precision, bool) or not isinstance(precision, int) or precision <= 0:
+            raise RRCPrecisionError("RRC boundary precision must be a positive integer")
+
+        with localcontext() as decimal_context:
+            decimal_context.prec = precision
+            cumulative = Decimal(0)
+            cumulative_weights: list[Decimal] = [Decimal(0)]
+            for token_id in order:
+                probability = Decimal.from_float(
+                    float(reference.probabilities[int(token_id)])
+                )
+                previous = cumulative
+                cumulative += probability
+                if cumulative <= previous:
+                    raise RRCPrecisionError(
+                        "RRC Decimal accumulation lost a positive probability increment; "
+                        "increase precision_margin"
+                    )
+                cumulative_weights.append(cumulative)
+
+            total = cumulative
+            if not total.is_finite() or total <= 0:
+                raise MethodError(
+                    f"RRC candidate probability total is invalid: {total!r}"
+                )
+            return cls(
+                token_ids=order,
+                cumulative_weights=tuple(cumulative_weights),
+                total_weight=total,
+            )
 
     def index_of(self, token_id: int) -> int:
         hits = np.flatnonzero(self.token_ids == int(token_id))
@@ -176,23 +207,24 @@ def _select_index(
     right: Decimal,
     secret_point: Decimal,
 ) -> tuple[int, Decimal, Decimal]:
-    """Pinned Algorithm-3 candidate search using Decimal(str(boundary))."""
+    """Pinned Algorithm-3 candidate search over Decimal boundaries."""
 
     width = right - left
     if width <= 0:
         raise RRCPrecisionError("RRC interval collapsed before candidate selection")
-    boundaries = dist.boundaries
-    lo, hi = 0, len(boundaries) - 2
+    cumulative = dist.cumulative_weights
+    total = dist.total_weight
+    lo, hi = 0, len(cumulative) - 2
     while lo < hi:
         mid = (lo + hi) // 2
-        upper = left + Decimal(str(boundaries[mid + 1])) * width
+        upper = left + (cumulative[mid + 1] / total) * width
         if upper > secret_point:
             hi = mid
         else:
             lo = mid + 1
 
-    lower = left + Decimal(str(boundaries[lo])) * width
-    upper = left + Decimal(str(boundaries[lo + 1])) * width
+    lower = left + (cumulative[lo] / total) * width
+    upper = left + (cumulative[lo + 1] / total) * width
     if not upper > secret_point:
         raise RRCPrecisionError(
             "no RRC sub-interval contains the rotated secret point"
@@ -210,8 +242,8 @@ def _narrow(
         raise MethodError("RRC candidate index lies outside the current support")
     width = right - left
     return (
-        left + Decimal(str(dist.boundaries[index])) * width,
-        left + Decimal(str(dist.boundaries[index + 1])) * width,
+        left + (dist.cumulative_weights[index] / dist.total_weight) * width,
+        left + (dist.cumulative_weights[index + 1] / dist.total_weight) * width,
     )
 
 
@@ -235,7 +267,8 @@ def _distribution_info(context: StepContext) -> DistributionInfo:
         metadata={
             "method": "rrc",
             "reference_commit": _REFERENCE_COMMIT,
-            "construction": "independent_interval_measure",
+            "construction": "direct_normalized_interval_widths",
+            "boundary_construction": "decimal_cumulative_from_float32_probabilities",
             "randomness_model": "uniform_rotation_offset",
         },
     )
@@ -285,7 +318,9 @@ class RRCEncoderSession(EncoderSession):
         if self._done:
             raise SessionStateError("cannot call RRC encoder.step() after termination")
 
-        dist = _StepDistribution.from_context(context, self._environment)
+        dist = _StepDistribution.from_context(
+            context, self._environment, precision=self._precision
+        )
         with localcontext() as decimal_context:
             decimal_context.prec = self._precision
             width = self._right - self._left
@@ -363,6 +398,7 @@ class RRCEncoderSession(EncoderSession):
                 "verify_termination": self._config.verify_termination,
                 "termination_retries": self._termination_retries,
                 "reference_commit": _REFERENCE_COMMIT,
+                "boundary_construction": "decimal_cumulative_from_float32_probabilities",
             },
         )
 
@@ -408,7 +444,9 @@ class RRCDecoderSession(DecoderSession):
                 method_trace={"rrc_decode_failed": True, "failure_step": self._failure_step}
             )
 
-        dist = _StepDistribution.from_context(context, self._environment)
+        dist = _StepDistribution.from_context(
+            context, self._environment, precision=self._precision
+        )
         index = dist.index_of(int(observed_token_id))
         if index < 0:
             self._failure_step = context.step_index

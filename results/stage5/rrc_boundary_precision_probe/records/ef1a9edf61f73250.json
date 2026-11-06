@@ -1,0 +1,33 @@
+{
+  "ber": 0.0,
+  "bits_per_token": 4.015686274509804,
+  "boundary_summary": {
+    "all_forward_infinite_steps_have_support_loss": true,
+    "carrier_tokens": 255,
+    "first_support_loss_step": null,
+    "forward_infinite_steps": 0,
+    "max_step_lost_reference_mass": 0.0,
+    "max_zero_width_count_on_one_step": 0,
+    "replay_metric_classification_mismatches": 0,
+    "support_loss_steps": 0,
+    "total_lost_reference_mass_across_steps": 0.0
+  },
+  "entropy_utilization": 1.0122736273060808,
+  "method_params": {
+    "precision_margin": 40,
+    "verify_termination": true
+  },
+  "method_point_id": "margin40",
+  "prompt_id": "s5p0003",
+  "replicate_id": "r02",
+  "roundtrip_exact": true,
+  "run_id": "ef1a9edf61f73250",
+  "schema_version": "stage5.rrc_boundary_precision_probe.record.v1",
+  "source_forward_kl_infinite_steps": 0,
+  "source_forward_kl_mean_bits": 8.923950604661615e-17,
+  "source_reverse_kl_mean_bits": 1.3195234313464942e-16,
+  "source_tvd_mean": 2.512912410875914e-12,
+  "status": "ok",
+  "support_loss_step_records": [],
+  "target_payload_bits": 1024
+}

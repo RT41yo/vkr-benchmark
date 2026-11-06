@@ -21,11 +21,11 @@ from vkr_benchmark.errors import DistributionError
 def explicit_rrc_q(reference: ReferenceDistribution) -> np.ndarray:
     """Return the explicit RRC-induced token distribution for one step.
 
-    The construction mirrors the numerical partition used by the pinned RRC
-    implementation: positive-probability candidates are taken in deterministic
-    descending order, accumulated in FP64, and the cumulative boundaries are
-    normalized by their final total.  The induced probability of a token is
-    the width of its normalized interval.
+    The practical RRC partition now accumulates boundaries in Decimal.  The
+    width of each normalized interval is therefore its positive stored
+    P_reference probability divided by the positive-support total.  Constructing
+    Q directly from those widths is independent of the encoder and avoids
+    reintroducing the old FP64 cumulative-boundary support loss into metrics.
     """
 
     order = np.asarray(reference.token_order, dtype=np.int64)
@@ -37,21 +37,14 @@ def explicit_rrc_q(reference: ReferenceDistribution) -> np.ndarray:
     if not np.isfinite(total) or total <= 0.0:
         raise DistributionError(f"RRC support probability total is invalid: {total!r}")
 
-    boundaries = np.empty(order.size + 1, dtype=np.float64)
-    boundaries[0] = 0.0
-    np.cumsum(support, dtype=np.float64, out=boundaries[1:])
-    boundaries[1:] /= boundaries[-1]
-
-    widths = np.diff(boundaries)
-    if np.any(widths < 0.0) or not np.all(np.isfinite(widths)):
-        raise DistributionError("RRC interval widths are not a valid distribution")
+    widths = support / total
+    if np.any(widths <= 0.0) or not np.all(np.isfinite(widths)):
+        raise DistributionError("RRC interval widths are not a valid positive support")
 
     q = np.zeros(reference.vocab_size, dtype=np.float64)
     q[order] = widths
     q_total = float(np.sum(q, dtype=np.float64))
     if not np.isfinite(q_total) or q_total <= 0.0:
         raise DistributionError(f"RRC explicit Q total is invalid: {q_total!r}")
-    # Remove only cumulative floating-point residue from the explicit interval
-    # widths.  This does not alter support.
     q /= q_total
     return q

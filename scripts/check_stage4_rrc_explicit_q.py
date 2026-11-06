@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 """Validate explicit Q_stego construction and numerical preservation for RRC.
 
-Synthetic small-support cases use near-machine-precision equality checks.  A
-real full-vocabulary LM trajectory is judged by the benchmark distortion
-metrics themselves (dual KL and TVD), while max |Q-P| remains a diagnostic.
-This distinction is intentional: RRC builds sorted FP64 cumulative boundaries,
-whereas canonical P_reference is stored in FP32 and normalized independently by
-the common metric layer.  With O(1e5) support, mathematically equivalent sums
-are not bit-identical even though the resulting distributional distortion is
-at the FP64 numerical-noise scale.
+Synthetic small-support cases use near-machine-precision equality checks.
+Stage 4 originally validated the FP64 cumulative-boundary adapter.  Stage 5
+replaced that numerical layer with Decimal accumulation after a real-model
+support-loss diagnosis.  The helper remains useful for checking the current
+independent explicit-Q construction against the same frozen reference inputs.
 """
 
 from __future__ import annotations
@@ -82,14 +79,7 @@ def _synthetic_failure_reasons(row: dict[str, Any], tol: dict[str, float]) -> li
 
 
 def _real_failure_reasons(row: dict[str, Any], tol: dict[str, float]) -> list[str]:
-    """Gate real LM rows on benchmark distortion, not coordinate equality.
-
-    max |Q-P| is deliberately diagnostic here.  On a large support the actual
-    RRC partition is obtained from a sequential FP64 cumulative sum in sorted
-    probability order, while the common metric layer normalizes canonical FP32
-    P_reference independently.  Their coordinate-wise difference can therefore
-    exceed a small-support ulp threshold without implying material distortion.
-    """
+    """Gate real LM rows on the benchmark distortion metrics."""
 
     reasons: list[str] = []
     for name in ("kl_ref_to_stego_bits", "kl_stego_to_ref_bits", "tvd"):
@@ -128,7 +118,7 @@ def _synthetic_references(random_cases: int):
 
 
 def _large_vocab_stress_reference(vocab_size: int = 128_256) -> ReferenceDistribution:
-    """Deterministic full-vocabulary case exposing cumulative FP64 residue."""
+    """Deterministic full-vocabulary stress case retained from Stage 4."""
 
     if vocab_size < 2:
         raise ValueError("vocab_size must be at least 2")

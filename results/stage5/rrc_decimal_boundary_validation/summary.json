@@ -1,0 +1,26 @@
+{
+  "by_prompt_replicate": {
+    "s5p0001:r01": {"ber": 0.0, "bits_per_token": 4.452173913043478, "carrier_tokens": 230, "kl_ref_to_stego_mean_bits": 1.0745169161293357e-16, "kl_stego_to_ref_mean_bits": 1.534875436600463e-16, "roundtrip_exact": true, "run_id": "13b7de0f1f5217ff", "tvd_mean": 9.138914157478031e-17},
+    "s5p0001:r02": {"ber": 0.0, "bits_per_token": 3.9384615384615387, "carrier_tokens": 260, "kl_ref_to_stego_mean_bits": 1.1280087942806573e-16, "kl_stego_to_ref_mean_bits": 1.214972832758767e-16, "roundtrip_exact": true, "run_id": "d1e37f8864f2c487", "tvd_mean": 8.26613480212274e-17},
+    "s5p0002:r01": {"ber": 0.0, "bits_per_token": 4.612612612612613, "carrier_tokens": 222, "kl_ref_to_stego_mean_bits": 1.0188926542779998e-16, "kl_stego_to_ref_mean_bits": 1.3102575701790164e-16, "roundtrip_exact": true, "run_id": "c7ff42a7929fba36", "tvd_mean": 8.104796567124998e-17},
+    "s5p0002:r02": {"ber": 0.0, "bits_per_token": 5.657458563535911, "carrier_tokens": 181, "kl_ref_to_stego_mean_bits": 1.1494555292802847e-16, "kl_stego_to_ref_mean_bits": 1.4658210291854632e-16, "roundtrip_exact": true, "run_id": "2d66fc496000ca9f", "tvd_mean": 9.071340929021709e-17},
+    "s5p0003:r01": {"ber": 0.0, "bits_per_token": 5.688888888888889, "carrier_tokens": 180, "kl_ref_to_stego_mean_bits": 8.498317317230688e-17, "kl_stego_to_ref_mean_bits": 1.63081207823859e-16, "roundtrip_exact": true, "run_id": "9f5b63670be7f342", "tvd_mean": 8.472127207672151e-17},
+    "s5p0003:r02": {"ber": 0.0, "bits_per_token": 3.220125786163522, "carrier_tokens": 318, "kl_ref_to_stego_mean_bits": 1.3798816980502983e-16, "kl_stego_to_ref_mean_bits": 1.5144636679588488e-16, "roundtrip_exact": true, "run_id": "5c2cf34cc93632f6", "tvd_mean": 1.0284529972686038e-16},
+    "s5p0004:r01": {"ber": 0.0, "bits_per_token": 3.9689922480620154, "carrier_tokens": 258, "kl_ref_to_stego_mean_bits": 1.2014828060058533e-16, "kl_stego_to_ref_mean_bits": 1.455022291577736e-16, "roundtrip_exact": true, "run_id": "db6c7ac7e2f5aba2", "tvd_mean": 9.209764495921568e-17},
+    "s5p0004:r02": {"ber": 0.4150390625, "bits_per_token": 4.112449799196787, "carrier_tokens": 249, "kl_ref_to_stego_mean_bits": 1.0880539298341208e-16, "kl_stego_to_ref_mean_bits": 1.5147453354008842e-16, "roundtrip_exact": false, "run_id": "9967d088525fcf46", "tvd_mean": 8.931706751663217e-17}
+  },
+  "completed_ok_count": 8,
+  "exact_count": 7,
+  "finite_forward_kl_count": 8,
+  "finite_reverse_kl_count": 8,
+  "interpretation": "The validation gate checks the Decimal-boundary RRC implementation only. The new sweep uses a new Stage-5 sweep id, so synchronized RRC randomness is newly derived rather than paired bit-for-bit with the earlier margin40 sweep.",
+  "max_abs_forward_kl_bits": 1.3798816980502983e-16,
+  "max_abs_reverse_kl_bits": 1.63081207823859e-16,
+  "max_tvd": 1.0284529972686038e-16,
+  "schema_version": "stage5.rrc_decimal_boundary_validation.summary.v1",
+  "selected_count": 8,
+  "source_margin40_count": 8,
+  "source_margin40_infinite_forward_kl_count": 4,
+  "validation_gate": false,
+  "zero_ber_count": 7
+}

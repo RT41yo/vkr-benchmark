@@ -1,0 +1,112 @@
+{
+  "ber": 0.0,
+  "bits_per_token": 3.9083969465648853,
+  "boundary_summary": {
+    "all_forward_infinite_steps_have_support_loss": true,
+    "carrier_tokens": 262,
+    "first_support_loss_step": 26,
+    "forward_infinite_steps": 2,
+    "max_step_lost_reference_mass": 9.741370310693399e-17,
+    "max_zero_width_count_on_one_step": 2,
+    "replay_metric_classification_mismatches": 0,
+    "support_loss_steps": 2,
+    "total_lost_reference_mass_across_steps": 1.1645097745541469e-16
+  },
+  "entropy_utilization": 0.932243066270889,
+  "method_params": {
+    "precision_margin": 40,
+    "verify_termination": true
+  },
+  "method_point_id": "margin40",
+  "prompt_id": "s5p0002",
+  "replicate_id": "r02",
+  "roundtrip_exact": true,
+  "run_id": "7c0e33a9cd93f7f0",
+  "schema_version": "stage5.rrc_boundary_precision_probe.record.v1",
+  "source_forward_kl_infinite_steps": 2,
+  "source_forward_kl_mean_bits": "+inf",
+  "source_reverse_kl_mean_bits": 1.347140296515668e-16,
+  "source_tvd_mean": 2.5276502171799736e-12,
+  "status": "ok",
+  "support_loss_step_records": [
+    {
+      "first_lost_rank": 128253,
+      "ideal_support_preserving_forward_kl_bits": 3.203481797133104e-16,
+      "ideal_support_preserving_reverse_kl_bits": 0.0,
+      "ideal_support_preserving_tvd": 1.1103749840412717e-16,
+      "lost_intervals": [
+        {
+          "collapse_stage": "fp64_cumsum",
+          "normalized_left_boundary": 1.0,
+          "normalized_right_boundary": 1.0,
+          "probability_to_spacing_ratio": 0.17147251963615417,
+          "rank": 128253,
+          "raw_boundary_spacing": 1.1102230246251565e-16,
+          "raw_left_boundary": 0.9999999784933088,
+          "raw_right_boundary": 0.9999999784933088,
+          "reference_probability": 1.9037273939054763e-17,
+          "token_id": 113329
+        }
+      ],
+      "lost_reference_mass": 1.90372743484807e-17,
+      "max_lost_reference_probability": 1.9037273939054763e-17,
+      "min_lost_reference_probability": 1.9037273939054763e-17,
+      "original_forward_kl_bits": "+inf",
+      "original_reverse_kl_bits": 1.3551080677336582e-15,
+      "original_tvd": 1.866429110572867e-12,
+      "replayed_forward_kl_bits": "+inf",
+      "replayed_reverse_kl_bits": 1.3551080677336582e-15,
+      "replayed_tvd": 1.866429110572867e-12,
+      "selected_token_id": 2642,
+      "step_index": 26,
+      "support_size": 128254,
+      "zero_width_count": 1
+    },
+    {
+      "first_lost_rank": 128252,
+      "ideal_support_preserving_forward_kl_bits": 0.0,
+      "ideal_support_preserving_reverse_kl_bits": 9.850885407062784e-24,
+      "ideal_support_preserving_tvd": 1.726971491691311e-21,
+      "lost_intervals": [
+        {
+          "collapse_stage": "fp64_cumsum",
+          "normalized_left_boundary": 1.0,
+          "normalized_right_boundary": 1.0,
+          "probability_to_spacing_ratio": 0.4660961627960205,
+          "rank": 128252,
+          "raw_boundary_spacing": 1.1102230246251565e-16,
+          "raw_left_boundary": 0.9999999926101437,
+          "raw_right_boundary": 0.9999999926101437,
+          "reference_probability": 5.1747069162557725e-17,
+          "token_id": 31315
+        },
+        {
+          "collapse_stage": "fp64_cumsum",
+          "normalized_left_boundary": 1.0,
+          "normalized_right_boundary": 1.0,
+          "probability_to_spacing_ratio": 0.4113284647464752,
+          "rank": 128253,
+          "raw_boundary_spacing": 1.1102230246251565e-16,
+          "raw_left_boundary": 0.9999999926101437,
+          "raw_right_boundary": 0.9999999926101437,
+          "reference_probability": 4.566663322452538e-17,
+          "token_id": 3616
+        }
+      ],
+      "lost_reference_mass": 9.741370310693399e-17,
+      "max_lost_reference_probability": 5.1747069162557725e-17,
+      "min_lost_reference_probability": 4.566663322452538e-17,
+      "original_forward_kl_bits": "+inf",
+      "original_reverse_kl_bits": 2.3724775671553683e-15,
+      "original_tvd": 1.8583641723808256e-12,
+      "replayed_forward_kl_bits": "+inf",
+      "replayed_reverse_kl_bits": 2.3724775671553683e-15,
+      "replayed_tvd": 1.8583641723808256e-12,
+      "selected_token_id": 352,
+      "step_index": 143,
+      "support_size": 128254,
+      "zero_width_count": 2
+    }
+  ],
+  "target_payload_bits": 1024
+}

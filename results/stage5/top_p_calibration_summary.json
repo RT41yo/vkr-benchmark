@@ -1,0 +1,133 @@
+{
+  "schema_version": "stage5.top_p_calibration.summary.v1",
+  "sweep_id": "stage5-top-p-calibration-llama-v1",
+  "source_execution_log": "results/stage5/sweeps/stage5-top-p-calibration-llama-v1/execution.jsonl",
+  "source_support_probe_log": "results/stage5/sweeps/stage5-top-p-calibration-llama-v1/support_probe_execution.jsonl",
+  "main_tp100": {
+    "run_count": 14,
+    "ok_count": 14,
+    "failed_count": 0,
+    "sum_elapsed_wall_seconds": 89.40131473301881,
+    "all_roundtrip_exact": true,
+    "ber_max": 0.0
+  },
+  "support_probe": {
+    "tp098_bins_status": "error",
+    "tp098_bins_error_type": "UnsupportedConfigurationError",
+    "tp098_bins_error_message": "current P_reference has no positive-probability token in Bins bin(s) [0, 1, 2]; common truncation/policy is incompatible with this Bins configuration at this step",
+    "tp100_bins_status": "ok"
+  },
+  "decision": {
+    "temperature": 1.0,
+    "common_top_k": null,
+    "common_top_p": 1.0,
+    "reason": "Full-support top_p=1.0 is feasible for all seven normalized methods in the technical calibration. top_p=0.98 empties positive-probability support in three of four Bins bins for the tested b=2 step; lowering top_p cannot restore removed support."
+  },
+  "per_method_tp100": {
+    "adg": {
+      "run_count": 2,
+      "ok_count": 2,
+      "roundtrip_exact_count": 2,
+      "ber_max": 0.0,
+      "bits_per_token_mean": 2.75,
+      "entropy_utilization_mean": 0.5882710844717962,
+      "kl_ref_to_stego_mean_bits_mean": 0.010052615799527213,
+      "kl_stego_to_ref_mean_bits_mean": 0.010282352954708123,
+      "tvd_mean_mean": 0.032862544983354225,
+      "ppl_raw_lm_mean": 17.28902951373696,
+      "elapsed_wall_seconds_mean": 29.559823970001162,
+      "metric_instrumentation_total_ms_mean": 27461.33096100675,
+      "stego_algorithm_total_ms_mean": 1190.159189987753
+    },
+    "arithmetic_coding": {
+      "run_count": 2,
+      "ok_count": 2,
+      "roundtrip_exact_count": 2,
+      "ber_max": 0.0,
+      "bits_per_token_mean": 3.75,
+      "entropy_utilization_mean": 0.8716148942467975,
+      "kl_ref_to_stego_mean_bits_mean": "inf",
+      "kl_stego_to_ref_mean_bits_mean": 0.024175807725373536,
+      "tvd_mean_mean": 0.017598488462045685,
+      "ppl_raw_lm_mean": 16.40134470197526,
+      "elapsed_wall_seconds_mean": 1.4036765885030036,
+      "metric_instrumentation_total_ms_mean": 355.5749594925146,
+      "stego_algorithm_total_ms_mean": 689.4873069904861
+    },
+    "bins": {
+      "run_count": 2,
+      "ok_count": 2,
+      "roundtrip_exact_count": 2,
+      "ber_max": 0.0,
+      "bits_per_token_mean": 2.0,
+      "entropy_utilization_mean": 0.4044381803531153,
+      "kl_ref_to_stego_mean_bits_mean": "inf",
+      "kl_stego_to_ref_mean_bits_mean": 2.1723322261224665,
+      "tvd_mean_mean": 0.6283280925249057,
+      "ppl_raw_lm_mean": 23.76905857051653,
+      "elapsed_wall_seconds_mean": 0.5486061865049123,
+      "metric_instrumentation_total_ms_mean": 15.637221487850184,
+      "stego_algorithm_total_ms_mean": 48.43369250011165
+    },
+    "dairstega": {
+      "run_count": 2,
+      "ok_count": 2,
+      "roundtrip_exact_count": 2,
+      "ber_max": 0.0,
+      "bits_per_token_mean": 1.0,
+      "entropy_utilization_mean": 0.2501091629471267,
+      "kl_ref_to_stego_mean_bits_mean": "inf",
+      "kl_stego_to_ref_mean_bits_mean": 0.8747018705461271,
+      "tvd_mean_mean": 0.3881976475349392,
+      "ppl_raw_lm_mean": 4.342424766913079,
+      "elapsed_wall_seconds_mean": 0.8964909304995672,
+      "metric_instrumentation_total_ms_mean": 12.610041012521833,
+      "stego_algorithm_total_ms_mean": 520.272813988413
+    },
+    "discop": {
+      "run_count": 2,
+      "ok_count": 2,
+      "roundtrip_exact_count": 2,
+      "ber_max": 0.0,
+      "bits_per_token_mean": 3.0625,
+      "entropy_utilization_mean": 0.9752447007172325,
+      "kl_ref_to_stego_mean_bits_mean": 8.428179248341657e-17,
+      "kl_stego_to_ref_mean_bits_mean": 1.7121347431812635e-16,
+      "tvd_mean_mean": 1.1036301288657697e-16,
+      "ppl_raw_lm_mean": 14.465501667145759,
+      "elapsed_wall_seconds_mean": 10.795698693000304,
+      "metric_instrumentation_total_ms_mean": 5928.487422988837,
+      "stego_algorithm_total_ms_mean": 4368.3589690044755
+    },
+    "huffman": {
+      "run_count": 2,
+      "ok_count": 2,
+      "roundtrip_exact_count": 2,
+      "ber_max": 0.0,
+      "bits_per_token_mean": 1.9375,
+      "entropy_utilization_mean": 0.37375258367345354,
+      "kl_ref_to_stego_mean_bits_mean": "inf",
+      "kl_stego_to_ref_mean_bits_mean": 1.3598344643724614,
+      "tvd_mean_mean": 0.5218113395681392,
+      "ppl_raw_lm_mean": 14.363716411441223,
+      "elapsed_wall_seconds_mean": 0.36398391100374283,
+      "metric_instrumentation_total_ms_mean": 10.604736497043632,
+      "stego_algorithm_total_ms_mean": 0.9189800039166585
+    },
+    "rrc": {
+      "run_count": 2,
+      "ok_count": 2,
+      "roundtrip_exact_count": 2,
+      "ber_max": 0.0,
+      "bits_per_token_mean": 3.5164835164835164,
+      "entropy_utilization_mean": 0.9639463411923348,
+      "kl_ref_to_stego_mean_bits_mean": 1.195725644554207e-16,
+      "kl_stego_to_ref_mean_bits_mean": 1.2848919431165002e-16,
+      "tvd_mean_mean": 2.48718644790787e-12,
+      "ppl_raw_lm_mean": 21.721799419266183,
+      "elapsed_wall_seconds_mean": 1.132377086996712,
+      "metric_instrumentation_total_ms_mean": 37.150471511267824,
+      "stego_algorithm_total_ms_mean": 655.3112484980375
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": "stage5.rrc_decimal_boundary_validation.closeout.v1",
+  "precision_margin": 40,
+  "payload_bits": 1024,
+  "boundary_root_cause_confirmed": true,
+  "numerical_validation_passed": true,
+  "completed_runs": 8,
+  "finite_forward_kl_runs": 8,
+  "finite_reverse_kl_runs": 8,
+  "max_abs_forward_kl_bits": 1.3798816980502983e-16,
+  "max_abs_reverse_kl_bits": 1.63081207823859e-16,
+  "max_tvd": 1.0284529972686038e-16,
+  "end_to_end_exact_runs": 7,
+  "text_transport_attributed_runs": 1,
+  "direct_sender_exact_for_end_to_end_failures": true,
+  "rrc_core_validation_passed": true,
+  "stage6_status": "boundary_precision_closed_payload_calibration_pending",
+  "note": "The single end-to-end inexact run was caused by token-sequence change after text serialization and retokenization. Payload calibration remains separate from the numerical boundary fix."
+}
