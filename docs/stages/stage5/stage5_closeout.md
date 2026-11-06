@@ -1,6 +1,6 @@
 # Закрытие Этапа 5: пилотные эксперименты и фиксация дизайна Stage 6
 
-Статус: **содержательная и техническая часть Этапа 5 завершена**.
+Статус: **Этап 5 завершён и готов к финальному коммиту**.
 
 ## 1. Что сделано
 
@@ -16,7 +16,8 @@
 - зафиксированы 3 повтора для Llama и 2 для Qwen;
 - рассчитан вычислительный бюджет;
 - подготовлена спецификация бенчмарка v1.0;
-- подготовлены исполняемые конфигурации Stage 6.
+- подготовлены исполняемые конфигурации Stage 6;
+- подготовлена итоговая презентация `docs/stages/stage5/stage_5.typ`.
 
 Единый итоговый отчёт:
 
@@ -60,7 +61,8 @@ Qwen:
 - `docs/stages/stage5/decoder_audit_report.md` — аудит ошибок Pilot B;
 - `docs/stages/stage5/rrc_decimal_boundary_validation_report.md` — численная проверка RRC;
 - `docs/stages/stage5/rrc_payload_calibration_report.md` — выбор размера секрета RRC;
-- `docs/stages/stage5/stage6_scale_and_budget_report.md` — масштаб и вычислительный бюджет.
+- `docs/stages/stage5/stage6_scale_and_budget_report.md` — масштаб и вычислительный бюджет;
+- `docs/stages/stage5/stage_5.typ` — итоговая презентация Этапа 5.
 
 ## 5. Исполняемые конфигурации Stage 6
 
