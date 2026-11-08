@@ -15,6 +15,7 @@ from vkr_benchmark.storage.run_store import (
     materialize_run_config,
     persist_experiment_execution,
     persist_failed_run,
+    successful_run_is_complete,
     update_summary_parquet,
 )
 
@@ -33,5 +34,6 @@ __all__ = [
     "materialize_run_config",
     "persist_experiment_execution",
     "persist_failed_run",
+    "successful_run_is_complete",
     "update_summary_parquet",
 ]

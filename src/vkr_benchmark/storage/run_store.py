@@ -19,7 +19,11 @@ from tempfile import NamedTemporaryFile
 from typing import Any, Iterable, Mapping
 
 from vkr_benchmark.config import ExperimentConfig, LocalModelConfig
-from vkr_benchmark.errors import StorageError
+from vkr_benchmark.errors import (
+    RoundtripFailureDiagnostics,
+    StorageError,
+    get_roundtrip_failure_diagnostics,
+)
 from vkr_benchmark.runner.experiment import ExperimentExecution
 
 _RUN_ID_HEX_CHARS = 16
@@ -38,6 +42,7 @@ class RunArtifacts:
     token_ids_path: Path | None
     trace_path: Path | None
     summary_path: Path | None
+    failure_diagnostics_path: Path | None
 
 
 def _canonicalizable(value: Any) -> Any:
@@ -598,6 +603,106 @@ def _run_paths(results_root: Path, run_id: str) -> tuple[Path, Path]:
     return run_directory, summary_path
 
 
+def _failure_diagnostics_record(
+    diagnostics: RoundtripFailureDiagnostics,
+) -> dict[str, Any]:
+    """Serialize non-normative hard-failure evidence captured by the runner."""
+
+    return {
+        "failure_phase": diagnostics.failure_phase,
+        "sender_token_ids": list(diagnostics.sender_token_ids),
+        "sender_token_count": len(diagnostics.sender_token_ids),
+        "payload_bits": diagnostics.payload_bits,
+        "secret_bits_read": diagnostics.secret_bits_read,
+        "transport_text": diagnostics.transport_text,
+        "receiver_token_ids": (
+            None
+            if diagnostics.receiver_token_ids is None
+            else list(diagnostics.receiver_token_ids)
+        ),
+        "receiver_token_count": (
+            None
+            if diagnostics.receiver_token_ids is None
+            else len(diagnostics.receiver_token_ids)
+        ),
+        "token_sequence_roundtrip_exact": (
+            diagnostics.token_sequence_roundtrip_exact
+        ),
+        "first_token_mismatch": diagnostics.first_token_mismatch,
+        "token_count_delta": diagnostics.token_count_delta,
+    }
+
+
+def successful_run_is_complete(results_root: str | Path, run_id: str) -> bool:
+    """Return whether a success marker and all mandatory run artifacts are valid.
+
+    ``result.json(status=ok)`` is the completion marker, but it is accepted only
+    together with readable canonical config, text, token-id, and trace artifacts.
+    ``summary.parquet`` is intentionally not required because callers may use
+    ``--skip-summary-parquet``.
+    """
+
+    run_directory = Path(results_root).expanduser().resolve() / "runs" / run_id
+    config_path = run_directory / "config.json"
+    result_path = run_directory / "result.json"
+    stegotext_path = run_directory / "stegotext.txt"
+    token_ids_path = run_directory / "token_ids.json"
+    trace_path = run_directory / "trace.jsonl.gz"
+
+    required = (config_path, result_path, stegotext_path, token_ids_path, trace_path)
+    if not all(path.is_file() for path in required):
+        return False
+
+    try:
+        config_raw = json.loads(config_path.read_text(encoding="utf-8"))
+        if not isinstance(config_raw, dict) or compute_run_id(config_raw) != run_id:
+            return False
+
+        result_raw = json.loads(result_path.read_text(encoding="utf-8"))
+        if (
+            not isinstance(result_raw, dict)
+            or result_raw.get("status") != "ok"
+            or result_raw.get("run_id") != run_id
+        ):
+            return False
+        carrier_tokens = result_raw.get("carrier_tokens")
+        if not isinstance(carrier_tokens, int) or carrier_tokens <= 0:
+            return False
+
+        # Reading the whole text verifies that the file is valid UTF-8.  Empty
+        # text is not rejected: tokenizers may theoretically decode carriers to
+        # an empty string, and reliability is measured after retokenization.
+        stegotext_path.read_text(encoding="utf-8")
+
+        token_ids_raw = json.loads(token_ids_path.read_text(encoding="utf-8"))
+        if not isinstance(token_ids_raw, dict):
+            return False
+        sender = token_ids_raw.get("sender_token_ids")
+        receiver = token_ids_raw.get("receiver_token_ids")
+        if not isinstance(sender, list) or not isinstance(receiver, list):
+            return False
+        if len(sender) != carrier_tokens:
+            return False
+        if any(not isinstance(token_id, int) for token_id in sender + receiver):
+            return False
+
+        trace_rows = 0
+        with gzip.open(trace_path, "rt", encoding="utf-8") as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                row = json.loads(line)
+                if not isinstance(row, dict):
+                    return False
+                trace_rows += 1
+        if trace_rows != carrier_tokens:
+            return False
+    except (OSError, UnicodeError, json.JSONDecodeError, EOFError, StorageError):
+        return False
+
+    return True
+
+
 def persist_experiment_execution(
     execution: ExperimentExecution,
     *,
@@ -605,7 +710,7 @@ def persist_experiment_execution(
     results_root: str | Path,
     update_summary: bool = True,
 ) -> RunArtifacts:
-    """Persist one successful execution using the Stage-2 v0.2 layout."""
+    """Persist one successful execution using a crash-safe completion marker."""
 
     root = Path(results_root).expanduser().resolve()
     canonical_config = materialize_run_config(execution.config, model_config)
@@ -618,13 +723,16 @@ def persist_experiment_execution(
     stegotext_path = run_directory / "stegotext.txt"
     token_ids_path = run_directory / "token_ids.json"
     trace_path = run_directory / "trace.jsonl.gz"
+    failure_diagnostics_path = run_directory / "failure_diagnostics.json"
+
+    # result.json(status=ok) is the final completion marker.  Remove any marker
+    # from an earlier attempt before rewriting the run so an interruption can
+    # never leave a stale success marker pointing at partial artifacts.
+    if result_path.exists():
+        result_path.unlink()
 
     # config.json bytes are the exact canonical JSON bytes used for run_id.
     _atomic_write_text(config_path, canonical_json_text(canonical_config))
-    _atomic_write_text(
-        result_path,
-        _pretty_json_text(build_result_record(execution, run_id=run_id)),
-    )
     # Exact transmitted ordinary text: no synthetic trailing newline is added.
     _atomic_write_text(stegotext_path, execution.roundtrip.transport.text)
     _atomic_write_text(
@@ -632,6 +740,10 @@ def persist_experiment_execution(
         _pretty_json_text(build_token_ids_record(execution)),
     )
     _write_trace_gzip(trace_path, iter_trace_records(execution))
+
+    # A successful latest attempt supersedes diagnostics from an older failure.
+    if failure_diagnostics_path.exists():
+        failure_diagnostics_path.unlink()
 
     persisted_summary: Path | None = None
     if update_summary:
@@ -644,6 +756,12 @@ def persist_experiment_execution(
             ),
         )
 
+    # Completion marker is intentionally written last.
+    _atomic_write_text(
+        result_path,
+        _pretty_json_text(build_result_record(execution, run_id=run_id)),
+    )
+
     return RunArtifacts(
         run_id=run_id,
         run_directory=run_directory,
@@ -653,6 +771,7 @@ def persist_experiment_execution(
         token_ids_path=token_ids_path,
         trace_path=trace_path,
         summary_path=persisted_summary,
+        failure_diagnostics_path=None,
     )
 
 
@@ -664,7 +783,7 @@ def persist_failed_run(
     results_root: str | Path,
     update_summary: bool = True,
 ) -> RunArtifacts:
-    """Persist a configured run that failed after configuration was resolved."""
+    """Persist a configured hard failure and any captured diagnostic evidence."""
 
     root = Path(results_root).expanduser().resolve()
     canonical_config = materialize_run_config(config, model_config)
@@ -674,11 +793,13 @@ def persist_failed_run(
 
     config_path = run_directory / "config.json"
     result_path = run_directory / "result.json"
+    failure_diagnostics_path = run_directory / "failure_diagnostics.json"
+
+    # Clear an earlier completion marker first.  The final error result is also
+    # written last so the run directory always describes one complete attempt.
+    if result_path.exists():
+        result_path.unlink()
     _atomic_write_text(config_path, canonical_json_text(canonical_config))
-    _atomic_write_text(
-        result_path,
-        _pretty_json_text(build_failure_result_record(run_id=run_id, error=error)),
-    )
 
     # Remove success-only artifacts if an identical configuration is being
     # rerun and now fails; the directory must describe the latest attempt only.
@@ -686,6 +807,19 @@ def persist_failed_run(
         stale = run_directory / filename
         if stale.exists():
             stale.unlink()
+
+    diagnostics = get_roundtrip_failure_diagnostics(error)
+    persisted_failure_diagnostics: Path | None = None
+    if diagnostics is not None:
+        _atomic_write_text(
+            failure_diagnostics_path,
+            _pretty_json_text(_failure_diagnostics_record(diagnostics)),
+        )
+        persisted_failure_diagnostics = failure_diagnostics_path
+    elif failure_diagnostics_path.exists():
+        # Do not leave diagnostics from an earlier failed attempt attached to a
+        # newer failure that did not reach the same execution phase.
+        failure_diagnostics_path.unlink()
 
     persisted_summary: Path | None = None
     if update_summary:
@@ -698,6 +832,11 @@ def persist_failed_run(
             ),
         )
 
+    _atomic_write_text(
+        result_path,
+        _pretty_json_text(build_failure_result_record(run_id=run_id, error=error)),
+    )
+
     return RunArtifacts(
         run_id=run_id,
         run_directory=run_directory,
@@ -707,4 +846,5 @@ def persist_failed_run(
         token_ids_path=None,
         trace_path=None,
         summary_path=persisted_summary,
+        failure_diagnostics_path=persisted_failure_diagnostics,
     )

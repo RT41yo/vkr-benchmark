@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 
 from vkr_benchmark.distributions import GenerationPolicy, ReferenceDistributionBuilder
+from vkr_benchmark.errors import get_roundtrip_failure_diagnostics
 from vkr_benchmark.lm import LMAdapter, LMState, TokenSpace
 from vkr_benchmark.methods import BinsMethod
 from vkr_benchmark.randomness import MethodRandomSource, Shake256SecretSource
@@ -111,6 +113,50 @@ def test_bins_full_text_roundtrip_through_common_runner() -> None:
     # cached advances on each path, not six.
     assert lm.prefill_calls == 2
     assert lm.advance_calls == 10
+
+
+def test_decode_hard_failure_preserves_exact_sender_and_transport_diagnostics(
+    monkeypatch,
+) -> None:
+    import vkr_benchmark.runner.streaming as streaming
+
+    lm = _DeterministicFakeLM()
+    builder = ReferenceDistributionBuilder(
+        token_space=lm.token_space,
+        policy=GenerationPolicy(),
+    )
+    environment = method_environment_from_builder(builder)
+
+    def fail_decode(**kwargs):
+        raise RuntimeError("synthetic decoder failure")
+
+    monkeypatch.setattr(streaming, "decode_streaming_tokens", fail_decode)
+
+    with pytest.raises(RuntimeError, match="synthetic decoder failure") as caught:
+        run_streaming_text_roundtrip(
+            lm_adapter=lm,
+            reference_builder=builder,
+            method=BinsMethod(),
+            method_config={"block_size": 2},
+            environment=environment,
+            prompt_text="prompt",
+            carrier_tokens=4,
+            secret_source=Shake256SecretSource("000001"),
+            encoder_random_source=MethodRandomSource(12345),
+            decoder_random_source=MethodRandomSource(12345),
+        )
+
+    diagnostics = get_roundtrip_failure_diagnostics(caught.value)
+    assert diagnostics is not None
+    assert diagnostics.failure_phase == "decode"
+    assert len(diagnostics.sender_token_ids) == 4
+    assert diagnostics.transport_text == " ".join(
+        str(token_id) for token_id in diagnostics.sender_token_ids
+    )
+    assert diagnostics.receiver_token_ids == diagnostics.sender_token_ids
+    assert diagnostics.token_sequence_roundtrip_exact is True
+    assert diagnostics.first_token_mismatch is None
+    assert diagnostics.token_count_delta == 0
 
 
 def test_method_environment_is_derived_from_common_allowed_mask() -> None:
