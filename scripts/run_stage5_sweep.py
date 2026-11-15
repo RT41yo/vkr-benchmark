@@ -29,6 +29,7 @@ from vkr_benchmark.storage import (
     ensure_summary_backend_available,
     persist_experiment_execution,
     persist_failed_run,
+    successful_run_is_complete,
 )
 from vkr_benchmark.sweeps import PlannedRun, SweepManifest
 
@@ -65,17 +66,6 @@ def _selected(
     return selected
 
 
-def _successful_run_exists(results_root: Path, run_id: str) -> bool:
-    result_path = results_root / "runs" / run_id / "result.json"
-    if not result_path.exists():
-        return False
-    try:
-        raw = json.loads(result_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return False
-    return isinstance(raw, dict) and raw.get("status") == "ok"
-
-
 def _sweep_log_stage(sweep_id: str) -> str:
     if sweep_id.startswith("stage6-"):
         return "stage6"
@@ -104,7 +94,7 @@ def main() -> None:
     parser.add_argument(
         "--resume",
         action="store_true",
-        help="Skip canonical run ids that already have status=ok.",
+        help="Skip canonical run ids with a complete, validated status=ok artifact set.",
     )
     parser.add_argument(
         "--skip-summary-parquet",
@@ -161,7 +151,7 @@ def main() -> None:
     sweep_started = time.perf_counter()
 
     for index, planned_run in enumerate(planned, start=1):
-        if args.resume and _successful_run_exists(results_root, planned_run.run_id):
+        if args.resume and successful_run_is_complete(results_root, planned_run.run_id):
             skipped += 1
             print(f"[{index}/{len(planned)}] SKIP {planned_run.run_id}")
             _append_log(

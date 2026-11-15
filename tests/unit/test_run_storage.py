@@ -16,7 +16,11 @@ from vkr_benchmark.config import (
     TerminationConfig,
 )
 from vkr_benchmark.distributions import QMode, QSource
-from vkr_benchmark.errors import StorageError
+from vkr_benchmark.errors import (
+    RoundtripFailureDiagnostics,
+    StorageError,
+    attach_roundtrip_failure_diagnostics,
+)
 from vkr_benchmark.metrics import (
     CapacityEntropyMetrics,
     DistributionDistortionMetrics,
@@ -34,6 +38,7 @@ from vkr_benchmark.storage import (
     materialize_run_config,
     persist_experiment_execution,
     persist_failed_run,
+    successful_run_is_complete,
     update_summary_parquet,
 )
 import vkr_benchmark.storage.run_store as run_store
@@ -295,6 +300,66 @@ def test_success_persistence_writes_canonical_run_artifacts_without_parquet(tmp_
     assert artifacts.summary_path is None
 
 
+def test_success_persistence_is_a_valid_complete_resume_target(tmp_path: Path) -> None:
+    artifacts = persist_experiment_execution(
+        _execution(), model_config=_model(), results_root=tmp_path, update_summary=False
+    )
+    assert successful_run_is_complete(tmp_path, artifacts.run_id) is True
+
+
+@pytest.mark.parametrize(
+    "filename",
+    ["config.json", "result.json", "stegotext.txt", "token_ids.json", "trace.jsonl.gz"],
+)
+def test_resume_rejects_success_with_missing_mandatory_artifact(
+    tmp_path: Path, filename: str
+) -> None:
+    artifacts = persist_experiment_execution(
+        _execution(), model_config=_model(), results_root=tmp_path, update_summary=False
+    )
+    (artifacts.run_directory / filename).unlink()
+    assert successful_run_is_complete(tmp_path, artifacts.run_id) is False
+
+
+def test_resume_rejects_truncated_trace_even_when_result_says_ok(tmp_path: Path) -> None:
+    artifacts = persist_experiment_execution(
+        _execution(), model_config=_model(), results_root=tmp_path, update_summary=False
+    )
+    assert artifacts.trace_path is not None
+    payload = artifacts.trace_path.read_bytes()
+    artifacts.trace_path.write_bytes(payload[: max(1, len(payload) // 2)])
+    assert successful_run_is_complete(tmp_path, artifacts.run_id) is False
+
+
+def test_result_json_is_written_last_as_completion_marker(
+    tmp_path: Path, monkeypatch
+) -> None:
+    events: list[str] = []
+
+    def fake_atomic(path: Path, text: str) -> None:
+        events.append(path.name)
+
+    def fake_trace(path: Path, rows) -> None:
+        list(rows)
+        events.append(path.name)
+
+    def fake_summary(path: Path, row) -> Path:
+        events.append(path.name)
+        return path
+
+    monkeypatch.setattr(run_store, "_atomic_write_text", fake_atomic)
+    monkeypatch.setattr(run_store, "_write_trace_gzip", fake_trace)
+    monkeypatch.setattr(run_store, "update_summary_parquet", fake_summary)
+
+    persist_experiment_execution(
+        _execution(), model_config=_model(), results_root=tmp_path, update_summary=True
+    )
+
+    assert events[-1] == "result.json"
+    assert events.index("summary.parquet") < events.index("result.json")
+    assert events.index("trace.jsonl.gz") < events.index("result.json")
+
+
 def test_success_persistence_is_idempotent_for_same_run_id(tmp_path: Path) -> None:
     first = persist_experiment_execution(
         _execution(), model_config=_model(), results_root=tmp_path, update_summary=False
@@ -305,6 +370,73 @@ def test_success_persistence_is_idempotent_for_same_run_id(tmp_path: Path) -> No
     assert first.run_id == second.run_id
     assert first.run_directory == second.run_directory
     assert len(list((tmp_path / "runs").iterdir())) == 1
+
+
+def test_failed_run_persists_attached_sender_transport_diagnostics(tmp_path: Path) -> None:
+    error = RuntimeError("decoder boom")
+    attach_roundtrip_failure_diagnostics(
+        error,
+        RoundtripFailureDiagnostics(
+            failure_phase="decode",
+            sender_token_ids=(20, 21),
+            payload_bits=4,
+            secret_bits_read=6,
+            transport_text="hello world",
+            receiver_token_ids=(20, 22),
+            token_sequence_roundtrip_exact=False,
+            first_token_mismatch=1,
+            token_count_delta=0,
+        ),
+    )
+
+    failed = persist_failed_run(
+        config=_config(),
+        model_config=_model(),
+        error=error,
+        results_root=tmp_path,
+        update_summary=False,
+    )
+
+    assert failed.failure_diagnostics_path is not None
+    diagnostic = json.loads(
+        failed.failure_diagnostics_path.read_text(encoding="utf-8")
+    )
+    assert diagnostic["failure_phase"] == "decode"
+    assert diagnostic["sender_token_ids"] == [20, 21]
+    assert diagnostic["receiver_token_ids"] == [20, 22]
+    assert diagnostic["first_token_mismatch"] == 1
+
+    result = json.loads(failed.result_path.read_text(encoding="utf-8"))
+    assert result["error"] == {"message": "decoder boom", "type": "RuntimeError"}
+    assert successful_run_is_complete(tmp_path, failed.run_id) is False
+
+
+def test_success_removes_stale_failure_diagnostics(tmp_path: Path) -> None:
+    error = RuntimeError("decoder boom")
+    attach_roundtrip_failure_diagnostics(
+        error,
+        RoundtripFailureDiagnostics(
+            failure_phase="decode",
+            sender_token_ids=(20, 21),
+            payload_bits=4,
+            secret_bits_read=4,
+        ),
+    )
+    failed = persist_failed_run(
+        config=_config(),
+        model_config=_model(),
+        error=error,
+        results_root=tmp_path,
+        update_summary=False,
+    )
+    assert failed.failure_diagnostics_path is not None
+    assert failed.failure_diagnostics_path.exists()
+
+    success = persist_experiment_execution(
+        _execution(), model_config=_model(), results_root=tmp_path, update_summary=False
+    )
+    assert not (success.run_directory / "failure_diagnostics.json").exists()
+    assert successful_run_is_complete(tmp_path, success.run_id) is True
 
 
 def test_failed_run_persists_config_and_error_and_removes_success_only_files(tmp_path: Path) -> None:

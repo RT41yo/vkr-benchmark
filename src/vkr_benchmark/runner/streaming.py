@@ -9,7 +9,11 @@ from typing import Any, Callable, Mapping, TypeVar
 import numpy as np
 
 from vkr_benchmark.distributions import ReferenceDistributionBuilder, StepContext
-from vkr_benchmark.errors import ContractError
+from vkr_benchmark.errors import (
+    ContractError,
+    RoundtripFailureDiagnostics,
+    attach_roundtrip_failure_diagnostics,
+)
 from vkr_benchmark.lm import LMAdapter
 from vkr_benchmark.metrics import (
     StepDistributionDistortion,
@@ -550,21 +554,54 @@ def run_streaming_text_roundtrip(
         )
 
     # Text transport is part of reliability validation but intentionally not
-    # included in encode/decode computational-efficiency timing.
-    transport = TextChannel(lm_adapter).transmit(encoded.carrier_token_ids)
+    # included in encode/decode computational-efficiency timing.  If a hard
+    # failure happens after encoding, preserve the exact sender-side carrier so
+    # Stage 6 diagnostics do not need to reconstruct it post hoc.
+    try:
+        transport = TextChannel(lm_adapter).transmit(encoded.carrier_token_ids)
+    except Exception as exc:
+        attach_roundtrip_failure_diagnostics(
+            exc,
+            RoundtripFailureDiagnostics(
+                failure_phase="text_transport",
+                sender_token_ids=encoded.carrier_token_ids,
+                payload_bits=encoded.payload_bits,
+                secret_bits_read=encoded.secret_bits_read,
+            ),
+        )
+        raise
 
-    decoded = decode_streaming_tokens(
-        lm_adapter=lm_adapter,
-        reference_builder=reference_builder,
-        method=method,
-        method_config=method_config,
-        environment=environment,
-        prompt_text=prompt_text,
-        observed_token_ids=transport.receiver_token_ids,
-        method_random_source=decoder_random_source,
-        expected_payload_bits=encoded.payload_bits,
-        key=key,
-    )
+    try:
+        decoded = decode_streaming_tokens(
+            lm_adapter=lm_adapter,
+            reference_builder=reference_builder,
+            method=method,
+            method_config=method_config,
+            environment=environment,
+            prompt_text=prompt_text,
+            observed_token_ids=transport.receiver_token_ids,
+            method_random_source=decoder_random_source,
+            expected_payload_bits=encoded.payload_bits,
+            key=key,
+        )
+    except Exception as exc:
+        attach_roundtrip_failure_diagnostics(
+            exc,
+            RoundtripFailureDiagnostics(
+                failure_phase="decode",
+                sender_token_ids=encoded.carrier_token_ids,
+                payload_bits=encoded.payload_bits,
+                secret_bits_read=encoded.secret_bits_read,
+                transport_text=transport.text,
+                receiver_token_ids=transport.receiver_token_ids,
+                token_sequence_roundtrip_exact=(
+                    transport.token_sequence_roundtrip_exact
+                ),
+                first_token_mismatch=transport.first_token_mismatch,
+                token_count_delta=transport.token_count_delta,
+            ),
+        )
+        raise
 
     expected = encoded.payload_secret_bits
     recovered = decoded.recovered_bits

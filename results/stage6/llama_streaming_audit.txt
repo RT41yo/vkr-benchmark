@@ -1,0 +1,54 @@
+unique planned/observed runs: 1008
+
+CANONICAL STATUS
+----------------
+error: 58
+ok: 950
+
+BY OPERATING POINT
+------------------
+method         point              total    ok  hard tokenRT- secretRT-  exact
+adg            default               72    72     0        9         9     63
+arithmetic_coding p32-k128              72    72     0        5         5     67
+arithmetic_coding p32-k2048             72    71     1        6         6     65
+arithmetic_coding p32-k50000            72    72     0       11        11     61
+bins           b1                    72    72     0        8         7     65
+bins           b4                    72    72     0       36        36     36
+bins           b6                    72    72     0       37        37     35
+dairstega      a16-b075-k100         72    68     4        0         0     68
+dairstega      a32-b05-k100          72    57    15        0         0     57
+dairstega      a8-b1-k100            72    72     0        0         0     72
+discop         default               72    64     8        1         1     63
+huffman        e2                    72    62    10        3         3     59
+huffman        e4                    72    60    12        5         5     55
+huffman        e8                    72    64     8       14        14     50
+
+HARD FAILURE TYPES
+------------------
+<missing>: 58
+
+HARD FAILURE PHASES
+-------------------
+decode: 58
+
+HARD FAILURE TOKEN CHANNEL
+--------------------------
+token_sequence_roundtrip_exact=False: 58
+token_sequence_roundtrip_exact=True : 0
+unknown/not available              : 0
+
+INTEGRITY
+---------
+missing result.json: 0
+missing failure_diagnostics.json: 0
+
+END-TO-END RELIABILITY
+----------------------
+total runs: 1008
+status=ok: 950
+hard failures: 58
+successful decode but secretRT=false: 134
+exact secret round-trip: 816
+exact round-trip rate: 80.952381%
+
+Llama streaming audit completed.
