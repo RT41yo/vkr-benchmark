@@ -33,6 +33,16 @@ FINAL STAGE 6 INTEGRITY AUDIT: OK
 
 `summary.parquet` содержит 1800 уникальных Stage 6 строк с теми же статусами.
 
+Основной экспериментальный набор данных формально зафиксирован как **dataset v1.0** в:
+
+```text
+results/stage6/dataset_v1.0_manifest.json
+```
+
+Manifest является inventory/provenance-артефактом Stage 6: он фиксирует 1800 canonical `run_id`, четыре sweep, 15 operating points, обе модельные ревизии, 24 промпта, status counts, контракт per-run артефактов и SHA-256 ключевых frozen файлов. Он не заменяет canonical `results/runs/<run_id>/`, а однозначно описывает состав завершённого dataset v1.0.
+
+Таким образом, roadmap-результат **«Основной набор экспериментальных данных v1.0»** закрыт отдельным формальным артефактом.
+
 ## 3. Надёжность
 
 Нормативная reliability остаётся полным текстовым каналом.
@@ -68,7 +78,13 @@ scripts/analyze_stage6_main.py
 
 Он читает только зафиксированные Stage 6 `execution.jsonl`, не запускает модели и не пересчитывает стегометоды.
 
-Выходы:
+Ключевой inventory/provenance-артефакт dataset:
+
+```text
+results/stage6/dataset_v1.0_manifest.json
+```
+
+Выходы analysis-скрипта:
 
 ```text
 results/stage6/stage6_execution_summary.json

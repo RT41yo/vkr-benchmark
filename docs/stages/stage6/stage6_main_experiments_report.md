@@ -124,6 +124,14 @@ error:   97
 
 Таким образом, основной экспериментальный массив не имеет пропущенных canonical configurations.
 
+Формальная идентичность основного экспериментального набора данных Stage 6 зафиксирована отдельным машинно-проверяемым manifest:
+
+```text
+results/stage6/dataset_v1.0_manifest.json
+```
+
+Этот файл объявляет набор как **основной экспериментальный набор данных v1.0** и фиксирует его состав без дублирования per-run результатов: 1800 canonical `run_id`, четыре исполненных Stage 6 sweep, 15 operating points, две языковые модели с зафиксированными ревизиями, 24 Stage 6 промпта, итоговые status counts, контракт обязательных per-run артефактов и SHA-256 ключевых frozen входов и журналов. Источником истины для конкретного запуска по-прежнему остаются canonical artifacts в `results/runs/<run_id>/`; manifest служит inventory/provenance-описанием полного dataset v1.0.
+
 ---
 
 ## 5. End-to-end reliability
@@ -422,6 +430,7 @@ configs/experiments/stage6_main_rrc_llama.json
 configs/experiments/stage6_main_streaming_qwen.json
 configs/experiments/stage6_main_rrc_qwen.json
 
+results/stage6/dataset_v1.0_manifest.json
 results/stage6/stage6_final_audit.txt
 results/stage6/stage6_execution_summary.json
 results/stage6/stage6_operating_point_summary.csv
