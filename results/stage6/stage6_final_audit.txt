@@ -1,0 +1,73 @@
+STAGE 6 EXECUTION COVERAGE
+==========================
+Llama  streaming : 1008 / 1008 unique runs
+Llama  rrc       :   72 /   72 unique runs
+Qwen   streaming :  672 /  672 unique runs
+Qwen   rrc       :   48 /   48 unique runs
+
+all unique run_ids: 1800
+
+CANONICAL STATUS / RELIABILITY
+==============================
+scope               total     ok   hard  tok-ex  sec-ex  sec-no  exact-rate
+Llama/streaming      1008    950     58     815     816     134  80.952381%
+Llama/rrc              72     72      0      66      66       6  91.666667%
+Llama/all            1080   1022     58     881     882     140  81.666667%
+Qwen/streaming        672    633     39     557     557      76  82.886905%
+Qwen/rrc               48     48      0      43      43       5  89.583333%
+Qwen/all              720    681     39     600     600      81  83.333333%
+ALL/all              1800   1703     97    1481    1482     221  82.333333%
+
+BY MODEL / OPERATING POINT
+==========================
+model  method             point                   n   ok hard  tok-  sec- exact       rate
+Llama  adg                default                72   72    0     9     9    63   87.5000%
+Llama  arithmetic_coding  p32-k128               72   72    0     5     5    67   93.0556%
+Llama  arithmetic_coding  p32-k2048              72   71    1     6     6    65   90.2778%
+Llama  arithmetic_coding  p32-k50000             72   72    0    11    11    61   84.7222%
+Llama  bins               b1                     72   72    0     8     7    65   90.2778%
+Llama  bins               b4                     72   72    0    36    36    36   50.0000%
+Llama  bins               b6                     72   72    0    37    37    35   48.6111%
+Llama  dairstega          a16-b075-k100          72   68    4     0     0    68   94.4444%
+Llama  dairstega          a32-b05-k100           72   57   15     0     0    57   79.1667%
+Llama  dairstega          a8-b1-k100             72   72    0     0     0    72  100.0000%
+Llama  discop             default                72   64    8     1     1    63   87.5000%
+Llama  huffman            e2                     72   62   10     3     3    59   81.9444%
+Llama  huffman            e4                     72   60   12     5     5    55   76.3889%
+Llama  huffman            e8                     72   64    8    14    14    50   69.4444%
+Llama  rrc                payload1024-margin40   72   72    0     6     6    66   91.6667%
+Qwen   adg                default                48   48    0     4     4    44   91.6667%
+Qwen   arithmetic_coding  p32-k128               48   48    0     0     0    48  100.0000%
+Qwen   arithmetic_coding  p32-k2048              48   47    1     2     2    45   93.7500%
+Qwen   arithmetic_coding  p32-k50000             48   48    0     4     4    44   91.6667%
+Qwen   bins               b1                     48   48    0    15    15    33   68.7500%
+Qwen   bins               b4                     48   48    0    14    14    34   70.8333%
+Qwen   bins               b6                     48   48    0    28    28    20   41.6667%
+Qwen   dairstega          a16-b075-k100          48   48    0     0     0    48  100.0000%
+Qwen   dairstega          a32-b05-k100           48   38   10     0     0    38   79.1667%
+Qwen   dairstega          a8-b1-k100             48   48    0     0     0    48  100.0000%
+Qwen   discop             default                48   46    2     0     0    46   95.8333%
+Qwen   huffman            e2                     48   35   13     1     1    34   70.8333%
+Qwen   huffman            e4                     48   38   10     0     0    38   79.1667%
+Qwen   huffman            e8                     48   45    3     8     8    37   77.0833%
+Qwen   rrc                payload1024-margin40   48   48    0     5     5    43   89.5833%
+
+HARD FAILURE AUDIT
+==================
+hard failures total: 97
+with token_sequence_roundtrip_exact=False: 97
+with token_sequence_roundtrip_exact=True : 0
+
+error types:
+  MethodError: 97
+
+failure phases:
+  decode: 97
+
+INTEGRITY
+=========
+missing result.json: 0
+missing failure_diagnostics.json: 0
+successful runs missing dual-KL/TVD fields: 0
+
+FINAL STAGE 6 INTEGRITY AUDIT: OK
