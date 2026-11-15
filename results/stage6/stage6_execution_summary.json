@@ -1,0 +1,107 @@
+{
+  "canonical_runs": 1800,
+  "error_types": {
+    "MethodError": 97
+  },
+  "final_integrity_audit": {
+    "audit_ok": true,
+    "hard_failures_token_roundtrip_false": 97,
+    "hard_failures_token_roundtrip_true": 0,
+    "hard_failures_total": 97,
+    "missing_failure_diagnostics_json": 0,
+    "missing_result_json": 0,
+    "source": "results/stage6/stage6_final_audit.txt",
+    "successful_missing_dual_kl_tvd": 0
+  },
+  "scopes": [
+    {
+      "canonical_run_wall_hours": 53.71256853849807,
+      "canonical_run_wall_seconds": 193365.24673859304,
+      "exact_roundtrip_rate": 0.8233333333333334,
+      "family": "all",
+      "model": "ALL",
+      "n_exact_roundtrip": 1482,
+      "n_hard_failure": 97,
+      "n_ok": 1703,
+      "n_soft_roundtrip_failure": 221,
+      "n_total": 1800
+    },
+    {
+      "canonical_run_wall_hours": 31.489618889783674,
+      "canonical_run_wall_seconds": 113362.62800322122,
+      "exact_roundtrip_rate": 0.8166666666666667,
+      "family": "all",
+      "model": "Llama-3.2-3B",
+      "n_exact_roundtrip": 882,
+      "n_hard_failure": 58,
+      "n_ok": 1022,
+      "n_soft_roundtrip_failure": 140,
+      "n_total": 1080
+    },
+    {
+      "canonical_run_wall_hours": 1.143967989108059,
+      "canonical_run_wall_seconds": 4118.284760789013,
+      "exact_roundtrip_rate": 0.9166666666666666,
+      "family": "rrc",
+      "model": "Llama-3.2-3B",
+      "n_exact_roundtrip": 66,
+      "n_hard_failure": 0,
+      "n_ok": 72,
+      "n_soft_roundtrip_failure": 6,
+      "n_total": 72
+    },
+    {
+      "canonical_run_wall_hours": 30.345650900675615,
+      "canonical_run_wall_seconds": 109244.34324243221,
+      "exact_roundtrip_rate": 0.8095238095238095,
+      "family": "streaming",
+      "model": "Llama-3.2-3B",
+      "n_exact_roundtrip": 816,
+      "n_hard_failure": 58,
+      "n_ok": 950,
+      "n_soft_roundtrip_failure": 134,
+      "n_total": 1008
+    },
+    {
+      "canonical_run_wall_hours": 22.222949648714398,
+      "canonical_run_wall_seconds": 80002.61873537183,
+      "exact_roundtrip_rate": 0.8333333333333334,
+      "family": "all",
+      "model": "Qwen3-4B-Base",
+      "n_exact_roundtrip": 600,
+      "n_hard_failure": 39,
+      "n_ok": 681,
+      "n_soft_roundtrip_failure": 81,
+      "n_total": 720
+    },
+    {
+      "canonical_run_wall_hours": 1.3745089044508172,
+      "canonical_run_wall_seconds": 4948.232056022942,
+      "exact_roundtrip_rate": 0.8958333333333334,
+      "family": "rrc",
+      "model": "Qwen3-4B-Base",
+      "n_exact_roundtrip": 43,
+      "n_hard_failure": 0,
+      "n_ok": 48,
+      "n_soft_roundtrip_failure": 5,
+      "n_total": 48
+    },
+    {
+      "canonical_run_wall_hours": 20.84844074426358,
+      "canonical_run_wall_seconds": 75054.38667934889,
+      "exact_roundtrip_rate": 0.8288690476190477,
+      "family": "streaming",
+      "model": "Qwen3-4B-Base",
+      "n_exact_roundtrip": 557,
+      "n_hard_failure": 39,
+      "n_ok": 633,
+      "n_soft_roundtrip_failure": 76,
+      "n_total": 672
+    }
+  ],
+  "stage": 6,
+  "status_counts": {
+    "error": 97,
+    "ok": 1703
+  }
+}
