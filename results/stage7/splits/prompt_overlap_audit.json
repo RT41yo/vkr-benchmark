@@ -1,0 +1,9 @@
+{
+  "candidates": [],
+  "cross_split_candidate_count": 0,
+  "prompt_count": 152,
+  "schema_version": "stage7.prompt_overlap_audit.v1",
+  "status": "ok",
+  "threshold": 0.85,
+  "token_shingle_width": 5
+}

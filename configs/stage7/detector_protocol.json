@@ -1,0 +1,51 @@
+{
+  "schema_version": "stage7.detector_protocol.v1",
+  "status": "methodology_frozen_before_gpu_execution",
+  "dataset": {
+    "train_groups": 96,
+    "validation_groups": 32,
+    "test_groups": 24,
+    "train_val_selection_ranks": [32, 159],
+    "test_source": "frozen_stage6",
+    "split_seed": 701,
+    "balance": "one_cover_per_stego_per_point",
+    "include_stage6_hard_failures": true
+  },
+  "models": [
+    "meta-llama/Llama-3.2-3B",
+    "Qwen/Qwen3-4B-Base"
+  ],
+  "control": {
+    "sampling": "inverse_cdf_token_id_ascending_fp64_accumulation_v1",
+    "reference": "canonical P_reference",
+    "streaming_carrier_tokens": 256,
+    "rrc_main_length": "matched_sender_carrier_tokens",
+    "rrc_unmatched_diagnostic_cover_tokens": 256,
+    "randomness_domain": "VKR-BENCHMARK-STAGE7-v1"
+  },
+  "detector": {
+    "base_model": "FacebookAI/roberta-base",
+    "base_revision": null,
+    "input": "carrier_text_only",
+    "max_length": 512,
+    "truncation": "right",
+    "learning_rate": 0.00002,
+    "weight_decay": 0.01,
+    "max_epochs": 4,
+    "warmup_ratio": 0.1,
+    "microbatch": 4,
+    "gradient_accumulation": 8,
+    "training_seeds": [711, 712, 713],
+    "early_stopping_patience": 2,
+    "model_selection": "maximum_pooled_validation_roc_auc",
+    "threshold_selection": "maximum_pooled_validation_balanced_accuracy"
+  },
+  "bootstrap": {"type": "paired_article_cluster", "iterations": 2000, "seed": 731, "confidence": 0.95},
+  "implementation_factors": {
+    "validation_group_count": 16,
+    "selection_seed": 741,
+    "arithmetic_precision": [16, 32, 48],
+    "arithmetic_top_k": 2048,
+    "rrc_precision_margin": [0, 10, 20, 40, 60]
+  }
+}

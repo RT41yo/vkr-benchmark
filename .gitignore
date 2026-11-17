@@ -32,3 +32,14 @@ environment/**/hf.txt
 
 # Stage-6 main prompt text is regenerated from the pinned Stage-3 CNN/DailyMail contexts.
 /data/stage6/main_prompts.jsonl
+
+# Stage-7 local full text and generated control/stego artifacts.
+/data/stage7/prompts.jsonl
+/data/stage7/dataset/
+/data/stage7/cache/
+/results/stage7/stego_runs/
+/results/stage7/cover_runs/
+/results/stage7/generation_summary.parquet
+/results/stage7/checkpoints/
+/results/stage7/predictions/raw/
+/models/detectors/

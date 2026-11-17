@@ -1,0 +1,14 @@
+{
+  "models": [
+    "Qwen/Qwen3-4B-Base",
+    "meta-llama/Llama-3.2-3B"
+  ],
+  "operating_point_count": 15,
+  "run_count": 1800,
+  "schema_version": "stage7.stage6_source_audit.v1",
+  "status": "ok",
+  "status_counts": {
+    "error": 97,
+    "ok": 1703
+  }
+}
