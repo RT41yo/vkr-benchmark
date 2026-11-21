@@ -128,3 +128,15 @@ def test_stage6_index_rejects_actual_duplicate_within_one_method(tmp_path: Path)
     with pytest.raises(ConfigurationError, match="duplicate Stage-6 experimental stratum"):
         build_stage6_test_index(run_root=tmp_path, frozen_manifest=frozen,
                                 stage6_prompts=prompts)
+
+
+def test_stage6_index_hashes_raw_visible_transport_text_without_newline_folding(tmp_path):
+    import hashlib
+    frozen, prompts = _fixture(tmp_path)
+    stored = 'Stage 6 visible\rsection\r\nfinal'
+    path = next(tmp_path.glob('*/stegotext.txt'))
+    path.write_bytes(stored.encode('utf-8'))
+    rows, _ = build_stage6_test_index(
+        run_root=tmp_path, frozen_manifest=frozen, stage6_prompts=prompts)
+    record = next(r for r in rows if r['stego_status'] == 'ok')
+    assert record['stego_text_sha256'] == hashlib.sha256(path.read_bytes()).hexdigest()

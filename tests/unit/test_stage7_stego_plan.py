@@ -12,15 +12,20 @@ from vkr_benchmark.config import (
     ExperimentConfig, GenerationRunConfig, MethodRunConfig, TerminationConfig,
 )
 from vkr_benchmark.distributions import GenerationPolicy, ReferenceDistributionBuilder
-from vkr_benchmark.errors import ConfigurationError
+from vkr_benchmark.errors import ConfigurationError, ContractError
 from vkr_benchmark.inputs import create_secret_source
 from vkr_benchmark.lm import TokenSpace
 from vkr_benchmark.lm.base import LMAdapter, LMState
 from vkr_benchmark.runner.experiment import create_method_runtime
-from vkr_benchmark.runner.streaming import encode_fixed_carrier_tokens, method_environment_from_builder
+from vkr_benchmark.runner.streaming import (
+    encode_fixed_carrier_tokens, encode_fixed_payload_bits,
+    method_environment_from_builder,
+)
 from vkr_benchmark.steganalysis.plan import build_trainval_stego_plan, validate_stego_plan_row
 from vkr_benchmark.steganalysis.protocol import method_random_material
-from vkr_benchmark.steganalysis.stego import generate_stage7_stego
+from vkr_benchmark.steganalysis.stego import (
+    Stage7FixedPayloadNonTermination, generate_stage7_stego,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -94,6 +99,73 @@ def test_fixed_payload_rrc_preserved_on_toy_lm():
     assert 1 <= len(output.sender_token_ids) <= 100
     assert output.payload_bits == 8
     assert output.termination_reason == 'fixed_payload_bits'
+
+
+def test_rrc_token_ceiling_is_a_failure_not_a_partial_stegotext():
+    """No silent truncation or reclassification when fixed payload is unfinished."""
+    lm = TinyLM()
+    cfg = _toy_config('rrc', {'precision_margin': 40, 'verify_termination': True},
+                      key='toy-rrc-key', termination=TerminationConfig(
+                          mode='fixed_payload_bits', target_payload_bits=1024,
+                          max_carrier_tokens=1))
+    b = ReferenceDistributionBuilder(token_space=lm.token_space, policy=GenerationPolicy())
+    with pytest.raises(Stage7FixedPayloadNonTermination) as info:
+        generate_stage7_stego(config=cfg, lm_adapter=lm,
+                              reference_builder=b, prompt_text='prompt')
+    failure = info.value
+    assert failure.target_payload_bits == 1024
+    assert failure.max_carrier_tokens == 1
+    assert failure.generated_carrier_tokens == 1
+    assert failure.termination_candidates >= failure.verification_rejections >= 0
+    runtime = create_method_runtime(cfg)
+    with pytest.raises(ContractError, match='did not terminate'):
+        encode_fixed_payload_bits(
+            lm_adapter=lm, reference_builder=b, method=runtime.method,
+            method_config=cfg.method.params,
+            environment=method_environment_from_builder(b),
+            prompt_text='prompt', target_payload_bits=1024,
+            max_carrier_tokens=1,
+            secret_source=create_secret_source(cfg.secret_id),
+            method_random_source=runtime.encoder_random_source,
+            key=cfg.method.key,
+        )
+
+
+def test_rrc_nontermination_record_is_validated_and_not_success(tmp_path):
+    """A failed record cannot satisfy the paired-dataset stegotext contract."""
+    import sys
+    sys.path.insert(0, str(ROOT/'scripts'))
+    try:
+        from generate_stage7_stegos import (
+            _record_nontermination, _verify_recorded_nontermination,
+        )
+    finally:
+        sys.path.pop(0)
+
+    row = {
+        'stego_run_id': 'failed-run', 'sample_id': 'sample', 'partition': 'train',
+        'model_id': 'Qwen/Qwen3-4B-Base', 'prompt_id': 's7p0001',
+        'article_id': 'article-1', 'method_id': 'rrc',
+        'method_point_id': 'payload1024-margin40',
+        'canonical_run_config': {'method': {'id': 'rrc'}},
+    }
+    error = Stage7FixedPayloadNonTermination(
+        target_payload_bits=1024, max_carrier_tokens=2048,
+        generated_carrier_tokens=2048, termination_candidates=3,
+        verification_rejections=3)
+    path = tmp_path/'failures'/'failed-run.json'
+    _record_nontermination(path, row, error)
+    assert _verify_recorded_nontermination(path, row)
+    record = json.loads(path.read_text(encoding='utf-8'))
+    assert record['is_usable_stegotext'] is False
+    assert record['verification_rejections'] == 3
+    assert not (tmp_path/'stego_runs'/'failed-run').exists()
+    bad = copy.deepcopy(row)
+    bad['canonical_run_config']['method']['id'] = 'bins'
+    with pytest.raises(ConfigurationError, match='failure record mismatch'):
+        _verify_recorded_nontermination(path, bad)
+    with pytest.raises(ConfigurationError, match='already exists'):
+        _record_nontermination(path, row, error)
 
 
 def test_method_randomness_shared_across_points_but_not_articles():

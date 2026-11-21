@@ -9,6 +9,7 @@ from typing import Any
 from vkr_benchmark.errors import ConfigurationError
 from vkr_benchmark.storage.run_store import compute_method_params_hash, compute_run_id
 from vkr_benchmark.steganalysis.protocol import cover_seed
+from vkr_benchmark.steganalysis.textio import read_carrier_text
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -83,7 +84,7 @@ def build_stage6_test_index(
             raise ConfigurationError(f"duplicate Stage-6 experimental stratum: {match}")
         seen.add(match)
         if status == "ok":
-            text = (directory / "stegotext.txt").read_text(encoding="utf-8")
+            text = read_carrier_text(directory / "stegotext.txt")
             sender_ids = _load(directory / "token_ids.json").get("sender_token_ids")
             text_source = "stegotext.txt"
         else:

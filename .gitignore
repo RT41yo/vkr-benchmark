@@ -38,6 +38,7 @@ environment/**/hf.txt
 /data/stage7/dataset/
 /data/stage7/cache/
 /results/stage7/stego_runs/
+/results/stage7/stego_failures/
 /results/stage7/cover_runs/
 /results/stage7/generation_summary.parquet
 /results/stage7/checkpoints/

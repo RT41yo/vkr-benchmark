@@ -23,7 +23,10 @@ from vkr_benchmark.runner.streaming import (  # noqa: E402
 )
 from vkr_benchmark.lm import HFCausalLMAdapter  # noqa: E402
 from vkr_benchmark.steganalysis.plan import validate_stego_plan_row  # noqa: E402
-from vkr_benchmark.steganalysis.stego import generate_stage7_stego  # noqa: E402
+from vkr_benchmark.steganalysis.textio import read_carrier_text, write_carrier_text  # noqa: E402
+from vkr_benchmark.steganalysis.stego import (  # noqa: E402
+    Stage7FixedPayloadNonTermination, generate_stage7_stego,
+)
 
 
 def _json(path: Path) -> dict:
@@ -45,7 +48,7 @@ def _verify_existing(directory: Path, row: dict) -> bool:
         raise ConfigurationError(f'Stage-7 stego run config mismatch: {directory}')
     if not (directory/'stegotext.txt').is_file() or not (directory/'token_ids.json').is_file():
         raise ConfigurationError(f'incomplete Stage-7 stego run: {directory}')
-    raw_text = (directory/'stegotext.txt').read_text(encoding='utf-8')
+    raw_text = read_carrier_text(directory/'stegotext.txt')
     ids = _json(directory/'token_ids.json')
     if hashlib.sha256(raw_text.encode()).hexdigest() != old.get('text_sha256'):
         raise ConfigurationError(f'Stage-7 stego text hash mismatch: {directory}')
@@ -57,15 +60,67 @@ def _verify_existing(directory: Path, row: dict) -> bool:
     return True
 
 
+def _verify_recorded_nontermination(path: Path, row: dict) -> bool:
+    """A failed attempt is immutable and never counted as a generated text."""
+    existing = _json(path)
+    if (existing.get('schema_version') != 'stage7.stego_nontermination.v1' or
+            existing.get('run_id') != row['stego_run_id'] or
+            existing.get('sample_id') != row['sample_id'] or
+            existing.get('canonical_run_config') != row['canonical_run_config'] or
+            existing.get('error_type') != 'Stage7FixedPayloadNonTermination'):
+        raise ConfigurationError(f'Stage-7 failure record mismatch: {path}')
+    return True
+
+
+def _record_nontermination(path: Path, row: dict,
+                           error: Stage7FixedPayloadNonTermination) -> None:
+    """Record a reproducible failure without producing a partial stegotext."""
+    if row['method_id'] != 'rrc':
+        raise ConfigurationError('nontermination record is only valid for RRC')
+    if path.exists():
+        raise ConfigurationError(f'failure record already exists: {path}')
+    path.parent.mkdir(parents=True, exist_ok=True)
+    record = {
+        'schema_version': 'stage7.stego_nontermination.v1',
+        'run_id': row['stego_run_id'], 'sample_id': row['sample_id'],
+        'partition': row['partition'], 'model_id': row['model_id'],
+        'prompt_id': row['prompt_id'], 'article_id': row['article_id'],
+        'method_id': row['method_id'], 'method_point_id': row['method_point_id'],
+        'canonical_run_config': row['canonical_run_config'],
+        'error_type': 'Stage7FixedPayloadNonTermination',
+        'error_message': str(error),
+        'target_payload_bits': error.target_payload_bits,
+        'max_carrier_tokens': error.max_carrier_tokens,
+        'generated_carrier_tokens': error.generated_carrier_tokens,
+        'termination_candidates': error.termination_candidates,
+        'verification_rejections': error.verification_rejections,
+        'is_usable_stegotext': False,
+    }
+    # A failed run must never create a success marker or a partial text.
+    tmp_path = path.with_name(path.name + '.tmp')
+    if tmp_path.exists():
+        raise ConfigurationError(f'leftover incomplete failure record: {tmp_path}')
+    try:
+        _write(tmp_path, record)
+        tmp_path.replace(path)
+    finally:
+        if tmp_path.exists():
+            tmp_path.unlink()
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('--model-config', type=Path, required=True)
     parser.add_argument('--prompts-file', type=Path, default=ROOT/'data/stage7/prompts.jsonl')
     parser.add_argument('--plan', type=Path, default=ROOT/'data/stage7/dataset/trainval_stego_plan.jsonl')
     parser.add_argument('--output-root', type=Path, default=ROOT/'results/stage7/stego_runs')
+    parser.add_argument('--failure-root', type=Path, default=ROOT/'results/stage7/stego_failures')
     parser.add_argument('--limit', type=int)
     parser.add_argument('--all', action='store_true')
     parser.add_argument('--resume', action='store_true')
+    parser.add_argument('--continue-on-rrc-nontermination', action='store_true',
+                        help='Record RRC fixed-payload cutoff as failure and continue other runs; '
+                             'exit code stays nonzero while failures remain')
     parser.add_argument('--method', help='Optional method id for staged smoke/execution')
     parser.add_argument('--method-point', help='Optional method-point id')
     parser.add_argument('--verify-encoder', action='store_true',
@@ -107,20 +162,41 @@ def main() -> int:
         prompts.get(row['prompt_id'])
         prepared.append((row, cfg))
     lm = HFCausalLMAdapter.from_local_config(model_cfg)
-    ok = skipped = 0
+    ok = skipped = failed = failed_skipped = 0
     for row, cfg in prepared:
         directory = args.output_root / row['stego_run_id']
+        failure_path = args.failure_root / f"{row['stego_run_id']}.json"
+        if failure_path.exists() and directory.exists():
+            raise ConfigurationError(f'conflicting success and failure records: {row["stego_run_id"]}')
         if directory.exists():
             if not args.resume:
                 raise ConfigurationError(f'Stage-7 run exists (use --resume): {directory}')
             _verify_existing(directory, row)
             skipped += 1
             continue
+        if failure_path.exists():
+            if not args.resume or not args.continue_on_rrc_nontermination:
+                raise ConfigurationError(
+                    f'recorded RRC nontermination for {row["stego_run_id"]}; '
+                    'use --resume --continue-on-rrc-nontermination to preserve it '
+                    'and finish other runs')
+            _verify_recorded_nontermination(failure_path, row)
+            failed_skipped += 1
+            print(f'STEGO FAILED (recorded, not retried) {row["stego_run_id"]}', flush=True)
+            continue
         builder = ReferenceDistributionBuilder(token_space=lm.token_space,
                                                policy=cfg.generation.to_policy())
         prompt_text = prompts.get(row['prompt_id']).text
-        output = generate_stage7_stego(
-            config=cfg, lm_adapter=lm, reference_builder=builder, prompt_text=prompt_text)
+        try:
+            output = generate_stage7_stego(
+                config=cfg, lm_adapter=lm, reference_builder=builder, prompt_text=prompt_text)
+        except Stage7FixedPayloadNonTermination as error:
+            if not args.continue_on_rrc_nontermination:
+                raise
+            _record_nontermination(failure_path, row, error)
+            failed += 1
+            print(f'STEGO FAILED (RRC cutoff) {row["stego_run_id"]}: {error}', flush=True)
+            continue
         if args.verify_encoder:
             runtime = create_method_runtime(cfg)
             common = dict(lm_adapter=lm, reference_builder=builder, method=runtime.method,
@@ -145,7 +221,7 @@ def main() -> int:
         # Write only after generation has finished; a partial directory is not
         # silently accepted by --resume.
         directory.mkdir(parents=True, exist_ok=False)
-        (directory/'stegotext.txt').write_text(output.text, encoding='utf-8')
+        write_carrier_text(directory/'stegotext.txt', output.text)
         _write(directory/'token_ids.json', {
             'prompt_token_ids': output.prompt_token_ids,
             'sender_token_ids': output.sender_token_ids,
@@ -171,7 +247,12 @@ def main() -> int:
         print(f"STEGO OK {row['stego_run_id']} model={row['model_id']} "
               f"method={row['method_id']}/{row['method_point_id']} "
               f"tokens={len(output.sender_token_ids)}", flush=True)
-    print(f'Stage-7 stego generation complete: {ok} new, {skipped} skipped')
+    print(f'Stage-7 stego generation complete: {ok} new, {skipped} skipped, '
+          f'{failed} new failures, {failed_skipped} recorded failures skipped')
+    if failed or failed_skipped:
+        print('Stage-7 stego dataset INCOMPLETE: failed RRC samples require '
+              'a separate methodological decision before paired dataset assembly')
+        return 2
     return 0
 
 

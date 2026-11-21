@@ -19,6 +19,32 @@ from vkr_benchmark.runner.streaming import method_environment_from_builder
 from vkr_benchmark.transport import TextChannel
 
 
+class Stage7FixedPayloadNonTermination(ContractError):
+    """RRC did not finish its fixed payload before the frozen token ceiling.
+
+    The partial carrier is *not* a valid Stage-7 stegotext. Keep only aggregate
+    diagnostic counters: no secret or partial text is exposed as a dataset item.
+    """
+
+    def __init__(
+        self, *, target_payload_bits: int, max_carrier_tokens: int,
+        generated_carrier_tokens: int, termination_candidates: int,
+        verification_rejections: int,
+    ) -> None:
+        self.target_payload_bits = target_payload_bits
+        self.max_carrier_tokens = max_carrier_tokens
+        self.generated_carrier_tokens = generated_carrier_tokens
+        self.termination_candidates = termination_candidates
+        self.verification_rejections = verification_rejections
+        super().__init__(
+            "Stage-7 fixed-payload encoder did not terminate "
+            f"after {generated_carrier_tokens}/{max_carrier_tokens} carriers "
+            f"for {target_payload_bits} payload bits; "
+            f"termination_candidates={termination_candidates}, "
+            f"verification_rejections={verification_rejections}"
+        )
+
+
 @dataclass(frozen=True, slots=True)
 class Stage7StegoGeneration:
     prompt_token_ids: tuple[int, ...]
@@ -70,6 +96,8 @@ def generate_stage7_stego(
     )
     generated: list[int] = []
     step_bits: list[int | None] = []
+    termination_candidates = 0
+    verification_rejections = 0
     for step_index in range(limit):
         raw_logits, state = lm_adapter.next_logits(state)
         reference = reference_builder.build(raw_logits)
@@ -79,11 +107,25 @@ def generate_stage7_stego(
             raise ContractError(f"Stage-7 method emitted forbidden token {token_id}")
         generated.append(token_id)
         step_bits.append(decision.bits_consumed)
+        if target is not None:
+            # Read diagnostics already emitted by the encoder. This does not
+            # invoke distribution metrics, receiver decoding or extra LM work.
+            trace = decision.method_trace
+            if trace.get("termination_test") is True:
+                termination_candidates += 1
+                if trace.get("termination_verified") is False:
+                    verification_rejections += 1
         if encoder.done or step_index + 1 == limit:
             break
         _, state = lm_adapter.next_logits(state, token_id)
     if target is not None and not encoder.done:
-        raise ContractError("Stage-7 fixed-payload encoder did not terminate")
+        raise Stage7FixedPayloadNonTermination(
+            target_payload_bits=target,
+            max_carrier_tokens=limit,
+            generated_carrier_tokens=len(generated),
+            termination_candidates=termination_candidates,
+            verification_rejections=verification_rejections,
+        )
     final = encoder.finalize()
     if target is not None and final.payload_bits != target:
         raise ContractError("Stage-7 RRC payload length disagrees with target")

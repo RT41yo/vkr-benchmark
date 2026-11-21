@@ -20,6 +20,7 @@ from vkr_benchmark.lm import HFCausalLMAdapter  # noqa: E402
 from vkr_benchmark.randomness import ControlRandomSource  # noqa: E402
 from vkr_benchmark.steganalysis.cover import generate_cover  # noqa: E402
 from vkr_benchmark.steganalysis.protocol import cover_seed  # noqa: E402
+from vkr_benchmark.steganalysis.textio import read_carrier_text, write_carrier_text  # noqa: E402
 
 
 def _read_plan(path: Path) -> list[dict]:
@@ -77,7 +78,7 @@ def main() -> int:
                         and old["cover_seed"] == row["cover_seed"]
                         and old["carrier_tokens"] == row["carrier_tokens"]):
                     if (folder / "cover.txt").is_file() and (folder / "token_ids.json").is_file():
-                        existing = (folder / "cover.txt").read_text(encoding="utf-8")
+                        existing = read_carrier_text(folder / "cover.txt")
                         if hashlib.sha256(existing.encode("utf-8")).hexdigest() == old["text_sha256"]:
                             skipped += 1
                             continue
@@ -88,7 +89,7 @@ def main() -> int:
                                 carrier_tokens=row["carrier_tokens"],
                                 random_source=ControlRandomSource(row["cover_seed"]))
         folder.mkdir(parents=True, exist_ok=True)
-        (folder / "cover.txt").write_text(result.text, encoding="utf-8")
+        write_carrier_text(folder / "cover.txt", result.text)
         (folder / "token_ids.json").write_text(json.dumps({
             "prompt_token_ids": result.prompt_token_ids,
             "sender_token_ids": result.sender_token_ids,

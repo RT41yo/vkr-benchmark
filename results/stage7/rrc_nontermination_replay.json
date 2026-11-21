@@ -1,0 +1,87 @@
+{
+  "canonical_config_sha256": "0b0e22af25613edbb404140f0003db7d5d327fe39971d4dfb3d40a57ef902b79",
+  "model_id": "Qwen/Qwen3-4B-Base",
+  "model_revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539",
+  "notes": "No secret bits, method key, plaintext, or incomplete stegotext are retained. Width is read-only from the unchanged RRC Decimal encoder. A matching outcome establishes replay of a cutoff, not the root cause.",
+  "prompt_id": "s7p0082",
+  "prompt_sha256": "fbe76ad8b6e4eadb24d21af1f337e93b0fb9dc63274a4fe62803159868baafb7",
+  "replays": [
+    {
+      "generated_carrier_tokens": 2048,
+      "snapshots": [
+        {
+          "interval_log2_width": 1017.14111,
+          "interval_width_at_most_one": false,
+          "interval_width_below_one": false,
+          "step": 1,
+          "termination_candidates": 0,
+          "verification_rejections": 0
+        },
+        {
+          "interval_log2_width": 740.768152,
+          "interval_width_at_most_one": false,
+          "interval_width_below_one": false,
+          "step": 64,
+          "termination_candidates": 0,
+          "verification_rejections": 0
+        },
+        {
+          "interval_log2_width": 644.355549,
+          "interval_width_at_most_one": false,
+          "interval_width_below_one": false,
+          "step": 128,
+          "termination_candidates": 0,
+          "verification_rejections": 0
+        },
+        {
+          "interval_log2_width": 611.649161,
+          "interval_width_at_most_one": false,
+          "interval_width_below_one": false,
+          "step": 256,
+          "termination_candidates": 0,
+          "verification_rejections": 0
+        },
+        {
+          "interval_log2_width": 577.150907,
+          "interval_width_at_most_one": false,
+          "interval_width_below_one": false,
+          "step": 512,
+          "termination_candidates": 0,
+          "verification_rejections": 0
+        },
+        {
+          "interval_log2_width": 576.41174,
+          "interval_width_at_most_one": false,
+          "interval_width_below_one": false,
+          "step": 1024,
+          "termination_candidates": 0,
+          "verification_rejections": 0
+        },
+        {
+          "interval_log2_width": 576.36896,
+          "interval_width_at_most_one": false,
+          "interval_width_below_one": false,
+          "step": 1536,
+          "termination_candidates": 0,
+          "verification_rejections": 0
+        },
+        {
+          "interval_log2_width": 576.316143,
+          "interval_width_at_most_one": false,
+          "interval_width_below_one": false,
+          "step": 2048,
+          "termination_candidates": 0,
+          "verification_rejections": 0
+        }
+      ],
+      "terminated": false,
+      "termination_candidates": 0,
+      "token_ids_sha256": "e4e02b32ad2856ed987699418905c7752d8a6951fffd5d5db8d00e15bb5f6077",
+      "verification_rejections": 0
+    }
+  ],
+  "run_id": "0b0e22af25613edb",
+  "sample_id": "79775985a169f917bfe94a05",
+  "schema_version": "stage7.rrc_nontermination_replay.v1",
+  "status": "reproduced"
+}

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from vkr_benchmark.errors import ConfigurationError
+from vkr_benchmark.steganalysis.textio import read_carrier_text
 
 
 def sha_text(text: str) -> str:
@@ -41,20 +42,33 @@ def jsonl_text(rows: list[dict[str, Any]]) -> str:
 
 def cover_plan_from_stegos(
     *, trainval_plan: list[dict[str, Any]], stage6_index: list[dict[str, Any]],
-    stego_root: Path,
+    stego_root: Path, accepted_failures: dict[str, dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """Compute RRC matched lengths from completed Stage-7 sender token IDs."""
     if len(trainval_plan) != 3840 or len(stage6_index) != 1800:
         raise ConfigurationError('Stage-7 cover plan requires 3840+1800 stego sources')
     if any(row['partition'] != 'test' for row in stage6_index):
         raise ConfigurationError('external Stage-6 data must be test-only')
+    accepted_failures = accepted_failures or {}
+    known_runs = {r['stego_run_id'] for r in trainval_plan}
+    if not set(accepted_failures).issubset(known_runs):
+        raise ConfigurationError('RRC exclusion is absent from the trainval plan')
     output: list[dict[str, Any]] = []
     for row in trainval_plan:
         run_id = row['stego_run_id']
+        if run_id in accepted_failures:
+            failure = accepted_failures[run_id]
+            if any(row.get(key) != failure[key] for key in (
+                    'sample_id', 'partition', 'model_id', 'prompt_id',
+                    'article_id', 'method_id', 'method_point_id')):
+                raise ConfigurationError(f'allowlisted RRC exclusion does not match plan: {run_id}')
+            if (stego_root/run_id).exists():
+                raise ConfigurationError(f'excluded RRC run also has a stego artifact: {run_id}')
+            continue
         directory = stego_root/run_id
         result = read_json(directory/'stego_result.json')
         ids = read_json(directory/'token_ids.json').get('sender_token_ids')
-        text = (directory/'stegotext.txt').read_text(encoding='utf-8')
+        text = read_carrier_text(directory/'stegotext.txt')
         if (not isinstance(ids, list) or not ids or
                 any(type(v) is not int or v < 0 for v in ids)):
             raise ConfigurationError(f'invalid Stage-7 sender tokens: {run_id}')
@@ -80,22 +94,54 @@ def cover_plan_from_stegos(
             'article_id', 'method_id', 'method_point_id', 'replicate_id',
             'cover_seed', 'carrier_tokens', 'stego_text_sha256', 'stego_status',
         )})
-    if len({r['sample_id'] for r in output}) != 5640 or len({r['stego_run_id'] for r in output}) != 5640:
-        raise ConfigurationError('Stage-7 cover plan contains duplicates')
-    if Counter(r['partition'] for r in output) != {'train': 2880, 'validation': 960, 'test': 1800}:
+    expected_pairs = 5640 - len(accepted_failures)
+    if (len(output) != expected_pairs or
+            len({r['sample_id'] for r in output}) != expected_pairs or
+            len({r['stego_run_id'] for r in output}) != expected_pairs):
+        raise ConfigurationError('Stage-7 cover plan is incomplete or contains duplicates')
+    expected_partitions = Counter({'train': 2880, 'validation': 960, 'test': 1800})
+    for failure in accepted_failures.values():
+        expected_partitions[failure['partition']] -= 1
+    if Counter(r['partition'] for r in output) != expected_partitions:
         raise ConfigurationError('Stage-7 cover plan has unexpected split counts')
-    by_model = Counter(r['model_id'] for r in output)
-    if sorted(by_model.values()) != [2520, 3120]:
-        raise ConfigurationError('Stage-7 cover plan has unexpected model counts')
-    strata = Counter((r['partition'], r['model_id'], r['method_id'], r['method_point_id'])
-                     for r in output)
+    # Frozen Stage 6 has 1080 Llama and 720 Qwen samples; train/val adds
+    # 1920 per model. Previously these expected model totals were reversed.
     model_test_counts = Counter(r['model_id'] for r in stage6_index)
-    for (partition, model_id, _, _), count in strata.items():
-        required = 96 if partition == 'train' else 32 if partition == 'validation' else model_test_counts[model_id] // 15
-        if count != required:
-            raise ConfigurationError(f'Stage-7 stratum has {count} samples, expected {required}')
-    if len(strata) != 90:
-        raise ConfigurationError('Stage-7 cover plan missing model/point/split strata')
+    if model_test_counts != {
+        'meta-llama/Llama-3.2-3B': 1080,
+        'Qwen/Qwen3-4B-Base': 720,
+    }:
+        raise ConfigurationError('Stage-7 frozen test model allocations changed')
+    if Counter(r['model_id'] for r in trainval_plan) != {
+        'meta-llama/Llama-3.2-3B': 1920,
+        'Qwen/Qwen3-4B-Base': 1920,
+    }:
+        raise ConfigurationError('Stage-7 trainval model allocations changed')
+    expected_by_model = Counter(r['model_id'] for r in trainval_plan + stage6_index)
+    if sorted(expected_by_model.values()) != [2640, 3000]:
+        raise ConfigurationError('Stage-7 source plans have unexpected model counts')
+    for failure in accepted_failures.values():
+        expected_by_model[failure['model_id']] -= 1
+    if Counter(r['model_id'] for r in output) != expected_by_model:
+        raise ConfigurationError('Stage-7 cover plan has unexpected model counts')
+    source_strata = Counter((r['partition'], r['model_id'], r['method_id'], r['method_point_id'])
+                            for r in trainval_plan + stage6_index)
+    if len(source_strata) != 90:
+        raise ConfigurationError('Stage-7 source plans have missing method/model/split strata')
+    expected_strata = source_strata.copy()
+    for failure in accepted_failures.values():
+        key = (failure['partition'], failure['model_id'],
+               failure['method_id'], failure['method_point_id'])
+        expected_strata[key] -= 1
+    actual_strata = Counter((r['partition'], r['model_id'], r['method_id'], r['method_point_id'])
+                            for r in output)
+    if actual_strata != expected_strata:
+        raise ConfigurationError('Stage-7 cover plan has unexpected stratum counts')
+    for (partition, model_id, _, _), count in source_strata.items():
+        model_test_size = model_test_counts[model_id]
+        expected = 96 if partition == 'train' else 32 if partition == 'validation' else model_test_size//15
+        if count != expected:
+            raise ConfigurationError('Stage-7 source plans violate frozen method stratum size')
     output.sort(key=lambda r: (r['partition'], r['model_id'], r['sample_id']))
     return output
 
@@ -105,8 +151,14 @@ def paired_dataset(
     stego_root: Path, stage6_run_root: Path,
     split_manifest: dict[str, Any],
     expected_pairs: int = 5640, expected_groups: int = 152,
+    documented_failures: dict[str, dict[str, Any]] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Return local text-only detector records and commit-safe metadata."""
+    documented_failures = documented_failures or {}
+    if expected_pairs != 5640 - len(documented_failures) and expected_groups == 152:
+        raise ConfigurationError('Stage-7 pair count does not match documented failure count')
+    if {row['stego_run_id'] for row in cover_plan} & set(documented_failures):
+        raise ConfigurationError('excluded RRC run leaked into paired dataset')
     if len(cover_plan) != expected_pairs:
         raise ConfigurationError(f'paired dataset requires all {expected_pairs} cover/stego pairs')
     split_rows = {r['prompt_id']: r for r in split_manifest['rows']}
@@ -125,7 +177,7 @@ def paired_dataset(
             raise ConfigurationError(f'leaked or mismatched prompt group: {sid}')
         if row['partition'] == 'test':
             run = stage6_run_root/row['stego_run_id']
-            stego = (run/'stegotext.txt').read_text(encoding='utf-8') if row['stego_status'] == 'ok' else \
+            stego = read_carrier_text(run/'stegotext.txt') if row['stego_status'] == 'ok' else \
                     read_json(run/'failure_diagnostics.json')['transport_text']
         else:
             run = stego_root/row['stego_run_id']
@@ -133,7 +185,7 @@ def paired_dataset(
             if (result.get('run_id') != row['stego_run_id'] or
                     result.get('carrier_tokens') != row['carrier_tokens']):
                 raise ConfigurationError(f'stego result mismatch: {sid}')
-            stego = (run/'stegotext.txt').read_text(encoding='utf-8')
+            stego = read_carrier_text(run/'stegotext.txt')
         if not isinstance(stego, str) or not stego or sha_text(stego) != row['stego_text_sha256']:
             raise ConfigurationError(f'stego source text corrupt: {sid}')
         cover_dir = cover_root/sid
@@ -142,7 +194,7 @@ def paired_dataset(
         if (not isinstance(cover_ids, list) or len(cover_ids) != row['carrier_tokens'] or
                 any(type(token_id) is not int or token_id < 0 for token_id in cover_ids)):
             raise ConfigurationError(f'cover sender carrier length/IDs corrupt: {sid}')
-        cover = (cover_dir/'cover.txt').read_text(encoding='utf-8')
+        cover = read_carrier_text(cover_dir/'cover.txt')
         if (not cover or cover_result.get('sample_id') != sid or
                 cover_result.get('stego_run_id') != row['stego_run_id'] or
                 cover_result.get('carrier_tokens') != row['carrier_tokens'] or
@@ -167,12 +219,15 @@ def paired_dataset(
             raise ConfigurationError('class imbalance within a method/model/split stratum')
     texts.sort(key=lambda r: (r['partition'], r['model_id'], r['pair_id'], r['label']))
     manifest = {
-        'schema_version': 'stage7.detector_dataset.v1', 'status': 'complete',
+        'schema_version': 'stage7.detector_dataset.v1',
+        'status': ('complete_with_documented_nontermination' if documented_failures else 'complete'),
         'sample_count': len(texts), 'pair_count': len(seen),
         'class_counts': {'cover': len(seen), 'stego': len(seen)},
         'partition_counts': dict(Counter(r['partition'] for r in texts)),
         'group_count': expected_groups,
         'stage6_test_sources': sum(r['partition']=='test' for r in cover_plan),
         'per_model_counts': dict(Counter(r['model_id'] for r in texts)),
+        'excluded_nontermination_count': len(documented_failures),
+        'excluded_nontermination_run_ids': sorted(documented_failures),
     }
     return texts, manifest

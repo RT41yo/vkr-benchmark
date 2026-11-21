@@ -108,3 +108,43 @@ def test_paired_dataset_rejects_wrong_cover_carrier_count(tmp_path):
         paired_dataset(cover_plan=plan, cover_root=cover, stego_root=stego,
                        stage6_run_root=stage6, split_manifest=split,
                        expected_pairs=2, expected_groups=2)
+
+
+def test_paired_dataset_preserves_generated_carriage_returns(tmp_path):
+    from vkr_benchmark.steganalysis.textio import read_carrier_text
+    plan, cover, stego, stage6, split = _setup_pair(tmp_path)
+    s_text = 'stego\rpart1\r\npart2'
+    c_text = 'cover\rpart1\r\npart2'
+    run = stego / 'new1'
+    (run / 'stegotext.txt').write_bytes(s_text.encode('utf-8'))
+    result = json.loads((run / 'stego_result.json').read_text(encoding='utf-8'))
+    result['text_sha256'] = _sha(s_text)
+    _write_json(run / 'stego_result.json', result)
+    for row in plan:
+        if row['partition'] == 'train':
+            row['stego_text_sha256'] = _sha(s_text)
+    cdir = cover / 'sample-new1'
+    (cdir / 'cover.txt').write_bytes(c_text.encode('utf-8'))
+    cover_result = json.loads((cdir / 'cover_result.json').read_text(encoding='utf-8'))
+    cover_result['text_sha256'] = _sha(c_text)
+    _write_json(cdir / 'cover_result.json', cover_result)
+    texts, _ = paired_dataset(
+        cover_plan=plan, cover_root=cover, stego_root=stego,
+        stage6_run_root=stage6, split_manifest=split,
+        expected_pairs=2, expected_groups=2)
+    assert next(r['text'] for r in texts if r['record_id']=='sample-new1-stego') == s_text
+    assert next(r['text'] for r in texts if r['record_id']=='sample-new1-cover') == c_text
+    assert read_carrier_text(cdir/'cover.txt') == c_text
+
+
+def test_dataset_manifest_reports_explicit_documented_cutoff(tmp_path):
+    plan, cover, stego, stage6, split = _setup_pair(tmp_path)
+    documented = {'failed-run': {'run_id': 'failed-run'}}
+    texts, manifest = paired_dataset(
+        cover_plan=plan, cover_root=cover, stego_root=stego,
+        stage6_run_root=stage6, split_manifest=split,
+        expected_pairs=2, expected_groups=2, documented_failures=documented)
+    assert len(texts) == 4
+    assert manifest['status'] == 'complete_with_documented_nontermination'
+    assert manifest['excluded_nontermination_count'] == 1
+    assert manifest['excluded_nontermination_run_ids'] == ['failed-run']

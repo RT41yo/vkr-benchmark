@@ -1,0 +1,22 @@
+{
+  "schema_version": "stage7.rrc_nontermination_exception.v1",
+  "decision": "conditional_on_matching_replay",
+  "expected_total_failed_runs": 1,
+  "exceptions": [
+    {
+      "run_id": "0b0e22af25613edb",
+      "sample_id": "79775985a169f917bfe94a05",
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "prompt_id": "s7p0082",
+      "article_id": "19496d97273879cee7e2a41de48fa2d6f445459e",
+      "partition": "validation",
+      "method_id": "rrc",
+      "method_point_id": "payload1024-margin40",
+      "target_payload_bits": 1024,
+      "max_carrier_tokens": 2048,
+      "generated_carrier_tokens": 2048,
+      "termination_candidates": 0,
+      "verification_rejections": 0
+    }
+  ]
+}

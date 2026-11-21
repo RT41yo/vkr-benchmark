@@ -10,6 +10,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'src'))
 from vkr_benchmark.errors import ConfigurationError  # noqa: E402
+from vkr_benchmark.steganalysis.rrc_failure import validate_registered_cutoffs  # noqa: E402
 from vkr_benchmark.steganalysis.dataset import (  # noqa: E402
     jsonl_text, paired_dataset, read_json, read_jsonl,
 )
@@ -28,19 +29,43 @@ def main() -> int:
     parser.add_argument('--split-manifest', type=Path, default=ROOT/'results/stage7/splits/split_manifest.json')
     parser.add_argument('--output', type=Path, default=ROOT/'data/stage7/dataset/detector_records.jsonl')
     parser.add_argument('--manifest-output', type=Path, default=ROOT/'results/stage7/dataset_manifest.json')
+    parser.add_argument('--trainval-plan', type=Path, default=ROOT/'data/stage7/dataset/trainval_stego_plan.jsonl')
+    parser.add_argument('--failure-root', type=Path, default=ROOT/'results/stage7/stego_failures')
+    parser.add_argument('--exception-config', type=Path, default=ROOT/'configs/stage7/rrc_nontermination_exception.json')
+    parser.add_argument('--replay-report', type=Path, default=ROOT/'results/stage7/rrc_nontermination_replay.json')
+    parser.add_argument('--allow-confirmed-rrc-cutoff', action='store_true',
+                        help='Explicit exception for one allowlisted, reproduced RRC validation cutoff')
     parser.add_argument('--dry-run', action='store_true')
     args = parser.parse_args()
     try:
+        accepted = validate_registered_cutoffs(
+            trainval_plan=read_jsonl(args.trainval_plan),
+            stego_root=args.stego_root, failure_root=args.failure_root,
+            exception_config_path=args.exception_config,
+            replay_report_path=args.replay_report,
+        ) if args.allow_confirmed_rrc_cutoff else {}
+        plan = read_jsonl(args.cover_plan)
+        if accepted:
+            trainval = read_jsonl(args.trainval_plan)
+            stage6_index = read_jsonl(ROOT/'data/stage7/dataset/stage6_test_index.jsonl')
+            expected_runs = ({r['stego_run_id'] for r in trainval + stage6_index}
+                             - set(accepted))
+            if len(expected_runs) != 5639 or {r['stego_run_id'] for r in plan} != expected_runs:
+                raise ConfigurationError('paired dataset cover plan differs from all nonexcluded sources')
         samples, manifest = paired_dataset(
-            cover_plan=read_jsonl(args.cover_plan), cover_root=args.cover_root,
+            cover_plan=plan, cover_root=args.cover_root,
             stego_root=args.stego_root, stage6_run_root=args.stage6_run_root,
             split_manifest=read_json(args.split_manifest),
+            expected_pairs=5640-len(accepted), documented_failures=accepted,
         )
         content = jsonl_text(samples)
         manifest['dataset_sha256'] = hashlib.sha256(content.encode('utf-8')).hexdigest()
         manifest['cover_plan_sha256'] = _sha_file(args.cover_plan)
         manifest['split_manifest_sha256'] = _sha_file(args.split_manifest)
         manifest['stage6_frozen_manifest_sha256'] = _sha_file(ROOT/'results/stage6/dataset_v1.0_manifest.json')
+        if accepted:
+            manifest['exception_config_sha256'] = _sha_file(args.exception_config)
+            manifest['rrc_replay_report_sha256'] = _sha_file(args.replay_report)
         if not args.dry_run:
             args.output.parent.mkdir(parents=True, exist_ok=True)
             if args.output.exists() and args.output.read_text(encoding='utf-8') != content:
