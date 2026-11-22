@@ -1,0 +1,52 @@
+{
+  "changed_hash_count": 6,
+  "changed_stage6_sources": [
+    {
+      "legacy_normalized_sha256": "811aa6d6ae4a417cecbb5bb8628cd362d614152b87c79aeab0deee99d7f2035b",
+      "raw_utf8_sha256": "9cf874e7e6c27c63a17fbaacfc795bb87995a315c8df8ca6950452b89b5675e1",
+      "run_id": "124dd34b3fee0237",
+      "sample_id": "d9023a12426ac7841bff240b"
+    },
+    {
+      "legacy_normalized_sha256": "09ee534b78e33396f1193ffa98847ed6383308ff645183b56d439d26790aa5c4",
+      "raw_utf8_sha256": "352eb3a812790a517c5965b0854d381e91751de6651a24340124d4a1081964a3",
+      "run_id": "7b16b222778ead5e",
+      "sample_id": "75bcf3def8d84a1712ba6390"
+    },
+    {
+      "legacy_normalized_sha256": "ce13a666f31d22193a0b397c0cfafc03be067a4f6815122fe8044e4f178cdece",
+      "raw_utf8_sha256": "1decf996590d6d3713553e47b0159996fb655ae5f159b8080bb13f97a1a8a4bc",
+      "run_id": "97e0487f8e44c23c",
+      "sample_id": "47b7ddcc7538a3824b11c353"
+    },
+    {
+      "legacy_normalized_sha256": "6b6d4df5d03666ee1afc69eaf269f389c6e91d19fb34add9aaa06962da53df85",
+      "raw_utf8_sha256": "f5e51956f879571e7ab458daffd7af041d623b7bfa248b9eee187cd5659a55dd",
+      "run_id": "9a69138968563929",
+      "sample_id": "11aa0f214229be7da4745eb9"
+    },
+    {
+      "legacy_normalized_sha256": "9a211a5006329ae0a11d2ae2935fd45042c4ed39da8f44d40e2f64bf823e8e84",
+      "raw_utf8_sha256": "83c9642c7eea222ca0f2ad9930896081d4a590b844534e54342401db3de3ec53",
+      "run_id": "b48273c421fd14ae",
+      "sample_id": "08a78ee8640b39a4acbc9b8d"
+    },
+    {
+      "legacy_normalized_sha256": "ed1726f8b8c82bd2169aeb7b79d50c215f1f3753320e11807d8ecbda6d2ef2a7",
+      "raw_utf8_sha256": "8c3d757fb1016048fdfefcbd98badde506dcaec328cbb603552efefa59fbc48b",
+      "run_id": "c38613f34749131f",
+      "sample_id": "3077a2bab4ba61a8ebccb40c"
+    }
+  ],
+  "cover_plan_pair_count": 5639,
+  "fresh_audit_status": "ok",
+  "previous_cover_plan_sha256": "5012104a9e90e3117a289c976710fed796e87fce907436b21f05d570256543fd",
+  "previous_index_sha256": "bf63393b701ae78d1dce1cc3b171e70ff92e7da12b9b7d1d40f2e5b2c2372e45",
+  "schema_version": "stage7.stage6_text_hash_reconciliation.v1",
+  "scope": "Stage-7 derived metadata only; Stage-6 source artifacts untouched",
+  "status": "verified_legacy_newline_normalization",
+  "test_source_count": 1800,
+  "unchanged_hash_count": 1794,
+  "updated_cover_plan_sha256": "bbc4a184f16c96155c2fb6a8513a3c07b94032f541c57b84e574b565bc9aea88",
+  "updated_index_sha256": "15db6aab960cfd730b318df25607134c9d0da1e73802e7ad7420fcdf1370a8bc"
+}

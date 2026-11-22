@@ -1,0 +1,31 @@
+{
+  "class_counts": {
+    "cover": 5639,
+    "stego": 5639
+  },
+  "cover_plan_sha256": "bbc4a184f16c96155c2fb6a8513a3c07b94032f541c57b84e574b565bc9aea88",
+  "dataset_sha256": "43ea3b2ded135a8004a2ada7f3c3897ee3873baf0cd9283408418f99298587d9",
+  "exception_config_sha256": "69b4d66c48bc055e41aa14c80c59ebcd3cdf52dd1e515fdcb7a9fb7d277bcc1e",
+  "excluded_nontermination_count": 1,
+  "excluded_nontermination_run_ids": [
+    "0b0e22af25613edb"
+  ],
+  "group_count": 152,
+  "pair_count": 5639,
+  "partition_counts": {
+    "test": 3600,
+    "train": 5760,
+    "validation": 1918
+  },
+  "per_model_counts": {
+    "Qwen/Qwen3-4B-Base": 5278,
+    "meta-llama/Llama-3.2-3B": 6000
+  },
+  "rrc_replay_report_sha256": "4fb261012803453701172a999a9e4d876a1ed16a5cb842acc84f0d9fe03e49a1",
+  "sample_count": 11278,
+  "schema_version": "stage7.detector_dataset.v1",
+  "split_manifest_sha256": "bfb6b6323177f834d72fe2e1236e53b9e559cd7d907c37890b058ab0fece52d6",
+  "stage6_frozen_manifest_sha256": "4cc8e69c0c69513e23aabdf74e633de762e21ace7e59cc943bd531024dff4e1f",
+  "stage6_test_sources": 1800,
+  "status": "complete_with_documented_nontermination"
+}
