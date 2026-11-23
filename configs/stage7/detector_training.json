@@ -1,0 +1,24 @@
+{
+  "schema_version": "stage7.detector_training.v1",
+  "dataset_sha256": "43ea3b2ded135a8004a2ada7f3c3897ee3873baf0cd9283408418f99298587d9",
+  "source_models": ["meta-llama/Llama-3.2-3B", "Qwen/Qwen3-4B-Base"],
+  "baseline": {
+    "analyzer": "char", "ngram_range": [3, 5], "min_df": 2,
+    "max_features": 100000, "sublinear_tf": true,
+    "logistic_regression_C": 1.0, "logistic_regression_max_iter": 2000,
+    "class_weight": null
+  },
+  "roberta": {
+    "base_model": "FacebookAI/roberta-base", "base_revision": null,
+    "max_length": 512, "truncation": "right", "dynamic_padding": true,
+    "learning_rate": 0.00002, "weight_decay": 0.01, "max_epochs": 4,
+    "warmup_ratio": 0.1, "microbatch": 4, "gradient_accumulation": 8,
+    "training_seeds": [711, 712, 713], "early_stopping_patience": 2
+  },
+  "selection": {
+    "metric": "pooled_validation_roc_auc",
+    "checkpoint_tie_break": ["earlier_epoch", "smaller_seed"],
+    "threshold": "max_pooled_validation_balanced_accuracy_lower_threshold_tiebreak",
+    "test_used_for_selection": false
+  }
+}
