@@ -1,0 +1,45 @@
+{
+  "schema_version": "stage7.final_evaluation_protocol.v1",
+  "study": "primary_e4_only",
+  "dataset_sha256": "43ea3b2ded135a8004a2ada7f3c3897ee3873baf0cd9283408418f99298587d9",
+  "primary_configuration_sha256": "2eb26ae60e768b0e55f041c53b2221a87bbb433f357e7523a5665a96a60b17ac",
+  "primary_audit_sha256": "bdcdd4443418e2d6b529d1cdea334ba23c08523c6e5e12614fb2aea6e54d37f5",
+  "roberta_revision": "e2da8e2f811d1448a5b465c236feacd80ffbac7b",
+  "selected_roberta_seeds": {
+    "meta-llama/Llama-3.2-3B": 713,
+    "Qwen/Qwen3-4B-Base": 713
+  },
+  "detectors": ["tfidf_logreg", "roberta_e4"],
+  "roberta_max_length": 512,
+  "roberta_batch_size": 4,
+  "threshold_source": "pooled_validation_only",
+  "bootstrap": {
+    "unit": "article_id",
+    "resamples": 2000,
+    "seed": 731,
+    "confidence": 0.95,
+    "method": "percentile",
+    "shared_draws": true
+  },
+  "test_article_groups": 24,
+  "test_pairs_per_model": {
+    "meta-llama/Llama-3.2-3B": 1080,
+    "Qwen/Qwen3-4B-Base": 720
+  },
+  "test_pair_count": 1800,
+  "operating_points": [
+    ["bins", "b1"], ["bins", "b4"], ["bins", "b6"],
+    ["huffman", "e2"], ["huffman", "e4"], ["huffman", "e8"],
+    ["arithmetic_coding", "p32-k128"],
+    ["arithmetic_coding", "p32-k2048"],
+    ["arithmetic_coding", "p32-k50000"],
+    ["adg", "default"], ["discop", "default"],
+    ["dairstega", "a8-b1-k100"],
+    ["dairstega", "a16-b075-k100"],
+    ["dairstega", "a32-b05-k100"],
+    ["rrc", "payload1024-margin40"]
+  ],
+  "scores": "positive_class_stego_probability",
+  "pr_auc_definition": "trapezoidal_precision_recall_curve",
+  "test_used_for_selection": false
+}

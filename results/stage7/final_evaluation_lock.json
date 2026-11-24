@@ -1,0 +1,66 @@
+{
+  "dataset_manifest_sha256": "94ea9e099d49a4f37d219a39f19717a19b746c9f5332f8828712fb96d93c2e34",
+  "dataset_sha256": "43ea3b2ded135a8004a2ada7f3c3897ee3873baf0cd9283408418f99298587d9",
+  "primary_audit_sha256": "bdcdd4443418e2d6b529d1cdea334ba23c08523c6e5e12614fb2aea6e54d37f5",
+  "primary_config_sha256": "2eb26ae60e768b0e55f041c53b2221a87bbb433f357e7523a5665a96a60b17ac",
+  "protocol_sha256": "56bc75b01c208c85ea6b389d4410a654b186277be27176f467f3359dbfad9a4e",
+  "schema_version": "stage7.final_evaluation_lock.v1",
+  "selected": [
+    {
+      "baseline": {
+        "historic_training_config_sha256": "29a5ac78eb4688e511e766a06d6847c76374e2bca435e3b9d133ea4529c660fd",
+        "joblib_sha256": "9419b269e12a9c4d2bbcde86e0a8e0980a368705d6d96d5d9d27105c93496b60",
+        "summary_sha256": "ec58107ce61386c28d2d232e4869d44f55c77dc92f26faa728995364d4a76b13",
+        "threshold": 0.5120935467373745,
+        "validation_predictions_sha256": "47e54ae7c9ed4afd55660d3cf6ba6f3be702b3c9b3e1eb1266044685c5a6371c",
+        "validation_roc_auc": 0.7047569444444446
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "roberta_e4": {
+        "checkpoint_asset_sha256": {
+          "config.json": "d6a21068cd066e9e6f635df19b93c756ef6603fca78617795e11d8fc3925f745",
+          "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+          "model.safetensors": "104e80291bbef203b5b885d19e7d52116683afce3c5eeab6fecc91093830eb79",
+          "tokenizer.json": "1f33749d010b4d63908e5c174c341622cb45039dd73a139dcd95bd74cc7e304b",
+          "tokenizer_config.json": "4ea8648e4067230942ac6b32dd61328675bc99ae0a9f4cc665c30a95f0f68712",
+          "vocab.json": "ed19656ea1707df69134c4af35c8ceda2cc9860bf2c3495026153a133670ab5e"
+        },
+        "epoch": 4,
+        "seed": 713,
+        "summary_sha256": "ee51f03275ea328a6ca2b9ee7798d894b2121ec21ab40822e4a9c279c3091f4c",
+        "threshold": 0.4882860481739044,
+        "validation_roc_auc": 0.8031727430555556
+      },
+      "slug": "llama-3.2-3b"
+    },
+    {
+      "baseline": {
+        "historic_training_config_sha256": "29a5ac78eb4688e511e766a06d6847c76374e2bca435e3b9d133ea4529c660fd",
+        "joblib_sha256": "576c9267f72de60acd3f651ff9ae6c2d44106247fb3269bf0660fe712dee0b53",
+        "summary_sha256": "4105aa5b2407060845aa9f9dcee0ccd86e26b4bc21fe8dd242d4637925aa5b16",
+        "threshold": 0.5332555668581335,
+        "validation_predictions_sha256": "c235104d6f8d32d3e2dc6a64fca51e2e63c4b35209aaa07ced5960b43c256fea",
+        "validation_roc_auc": 0.7256636782440802
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "roberta_e4": {
+        "checkpoint_asset_sha256": {
+          "config.json": "d6a21068cd066e9e6f635df19b93c756ef6603fca78617795e11d8fc3925f745",
+          "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+          "model.safetensors": "61e317299be4aa31da1d2bcd6669c714f7e4ebe0044091d874a7dc71450bf264",
+          "tokenizer.json": "1f33749d010b4d63908e5c174c341622cb45039dd73a139dcd95bd74cc7e304b",
+          "tokenizer_config.json": "4ea8648e4067230942ac6b32dd61328675bc99ae0a9f4cc665c30a95f0f68712",
+          "vocab.json": "ed19656ea1707df69134c4af35c8ceda2cc9860bf2c3495026153a133670ab5e"
+        },
+        "epoch": 4,
+        "seed": 713,
+        "summary_sha256": "2cbc250a3f04f56e71c7797a1a473c406ff18d4eb95cbb0c675465e82e74d61d",
+        "threshold": 0.5310582518577576,
+        "validation_roc_auc": 0.7901508448795114
+      },
+      "slug": "qwen3-4b-base"
+    }
+  ],
+  "status": "sealed",
+  "test_access": "none"
+}
