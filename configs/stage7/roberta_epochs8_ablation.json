@@ -1,0 +1,16 @@
+{
+  "schema_version": "stage7.roberta_epochs8_ablation.v1",
+  "study_id": "exploratory_epochs8_fresh_linear",
+  "dataset_sha256": "43ea3b2ded135a8004a2ada7f3c3897ee3873baf0cd9283408418f99298587d9",
+  "primary_configuration_sha256": "2eb26ae60e768b0e55f041c53b2221a87bbb433f357e7523a5665a96a60b17ac",
+  "base_report_sha256": "9acbccb24045fc2697633978cf80aed0ae52bbc3824834f9ed7b1f32e6e6d6f3",
+  "base_revision": "e2da8e2f811d1448a5b465c236feacd80ffbac7b",
+  "max_epochs": 8,
+  "early_stopping_patience": 2,
+  "training_seeds": [711, 712, 713],
+  "start_from": "pinned_base_not_primary_checkpoint",
+  "scheduler": "fresh_linear_over_eight_epochs",
+  "selection_metric": "pooled_validation_roc_auc",
+  "test_access": "none",
+  "primary_results_unchanged": true
+}

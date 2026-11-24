@@ -1,0 +1,94 @@
+{
+  "ablation_config_sha256": "d8e183a1a2fd9c203218c22239c8988aa72d5068b0c8ea287868b08cc9cf47b4",
+  "dataset_sha256": "43ea3b2ded135a8004a2ada7f3c3897ee3873baf0cd9283408418f99298587d9",
+  "models": [
+    {
+      "ablation_mean_validation_roc_auc": 0.8044690393518519,
+      "ablation_minus_primary_mean_roc_auc": 0.004767071759259278,
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "per_seed": [
+        {
+          "ablation_best_epoch": 6,
+          "ablation_epochs_executed": 8,
+          "ablation_minus_primary_roc_auc": 0.006710069444444633,
+          "ablation_summary_sha256": "c3478fe5898f04166f687e89ffb7c81d09f4ec5ad9d5f56ee21acffe6bf5be08",
+          "ablation_validation_roc_auc": 0.8050260416666668,
+          "primary_best_epoch": 4,
+          "primary_summary_sha256": "8380b66e2c7118e23796705c90f2fee737840b2cc568799653b200a5d41156d1",
+          "primary_validation_roc_auc": 0.7983159722222222,
+          "seed": 711
+        },
+        {
+          "ablation_best_epoch": 5,
+          "ablation_epochs_executed": 7,
+          "ablation_minus_primary_roc_auc": 0.0016015624999999867,
+          "ablation_summary_sha256": "319e6b83baae9dba4918dff129b29a8cf07d8785ae2f38f02e256384d9cba8ba",
+          "ablation_validation_roc_auc": 0.79921875,
+          "primary_best_epoch": 4,
+          "primary_summary_sha256": "20d031faa26ccdabf5c40fc56788535cbbf7b2f721131b6452ce7987ed461f29",
+          "primary_validation_roc_auc": 0.7976171875,
+          "seed": 712
+        },
+        {
+          "ablation_best_epoch": 5,
+          "ablation_epochs_executed": 7,
+          "ablation_minus_primary_roc_auc": 0.005989583333333104,
+          "ablation_summary_sha256": "f45bbd689c0c136a6f48757a0ec7b66ac2f65c75c0696ac46313dba456effe48",
+          "ablation_validation_roc_auc": 0.8091623263888887,
+          "primary_best_epoch": 4,
+          "primary_summary_sha256": "ee51f03275ea328a6ca2b9ee7798d894b2121ec21ab40822e4a9c279c3091f4c",
+          "primary_validation_roc_auc": 0.8031727430555556,
+          "seed": 713
+        }
+      ],
+      "primary_mean_validation_roc_auc": 0.7997019675925926
+    },
+    {
+      "ablation_mean_validation_roc_auc": 0.7911431115915057,
+      "ablation_minus_primary_mean_roc_auc": 0.003902237757564486,
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "per_seed": [
+        {
+          "ablation_best_epoch": 4,
+          "ablation_epochs_executed": 6,
+          "ablation_minus_primary_roc_auc": 0.011349322919617766,
+          "ablation_summary_sha256": "38a24a8548008c5e5f2cfe5c67b201a4d1d6d58838a3bd9416ac05b0267185e4",
+          "ablation_validation_roc_auc": 0.8000183053595478,
+          "primary_best_epoch": 4,
+          "primary_summary_sha256": "ed142586782f09a6c226330541c8d4ce6c32cc2f285c4d8c3df7b47249d12826",
+          "primary_validation_roc_auc": 0.78866898243993,
+          "seed": 711
+        },
+        {
+          "ablation_best_epoch": 3,
+          "ablation_epochs_executed": 5,
+          "ablation_minus_primary_roc_auc": 0.002514807728348334,
+          "ablation_summary_sha256": "891174e6f8a80fdf64d705259d348c29b174a19106eea67bf49bb17f8c82c3fe",
+          "ablation_validation_roc_auc": 0.7854176019107308,
+          "primary_best_epoch": 4,
+          "primary_summary_sha256": "1a04484a2e8d1004d099a6c03c70540fe729b18dab0261669f602fc3fa6ae5d2",
+          "primary_validation_roc_auc": 0.7829027941823825,
+          "seed": 712
+        },
+        {
+          "ablation_best_epoch": 6,
+          "ablation_epochs_executed": 8,
+          "ablation_minus_primary_roc_auc": -0.002157417375272752,
+          "ablation_summary_sha256": "0177359459e153fd0431910017b63cf547d88c458a20d3de6731d3027436c75a",
+          "ablation_validation_roc_auc": 0.7879934275042386,
+          "primary_best_epoch": 4,
+          "primary_summary_sha256": "2cbc250a3f04f56e71c7797a1a473c406ff18d4eb95cbb0c675465e82e74d61d",
+          "primary_validation_roc_auc": 0.7901508448795114,
+          "seed": 713
+        }
+      ],
+      "primary_mean_validation_roc_auc": 0.7872408738339413
+    }
+  ],
+  "primary_audit_sha256": "bdcdd4443418e2d6b529d1cdea334ba23c08523c6e5e12614fb2aea6e54d37f5",
+  "primary_checkpoint_selection_changed": false,
+  "scheduler_caveat": "8-epoch linear LR schedule differs from 4-epoch primary LR schedule",
+  "schema_version": "stage7.roberta_epochs8_comparison.v1",
+  "status": "validation_only_exploratory",
+  "test_access": "none"
+}

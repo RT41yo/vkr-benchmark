@@ -170,10 +170,17 @@ def test_roberta_dry_run_requires_pinned_revision_and_no_gpu(tmp_path,monkeypatc
     report=tmp_path/'snapshot_report.json'
     report.write_text(json.dumps(manifest_for_snapshot(snapshot,rev)))
     source_cfg=json.loads((Path(__file__).resolve().parents[2]/'configs/stage7/detector_training.json').read_text())
+    # The repository's primary revision may already be pinned by the user.
+    # Exercise the negative case explicitly rather than depending on that state.
+    source_cfg['roberta']['base_revision']=None
     config=tmp_path/'training.json';config.write_text(json.dumps(source_cfg))
     monkeypatch.setattr(sys,'argv',['train_stage7_roberta.py','--model-id',QWEN_ID,
                      '--seed','711','--snapshot',str(snapshot),'--base-report',str(report),
-                     '--config',str(config),'--dry-run'])
+                     '--config',str(config),
+                     # Never probe real trained checkpoints from a unit test.
+                     '--output-root',str(tmp_path/'runs'),
+                     '--model-root',str(tmp_path/'models'),
+                     '--dry-run'])
     assert runner.main()==1  # null floating revision must be refused
     source_cfg['roberta']['base_revision']=rev
     config.write_text(json.dumps(source_cfg))

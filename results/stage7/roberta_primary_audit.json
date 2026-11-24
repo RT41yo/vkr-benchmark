@@ -1,0 +1,126 @@
+{
+  "base_report_sha256": "9acbccb24045fc2697633978cf80aed0ae52bbc3824834f9ed7b1f32e6e6d6f3",
+  "base_revision": "e2da8e2f811d1448a5b465c236feacd80ffbac7b",
+  "dataset_sha256": "43ea3b2ded135a8004a2ada7f3c3897ee3873baf0cd9283408418f99298587d9",
+  "detector_count": 6,
+  "primary_configuration_sha256": "2eb26ae60e768b0e55f041c53b2221a87bbb433f357e7523a5665a96a60b17ac",
+  "runs": [
+    {
+      "best_epoch": 4,
+      "checkpoint_asset_sha256": {
+        "config.json": "d6a21068cd066e9e6f635df19b93c756ef6603fca78617795e11d8fc3925f745",
+        "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+        "model.safetensors": "a603f3c7b77f3579179455774222b0af3f81e82a05ecf99c3b8faa27ee0a8537",
+        "tokenizer.json": "1f33749d010b4d63908e5c174c341622cb45039dd73a139dcd95bd74cc7e304b",
+        "tokenizer_config.json": "4ea8648e4067230942ac6b32dd61328675bc99ae0a9f4cc665c30a95f0f68712",
+        "vocab.json": "ed19656ea1707df69134c4af35c8ceda2cc9860bf2c3495026153a133670ab5e"
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "predictions_sha256": "3a1c94c77022a788b6c002c7908e502e227ea1d2c04120ffc075eb8836594914",
+      "seed": 711,
+      "summary_sha256": "8380b66e2c7118e23796705c90f2fee737840b2cc568799653b200a5d41156d1",
+      "validation_balanced_accuracy": 0.7427083333333333,
+      "validation_count": 960,
+      "validation_roc_auc": 0.7983159722222222,
+      "validation_threshold": 0.5132262706756592
+    },
+    {
+      "best_epoch": 4,
+      "checkpoint_asset_sha256": {
+        "config.json": "d6a21068cd066e9e6f635df19b93c756ef6603fca78617795e11d8fc3925f745",
+        "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+        "model.safetensors": "9840d1db7dff2dd99a5866cc78d6bad08d36ca1ec71c7bedf34bfd52272556a5",
+        "tokenizer.json": "1f33749d010b4d63908e5c174c341622cb45039dd73a139dcd95bd74cc7e304b",
+        "tokenizer_config.json": "4ea8648e4067230942ac6b32dd61328675bc99ae0a9f4cc665c30a95f0f68712",
+        "vocab.json": "ed19656ea1707df69134c4af35c8ceda2cc9860bf2c3495026153a133670ab5e"
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "predictions_sha256": "4af9f82d0900f092401ada903ec0b14b5de99135163057a7c38dc20a3a6c7230",
+      "seed": 712,
+      "summary_sha256": "20d031faa26ccdabf5c40fc56788535cbbf7b2f721131b6452ce7987ed461f29",
+      "validation_balanced_accuracy": 0.7395833333333333,
+      "validation_count": 960,
+      "validation_roc_auc": 0.7976171875,
+      "validation_threshold": 0.595343291759491
+    },
+    {
+      "best_epoch": 4,
+      "checkpoint_asset_sha256": {
+        "config.json": "d6a21068cd066e9e6f635df19b93c756ef6603fca78617795e11d8fc3925f745",
+        "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+        "model.safetensors": "104e80291bbef203b5b885d19e7d52116683afce3c5eeab6fecc91093830eb79",
+        "tokenizer.json": "1f33749d010b4d63908e5c174c341622cb45039dd73a139dcd95bd74cc7e304b",
+        "tokenizer_config.json": "4ea8648e4067230942ac6b32dd61328675bc99ae0a9f4cc665c30a95f0f68712",
+        "vocab.json": "ed19656ea1707df69134c4af35c8ceda2cc9860bf2c3495026153a133670ab5e"
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "predictions_sha256": "23a3bd7477dd92280d22dfb456daed23a6fcc2b0f699828252e1b101e5c1f7da",
+      "seed": 713,
+      "summary_sha256": "ee51f03275ea328a6ca2b9ee7798d894b2121ec21ab40822e4a9c279c3091f4c",
+      "validation_balanced_accuracy": 0.7416666666666667,
+      "validation_count": 960,
+      "validation_roc_auc": 0.8031727430555556,
+      "validation_threshold": 0.4882860481739044
+    },
+    {
+      "best_epoch": 4,
+      "checkpoint_asset_sha256": {
+        "config.json": "d6a21068cd066e9e6f635df19b93c756ef6603fca78617795e11d8fc3925f745",
+        "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+        "model.safetensors": "92f73666b79aeff329c9d101d82b29386b22a67bb52678ab33c65d80497a1788",
+        "tokenizer.json": "1f33749d010b4d63908e5c174c341622cb45039dd73a139dcd95bd74cc7e304b",
+        "tokenizer_config.json": "4ea8648e4067230942ac6b32dd61328675bc99ae0a9f4cc665c30a95f0f68712",
+        "vocab.json": "ed19656ea1707df69134c4af35c8ceda2cc9860bf2c3495026153a133670ab5e"
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "predictions_sha256": "f62d833d64ef771926e98efa6087c75bda11e73d4ffe99c7643cb43bba3a1728",
+      "seed": 711,
+      "summary_sha256": "ed142586782f09a6c226330541c8d4ce6c32cc2f285c4d8c3df7b47249d12826",
+      "validation_balanced_accuracy": 0.7432150313152401,
+      "validation_count": 958,
+      "validation_roc_auc": 0.78866898243993,
+      "validation_threshold": 0.49060848355293274
+    },
+    {
+      "best_epoch": 4,
+      "checkpoint_asset_sha256": {
+        "config.json": "d6a21068cd066e9e6f635df19b93c756ef6603fca78617795e11d8fc3925f745",
+        "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+        "model.safetensors": "0262a7876793475f410be8715c2ffda04b1228ab2b18a9bd1e9024ca4a445978",
+        "tokenizer.json": "1f33749d010b4d63908e5c174c341622cb45039dd73a139dcd95bd74cc7e304b",
+        "tokenizer_config.json": "4ea8648e4067230942ac6b32dd61328675bc99ae0a9f4cc665c30a95f0f68712",
+        "vocab.json": "ed19656ea1707df69134c4af35c8ceda2cc9860bf2c3495026153a133670ab5e"
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "predictions_sha256": "a86f89b3a66de68abda9c092afa728b77da09ad57af656f20c7e1b89901ffa8d",
+      "seed": 712,
+      "summary_sha256": "1a04484a2e8d1004d099a6c03c70540fe729b18dab0261669f602fc3fa6ae5d2",
+      "validation_balanced_accuracy": 0.7296450939457202,
+      "validation_count": 958,
+      "validation_roc_auc": 0.7829027941823825,
+      "validation_threshold": 0.7978397011756897
+    },
+    {
+      "best_epoch": 4,
+      "checkpoint_asset_sha256": {
+        "config.json": "d6a21068cd066e9e6f635df19b93c756ef6603fca78617795e11d8fc3925f745",
+        "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+        "model.safetensors": "61e317299be4aa31da1d2bcd6669c714f7e4ebe0044091d874a7dc71450bf264",
+        "tokenizer.json": "1f33749d010b4d63908e5c174c341622cb45039dd73a139dcd95bd74cc7e304b",
+        "tokenizer_config.json": "4ea8648e4067230942ac6b32dd61328675bc99ae0a9f4cc665c30a95f0f68712",
+        "vocab.json": "ed19656ea1707df69134c4af35c8ceda2cc9860bf2c3495026153a133670ab5e"
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "predictions_sha256": "893b6f6724b29449272d67e14e5e8a8d47713dd3cdece9288a08deb33a06308b",
+      "seed": 713,
+      "summary_sha256": "2cbc250a3f04f56e71c7797a1a473c406ff18d4eb95cbb0c675465e82e74d61d",
+      "validation_balanced_accuracy": 0.7463465553235908,
+      "validation_count": 958,
+      "validation_roc_auc": 0.7901508448795114,
+      "validation_threshold": 0.5310582518577576
+    }
+  ],
+  "schema_version": "stage7.roberta_primary_audit.v1",
+  "status": "verified",
+  "test_access": "none"
+}
