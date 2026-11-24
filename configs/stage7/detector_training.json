@@ -9,7 +9,7 @@
     "class_weight": null
   },
   "roberta": {
-    "base_model": "FacebookAI/roberta-base", "base_revision": null,
+    "base_model": "FacebookAI/roberta-base", "base_revision": "e2da8e2f811d1448a5b465c236feacd80ffbac7b",
     "max_length": 512, "truncation": "right", "dynamic_padding": true,
     "learning_rate": 0.00002, "weight_decay": 0.01, "max_epochs": 4,
     "warmup_ratio": 0.1, "microbatch": 4, "gradient_accumulation": 8,
