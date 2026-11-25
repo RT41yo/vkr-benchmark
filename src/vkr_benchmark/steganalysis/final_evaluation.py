@@ -50,6 +50,28 @@ def canonical_bytes(item: Any) -> bytes:
     return (json.dumps(item, ensure_ascii=False, indent=2, sort_keys=True) + '\n').encode('utf-8')
 
 
+def parse_jsonl_records(blob: bytes) -> list[dict[str, Any]]:
+    """Parse canonical JSONL using literal LF record delimiters only.
+
+    splitlines() is not valid here: it also splits at U+0085/U+2028/U+2029,
+    which are permitted inside JSON strings serialized with ensure_ascii=False.
+    The dataset's frozen byte SHA-256 is validated by load_frozen_test first.
+    """
+    text = blob.decode('utf-8')
+    if not text.endswith('\n'):
+        raise ConfigurationError('frozen detector JSONL must end with LF')
+    records = [json.loads(line) for line in text.split('\n') if line]
+    if any(not isinstance(row, dict) for row in records):
+        raise ConfigurationError('frozen detector JSONL requires object records')
+    return records
+
+
+def jsonl_bytes(rows: list[dict[str, Any]]) -> bytes:
+    """Serialize one compact JSON object per literal LF-delimited record."""
+    return ''.join(json.dumps(row, ensure_ascii=False, sort_keys=True) + '\n'
+                   for row in rows).encode('utf-8')
+
+
 def close_number(value: Any, expected: float) -> bool:
     return (isinstance(value, (float, int)) and not isinstance(value, bool)
             and math.isfinite(value) and math.isclose(value, expected, rel_tol=0, abs_tol=1e-10))
@@ -211,8 +233,7 @@ def load_frozen_test(*, dataset: Path, manifest: Path, expected_sha256: str,
         raise ConfigurationError('frozen test manifest mismatch')
     test_rows = []
     non_test_articles = set()
-    for line in dataset.read_bytes().decode('utf-8').splitlines():
-        row = json.loads(line)
+    for row in parse_jsonl_records(dataset.read_bytes()):
         if row['partition'] == 'test':
             if (not isinstance(row.get('text'), str) or not row['text'] or
                     sha256(row['text'].encode('utf-8')).hexdigest() != row.get('text_sha256')):

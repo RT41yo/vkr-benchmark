@@ -19,7 +19,7 @@ sys.path.insert(0, str(ROOT / 'src'))
 from vkr_benchmark.errors import ConfigurationError  # noqa: E402
 from vkr_benchmark.steganalysis.final_evaluation import (  # noqa: E402
     MODEL_SLUGS, canonical_bytes, make_lock, read_json, file_sha, validate_protocol,
-    load_frozen_test, bootstrap_article_weights, evaluate_scored_rows,
+    load_frozen_test, bootstrap_article_weights, evaluate_scored_rows, jsonl_bytes,
 )
 
 
@@ -214,7 +214,7 @@ def main() -> int:
         args.report.parent.mkdir(parents=True, exist_ok=True)
         args.predictions.parent.mkdir(parents=True, exist_ok=True)
         # No carrier text in either report; raw record-level scores are ignored by Git.
-        args.predictions.write_bytes(b''.join(canonical_bytes(r) for r in predictions))
+        args.predictions.write_bytes(jsonl_bytes(predictions))
         args.report.write_bytes(canonical_bytes({**report,
             'predictions_sha256': file_sha(args.predictions)}))
         print(json.dumps({

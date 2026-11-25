@@ -239,3 +239,30 @@ def test_final_aggregates_all_15_points_two_detectors_and_four_pooled(tmp_path,m
     assert all(r['ci95_lower']==1.0 for r in report['results'])
     assert all(r['confusion']['fp']==0 for r in report['results'])
     assert {r['detector'] for r in report['results']}=={'tfidf_logreg','roberta_e4'}
+
+
+def test_frozen_jsonl_parser_preserves_unicode_line_separator_inside_carrier_text():
+    # Model text may contain Unicode NEL/LINE SEPARATOR/PARAGRAPH SEPARATOR.
+    # json.dumps(..., ensure_ascii=False) stores these as literal characters.
+    records = [
+        {'record_id': 'a', 'text': 'one\u0085two\u2028three\u2029four'},
+        {'record_id': 'b', 'text': 'ordinary\nnewline and \r carriage return'},
+    ]
+    serialized = ''.join(json.dumps(r, ensure_ascii=False, sort_keys=True) + '\n'
+                         for r in records).encode('utf-8')
+    assert fe.parse_jsonl_records(serialized) == records
+    assert len(serialized.decode('utf-8').splitlines()) > len(records)
+    with pytest.raises(ConfigurationError, match='end with LF'):
+        fe.parse_jsonl_records(serialized.rstrip(b'\n'))
+
+
+def test_final_prediction_output_is_real_jsonl_with_one_object_per_line():
+    predictions = [
+        {'record_id': 'one', 'score_stego': 0.125, 'model_id': 'test\u2028model'},
+        {'record_id': 'two', 'score_stego': 0.875, 'model_id': 'other'},
+    ]
+    raw = fe.jsonl_bytes(predictions)
+    assert raw.endswith(b'\n')
+    assert len(raw.split(b'\n')) == 3
+    assert fe.parse_jsonl_records(raw) == predictions
+    assert b'\n  ' not in raw  # pretty-printed multi-line JSON is forbidden in JSONL
