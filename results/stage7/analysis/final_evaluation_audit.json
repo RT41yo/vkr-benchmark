@@ -1,0 +1,223 @@
+{
+  "absolute_tolerance": 1e-10,
+  "article_groups": 24,
+  "bootstrap_algorithm": "weighted_tie_aware_score_groups",
+  "bootstrap_intervals_verified": 64,
+  "correlations": [
+    {
+      "detector": "tfidf_logreg",
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 15,
+      "spearman_rho": 0.9035714285714285,
+      "stage6_metric": "kl_stego_to_ref_mean_bits_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "tfidf_logreg",
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 15,
+      "spearman_rho": 0.932142857142857,
+      "stage6_metric": "tvd_mean_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "tfidf_logreg",
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 15,
+      "spearman_rho": 0.11071428571428568,
+      "stage6_metric": "ppl_raw_lm_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "tfidf_logreg",
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 15,
+      "spearman_rho": -0.18928571428571428,
+      "stage6_metric": "bits_per_token_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "tfidf_logreg",
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 15,
+      "spearman_rho": 0.6172133998483676,
+      "stage6_metric": "kl_ref_to_stego_infinite_rate_ok",
+      "status": "descriptive"
+    },
+    {
+      "detector": "tfidf_logreg",
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 3,
+      "spearman_rho": 1.0,
+      "stage6_metric": "kl_ref_to_stego_finite_median_bits",
+      "status": "finite_subset_only"
+    },
+    {
+      "detector": "roberta_e4",
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 15,
+      "spearman_rho": 0.8785714285714284,
+      "stage6_metric": "kl_stego_to_ref_mean_bits_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "roberta_e4",
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 15,
+      "spearman_rho": 0.8928571428571428,
+      "stage6_metric": "tvd_mean_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "roberta_e4",
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 15,
+      "spearman_rho": -0.014285714285714282,
+      "stage6_metric": "ppl_raw_lm_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "roberta_e4",
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 15,
+      "spearman_rho": -0.23928571428571427,
+      "stage6_metric": "bits_per_token_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "roberta_e4",
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 15,
+      "spearman_rho": 0.6172133998483676,
+      "stage6_metric": "kl_ref_to_stego_infinite_rate_ok",
+      "status": "descriptive"
+    },
+    {
+      "detector": "roberta_e4",
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 3,
+      "spearman_rho": 1.0,
+      "stage6_metric": "kl_ref_to_stego_finite_median_bits",
+      "status": "finite_subset_only"
+    },
+    {
+      "detector": "tfidf_logreg",
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 15,
+      "spearman_rho": 0.7857142857142856,
+      "stage6_metric": "kl_stego_to_ref_mean_bits_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "tfidf_logreg",
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 15,
+      "spearman_rho": 0.7999999999999999,
+      "stage6_metric": "tvd_mean_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "tfidf_logreg",
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 15,
+      "spearman_rho": 0.5428571428571428,
+      "stage6_metric": "ppl_raw_lm_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "tfidf_logreg",
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 15,
+      "spearman_rho": 0.175,
+      "stage6_metric": "bits_per_token_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "tfidf_logreg",
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 15,
+      "spearman_rho": 0.42433421239575275,
+      "stage6_metric": "kl_ref_to_stego_infinite_rate_ok",
+      "status": "descriptive"
+    },
+    {
+      "detector": "tfidf_logreg",
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 3,
+      "spearman_rho": 1.0,
+      "stage6_metric": "kl_ref_to_stego_finite_median_bits",
+      "status": "finite_subset_only"
+    },
+    {
+      "detector": "roberta_e4",
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 15,
+      "spearman_rho": 0.8714285714285712,
+      "stage6_metric": "kl_stego_to_ref_mean_bits_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "roberta_e4",
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 15,
+      "spearman_rho": 0.8571428571428571,
+      "stage6_metric": "tvd_mean_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "roberta_e4",
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 15,
+      "spearman_rho": 0.5285714285714286,
+      "stage6_metric": "ppl_raw_lm_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "roberta_e4",
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 15,
+      "spearman_rho": 0.10357142857142855,
+      "stage6_metric": "bits_per_token_median",
+      "status": "descriptive"
+    },
+    {
+      "detector": "roberta_e4",
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 15,
+      "spearman_rho": 0.5400617248673217,
+      "stage6_metric": "kl_ref_to_stego_infinite_rate_ok",
+      "status": "descriptive"
+    },
+    {
+      "detector": "roberta_e4",
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 3,
+      "spearman_rho": -0.5,
+      "stage6_metric": "kl_ref_to_stego_finite_median_bits",
+      "status": "finite_subset_only"
+    }
+  ],
+  "dataset_sha256": "43ea3b2ded135a8004a2ada7f3c3897ee3873baf0cd9283408418f99298587d9",
+  "derived_sha256": {
+    "roc_auc_llama-3.2-3b.svg": "494024a32e29ca42c1a78969e461eaab43105b847db411c0915f718d630159a9",
+    "roc_auc_qwen3-4b-base.svg": "692dacbf26e213047e9189235f220e32fc6367cf6331353d6bb136299d90843c",
+    "stage6_stage7_operating_points.csv": "9051e1936ad42bc505fa32df57f7c5cc07b7b3f8d1f475106e530f5f2b7d6e13"
+  },
+  "inference_repeated": false,
+  "joined_operating_points": 30,
+  "length_diagnostics": "copied_from_original_report_not_independently_recomputed",
+  "lock_file_verified": true,
+  "lock_sha256": "ba88ee49f92d7c12b64c7baad7329e10f6af463ab8b0857d2f27e900ed2654ce",
+  "max_absolute_numeric_difference": 0.0,
+  "metric_fields_verified": 1024,
+  "pair_count": 1800,
+  "prediction_count": 7200,
+  "predictions_sha256": "fc321b9f0d1dd2d7ad2c15376e19e6f872764beb20c426b58e39a83ed622f521",
+  "protocol_sha256": "56bc75b01c208c85ea6b389d4410a654b186277be27176f467f3359dbfad9a4e",
+  "record_count": 3600,
+  "report_sha256": "9249515e6a4d2e49a71d0d7a50acbbfc0065a98f57533990f0c86d157e6987b9",
+  "stage6_summary_sha256": "9b0324dcedd4c03cc0f13c6103f8825411b1a0086678f8eac4651f1c5e4f10a4",
+  "status": "verified",
+  "strata_verified": 64,
+  "test_access": "stored_predictions_only"
+}
