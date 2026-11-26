@@ -1,0 +1,2216 @@
+{
+  "article_groups": 16,
+  "bootstrap": {
+    "confidence": 0.95,
+    "method": "percentile",
+    "resamples": 2000,
+    "role": "exploratory_unadjusted",
+    "seed": 731,
+    "statistic": "mean paired difference",
+    "unit": "article_id"
+  },
+  "derived_sha256": {
+    "ac_precision_kl.svg": "4028dba7425a1eef86bd8c604f7a96495f7354d063673ab688abc3497cb52efa",
+    "ac_precision_runs.csv": "862602e66d9cf497f8f9c4ed37df7ae9479191e146849b4dfafebff029f709f2",
+    "ac_precision_tvd.svg": "2069ae59c2293e7136d93a2b772aa15582d3ea323698c5c8d5281d4aa4d5bc3e"
+  },
+  "exact_count": 90,
+  "hard_failure_count": 0,
+  "inference_repeated": false,
+  "paired_vs_p32": [
+    {
+      "common_prefix_max": 3,
+      "common_prefix_median": 1.0,
+      "identical_sender_count": 0,
+      "metrics": {
+        "ber": {
+          "equal_count": 15,
+          "higher_count": 1,
+          "lower_count": 0,
+          "mean_delta": 0.0017137096774193549,
+          "mean_delta_ci95": [
+            0.0,
+            0.005141129032258065
+          ],
+          "median_delta": 0.0
+        },
+        "bits_per_token": {
+          "equal_count": 0,
+          "higher_count": 4,
+          "lower_count": 12,
+          "mean_delta": -0.326171875,
+          "mean_delta_ci95": [
+            -0.585711669921875,
+            -0.05419311523437503
+          ],
+          "median_delta": -0.30859375
+        },
+        "entropy_utilization": {
+          "equal_count": 0,
+          "higher_count": 3,
+          "lower_count": 13,
+          "mean_delta": -0.038126222773694214,
+          "mean_delta_ci95": [
+            -0.05945126367430652,
+            -0.015739631964302125
+          ],
+          "median_delta": -0.04720285281707587
+        },
+        "kl_stego_to_ref_mean_bits": {
+          "equal_count": 0,
+          "higher_count": 16,
+          "lower_count": 0,
+          "mean_delta": 0.021567253551778708,
+          "mean_delta_ci95": [
+            0.01834605828675623,
+            0.024991427238724155
+          ],
+          "median_delta": 0.021045116682632113
+        },
+        "kl_stego_to_ref_median_bits": {
+          "equal_count": 0,
+          "higher_count": 16,
+          "lower_count": 0,
+          "mean_delta": 0.015348259083652806,
+          "mean_delta_ci95": [
+            0.012806552047328576,
+            0.01770998589841855
+          ],
+          "median_delta": 0.015922588499794433
+        },
+        "ppl_raw_lm": {
+          "equal_count": 0,
+          "higher_count": 4,
+          "lower_count": 12,
+          "mean_delta": -2.5854250142361326,
+          "mean_delta_ci95": [
+            -4.696923505590481,
+            -0.4711763837188048
+          ],
+          "median_delta": -2.3872020614659224
+        },
+        "reference_entropy_mean_bits": {
+          "equal_count": 0,
+          "higher_count": 5,
+          "lower_count": 11,
+          "mean_delta": -0.20331973370281597,
+          "mean_delta_ci95": [
+            -0.4488457887438234,
+            0.07654370956150354
+          ],
+          "median_delta": -0.2391888605641601
+        },
+        "tvd_mean": {
+          "equal_count": 0,
+          "higher_count": 16,
+          "lower_count": 0,
+          "mean_delta": 0.01498871637992924,
+          "mean_delta_ci95": [
+            0.012953910542707975,
+            0.01712730783495832
+          ],
+          "median_delta": 0.01493730460620381
+        },
+        "tvd_median": {
+          "equal_count": 0,
+          "higher_count": 16,
+          "lower_count": 0,
+          "mean_delta": 0.011352083136834267,
+          "mean_delta_ci95": [
+            0.0095400474915735,
+            0.013049733637119431
+          ],
+          "median_delta": 0.011792853581245318
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 16,
+      "precision": 16,
+      "reference_precision": 32
+    },
+    {
+      "common_prefix_max": 15,
+      "common_prefix_median": 4.0,
+      "identical_sender_count": 0,
+      "metrics": {
+        "ber": {
+          "equal_count": 16,
+          "higher_count": 0,
+          "lower_count": 0,
+          "mean_delta": 0.0,
+          "mean_delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "median_delta": 0.0
+        },
+        "bits_per_token": {
+          "equal_count": 0,
+          "higher_count": 8,
+          "lower_count": 8,
+          "mean_delta": 0.02099609375,
+          "mean_delta_ci95": [
+            -0.299365234375,
+            0.35302734375
+          ],
+          "median_delta": 0.04296875
+        },
+        "entropy_utilization": {
+          "equal_count": 0,
+          "higher_count": 8,
+          "lower_count": 8,
+          "mean_delta": -0.001596725837284707,
+          "mean_delta_ci95": [
+            -0.035665610092517556,
+            0.03140986219618594
+          ],
+          "median_delta": -0.0031477081541915197
+        },
+        "kl_stego_to_ref_mean_bits": {
+          "equal_count": 0,
+          "higher_count": 8,
+          "lower_count": 8,
+          "mean_delta": 0.0001773274846702125,
+          "mean_delta_ci95": [
+            -0.0021933101435344434,
+            0.002733299064804227
+          ],
+          "median_delta": -0.0004382333277063205
+        },
+        "kl_stego_to_ref_median_bits": {
+          "equal_count": 0,
+          "higher_count": 8,
+          "lower_count": 8,
+          "mean_delta": 0.00037826291434242185,
+          "mean_delta_ci95": [
+            -0.000813106255208874,
+            0.0017060164770000194
+          ],
+          "median_delta": -5.366154420738791e-05
+        },
+        "ppl_raw_lm": {
+          "equal_count": 0,
+          "higher_count": 8,
+          "lower_count": 8,
+          "mean_delta": -0.2682756810090043,
+          "mean_delta_ci95": [
+            -3.17594763865869,
+            2.5232409151591053
+          ],
+          "median_delta": 0.29443738648705686
+        },
+        "reference_entropy_mean_bits": {
+          "equal_count": 0,
+          "higher_count": 7,
+          "lower_count": 9,
+          "mean_delta": 0.03680912456977817,
+          "mean_delta_ci95": [
+            -0.2620572435632476,
+            0.37002925030344863
+          ],
+          "median_delta": -0.06540981268995494
+        },
+        "tvd_mean": {
+          "equal_count": 0,
+          "higher_count": 8,
+          "lower_count": 8,
+          "mean_delta": 0.00011330100631242663,
+          "mean_delta_ci95": [
+            -0.0014768750854217885,
+            0.001833866303501853
+          ],
+          "median_delta": -0.00030479571576459263
+        },
+        "tvd_median": {
+          "equal_count": 0,
+          "higher_count": 8,
+          "lower_count": 8,
+          "mean_delta": 0.0002611894555565894,
+          "mean_delta_ci95": [
+            -0.00056155389213642,
+            0.0011772067444353583
+          ],
+          "median_delta": -3.7130917955217825e-05
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 16,
+      "precision": 48,
+      "reference_precision": 32
+    },
+    {
+      "common_prefix_max": 5,
+      "common_prefix_median": 1.0,
+      "identical_sender_count": 0,
+      "metrics": {
+        "ber": {
+          "equal_count": 11,
+          "higher_count": 2,
+          "lower_count": 3,
+          "mean_delta": -0.009214208204911908,
+          "mean_delta_ci95": [
+            -0.06549079287409947,
+            0.04409437562548851
+          ],
+          "median_delta": 0.0
+        },
+        "bits_per_token": {
+          "equal_count": 0,
+          "higher_count": 6,
+          "lower_count": 10,
+          "mean_delta": -0.578125,
+          "mean_delta_ci95": [
+            -1.16436767578125,
+            -0.025848388671875167
+          ],
+          "median_delta": -0.373046875
+        },
+        "entropy_utilization": {
+          "equal_count": 0,
+          "higher_count": 3,
+          "lower_count": 13,
+          "mean_delta": -0.07878791841167736,
+          "mean_delta_ci95": [
+            -0.1225205929799819,
+            -0.03838301267392282
+          ],
+          "median_delta": -0.09035803622443589
+        },
+        "kl_stego_to_ref_mean_bits": {
+          "equal_count": 0,
+          "higher_count": 15,
+          "lower_count": 1,
+          "mean_delta": 0.015908290304237075,
+          "mean_delta_ci95": [
+            0.01050495816695096,
+            0.02132550161211601
+          ],
+          "median_delta": 0.017465667560876637
+        },
+        "kl_stego_to_ref_median_bits": {
+          "equal_count": 0,
+          "higher_count": 12,
+          "lower_count": 4,
+          "mean_delta": 0.00822882748926683,
+          "mean_delta_ci95": [
+            0.003768511095568522,
+            0.012723127178258548
+          ],
+          "median_delta": 0.0045703640575404225
+        },
+        "ppl_raw_lm": {
+          "equal_count": 0,
+          "higher_count": 6,
+          "lower_count": 10,
+          "mean_delta": -3.524768687232493,
+          "mean_delta_ci95": [
+            -6.574241367255165,
+            -0.5455393994484827
+          ],
+          "median_delta": -3.5383981880305004
+        },
+        "reference_entropy_mean_bits": {
+          "equal_count": 0,
+          "higher_count": 7,
+          "lower_count": 9,
+          "mean_delta": -0.38396226570842695,
+          "mean_delta_ci95": [
+            -0.979095489530849,
+            0.19848876319314276
+          ],
+          "median_delta": -0.03450000921726226
+        },
+        "tvd_mean": {
+          "equal_count": 0,
+          "higher_count": 15,
+          "lower_count": 1,
+          "mean_delta": 0.011063933739567655,
+          "mean_delta_ci95": [
+            0.007425636283052988,
+            0.014764859164406369
+          ],
+          "median_delta": 0.012167531613001761
+        },
+        "tvd_median": {
+          "equal_count": 0,
+          "higher_count": 13,
+          "lower_count": 3,
+          "mean_delta": 0.006151240583347188,
+          "mean_delta_ci95": [
+            0.0029041622535054493,
+            0.009437587376715417
+          ],
+          "median_delta": 0.0034401057907673845
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 16,
+      "precision": 16,
+      "reference_precision": 32
+    },
+    {
+      "common_prefix_max": 9,
+      "common_prefix_median": 3.0,
+      "identical_sender_count": 0,
+      "metrics": {
+        "ber": {
+          "equal_count": 13,
+          "higher_count": 0,
+          "lower_count": 3,
+          "mean_delta": -0.03320227323663723,
+          "mean_delta_ci95": [
+            -0.07808113995160353,
+            0.0
+          ],
+          "median_delta": 0.0
+        },
+        "bits_per_token": {
+          "equal_count": 0,
+          "higher_count": 7,
+          "lower_count": 9,
+          "mean_delta": -0.452880859375,
+          "mean_delta_ci95": [
+            -1.23817138671875,
+            0.34182739257812483
+          ],
+          "median_delta": -0.265625
+        },
+        "entropy_utilization": {
+          "equal_count": 0,
+          "higher_count": 6,
+          "lower_count": 10,
+          "mean_delta": -0.025753253201951085,
+          "mean_delta_ci95": [
+            -0.06000072333897651,
+            0.012643409768598856
+          ],
+          "median_delta": -0.0561792008693342
+        },
+        "kl_stego_to_ref_mean_bits": {
+          "equal_count": 0,
+          "higher_count": 6,
+          "lower_count": 10,
+          "mean_delta": -0.0009109292130476233,
+          "mean_delta_ci95": [
+            -0.004111443628520661,
+            0.0026125716099827767
+          ],
+          "median_delta": -0.002102742077728209
+        },
+        "kl_stego_to_ref_median_bits": {
+          "equal_count": 0,
+          "higher_count": 6,
+          "lower_count": 10,
+          "mean_delta": -0.0007554917252622687,
+          "mean_delta_ci95": [
+            -0.00267980572162384,
+            0.0012798740513485305
+          ],
+          "median_delta": -0.00030428540654613395
+        },
+        "ppl_raw_lm": {
+          "equal_count": 0,
+          "higher_count": 7,
+          "lower_count": 9,
+          "mean_delta": -2.9562174371436387,
+          "mean_delta_ci95": [
+            -7.479354721801575,
+            1.2695029708365284
+          ],
+          "median_delta": -0.8212502010840788
+        },
+        "reference_entropy_mean_bits": {
+          "equal_count": 0,
+          "higher_count": 5,
+          "lower_count": 11,
+          "mean_delta": -0.4084171662240982,
+          "mean_delta_ci95": [
+            -1.184264151875016,
+            0.3542765407501958
+          ],
+          "median_delta": -0.23316348601511216
+        },
+        "tvd_mean": {
+          "equal_count": 0,
+          "higher_count": 6,
+          "lower_count": 10,
+          "mean_delta": -0.0006290851904164179,
+          "mean_delta_ci95": [
+            -0.002806841664348307,
+            0.0017665788183633376
+          ],
+          "median_delta": -0.0014172641184882788
+        },
+        "tvd_median": {
+          "equal_count": 0,
+          "higher_count": 6,
+          "lower_count": 10,
+          "mean_delta": -0.0005229389177762713,
+          "mean_delta_ci95": [
+            -0.0018533182248508802,
+            0.0008842838104317845
+          ],
+          "median_delta": -0.00021091006438304886
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 16,
+      "precision": 48,
+      "reference_precision": 32
+    }
+  ],
+  "plan_sha256": "3bba2773c2e418bb1a718d06b48bd6b39ca0a7eb3af0a13839b3351a5e8f7b0e",
+  "role": "validation_only_diagnostic",
+  "run_count": 96,
+  "schema_version": "stage7.ac_precision_analysis.v1",
+  "soft_failure_count": 6,
+  "source_file_count": 288,
+  "source_inventory": [
+    {
+      "file": "config.json",
+      "run_id": "2ce027b2f0218726",
+      "sha256": "2ce027b2f021872684f5159f2af013a11e83675a012d20dbb2bb67b4350f1954"
+    },
+    {
+      "file": "result.json",
+      "run_id": "2ce027b2f0218726",
+      "sha256": "025db6fee5c9a3c16f2b5d7757e8ba170317c85184b0edf4dece4f00b10d1898"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "2ce027b2f0218726",
+      "sha256": "1c419393e7783ba56d4379a172538d50c8226eb8be7f7e59ea89228b440348ac"
+    },
+    {
+      "file": "config.json",
+      "run_id": "cf02b2c1a5fff02b",
+      "sha256": "cf02b2c1a5fff02b04dc5177db7a04a04826d9349b5e0c86bf67c7937c3adab5"
+    },
+    {
+      "file": "result.json",
+      "run_id": "cf02b2c1a5fff02b",
+      "sha256": "e1454df0e6ed16064e10f5cacfb3075dcefee88d127f067ca733f1b8b2a4546d"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "cf02b2c1a5fff02b",
+      "sha256": "aa89244752936a82e7ee80a6384d9eb232ca25c9cff5b7a78b9e940d4e735bea"
+    },
+    {
+      "file": "config.json",
+      "run_id": "2805a37294aa91c5",
+      "sha256": "2805a37294aa91c5aad0e4de5379773f7f732d6798ec45a6b0c1fbcce25b99e2"
+    },
+    {
+      "file": "result.json",
+      "run_id": "2805a37294aa91c5",
+      "sha256": "d2bb01ffab5e469535e523e4d8e0b6b073935d515534c33acd149e585ff4da80"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "2805a37294aa91c5",
+      "sha256": "87578aae3ba0c55484f2b3f769fa167f12dda3aad7c1f221c1b1d73da14074db"
+    },
+    {
+      "file": "config.json",
+      "run_id": "186b5368afd9c833",
+      "sha256": "186b5368afd9c833121ce507e4e94f9697e19f7a8b5ffa7da0ed13d259f12414"
+    },
+    {
+      "file": "result.json",
+      "run_id": "186b5368afd9c833",
+      "sha256": "85313c382ba7df8170a5e61e6b8041fa4e301e565bfd00ccee9fbbbc9e34f03d"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "186b5368afd9c833",
+      "sha256": "38721c04b7ef19596fc2de5e711d44aba14b7444e137d356c905ba444be68630"
+    },
+    {
+      "file": "config.json",
+      "run_id": "6db7ec3b39cc6b24",
+      "sha256": "6db7ec3b39cc6b247f32f083c3957e6abb8f596807b29d8d8b032fb79e685aaa"
+    },
+    {
+      "file": "result.json",
+      "run_id": "6db7ec3b39cc6b24",
+      "sha256": "da253fb7c847791094d27ccc5669cf7f0ae37e512b411a0443521c0f3d637bd6"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "6db7ec3b39cc6b24",
+      "sha256": "d11e94c8d38bd59f2e4b1c666c909313296ac4c139e06a54b0c94334cc6e893d"
+    },
+    {
+      "file": "config.json",
+      "run_id": "6fb0ed456ecb517c",
+      "sha256": "6fb0ed456ecb517cbc7409f0814fa5509bf52c2de1b2dd4b5d9994ee1d532c04"
+    },
+    {
+      "file": "result.json",
+      "run_id": "6fb0ed456ecb517c",
+      "sha256": "32b5360aa5b5eaac5e4ee9d6bf115d9e80ad090621076f9527e087298f78d90f"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "6fb0ed456ecb517c",
+      "sha256": "1d9412cfa06fcbd01819b96f049ab5e9f96ee7b32309b2329da1f4697fd5ceee"
+    },
+    {
+      "file": "config.json",
+      "run_id": "b89cdffbda112ed6",
+      "sha256": "b89cdffbda112ed67f6e92f6d318a292e0049da94a790e437bd28f3f9500bcda"
+    },
+    {
+      "file": "result.json",
+      "run_id": "b89cdffbda112ed6",
+      "sha256": "afebe44d0477610e4453d52e82373596773d654bf98f922c79b8eb5e00f2296f"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "b89cdffbda112ed6",
+      "sha256": "8a860d317afd46715c79e8a0974ccbfcda9a2652719b202cf23ccda7aa355e69"
+    },
+    {
+      "file": "config.json",
+      "run_id": "da0007ccadbf4b74",
+      "sha256": "da0007ccadbf4b74bef4452acf38340b214db6f684f7abee1e62b8e1999825f7"
+    },
+    {
+      "file": "result.json",
+      "run_id": "da0007ccadbf4b74",
+      "sha256": "8ac8c87d07f392ed2ba6896cceaa7a4dd5f4cbd72c11a6cf3c1b32852f072504"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "da0007ccadbf4b74",
+      "sha256": "338b0aff8f9cb23b4fd95c57599fa225ef2df1cf827991a6a62d2b090c968c20"
+    },
+    {
+      "file": "config.json",
+      "run_id": "62c49d3bc49e43fe",
+      "sha256": "62c49d3bc49e43fe0acbcfdad72010ccc578e9add5b2778b374ce28137d9558f"
+    },
+    {
+      "file": "result.json",
+      "run_id": "62c49d3bc49e43fe",
+      "sha256": "b181b22c73dc624c2a9d4cbb437c16d7a2e4a85b99905e87da7c47e99a7773e5"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "62c49d3bc49e43fe",
+      "sha256": "6b4cc1ba907ee9180c2c17b84acb7f04b800c1b1460b5c08a2eece1b6dffc15c"
+    },
+    {
+      "file": "config.json",
+      "run_id": "498d300a5ebeb415",
+      "sha256": "498d300a5ebeb4158506961da35481c1b09de5bb53a456e426c0817049fcc47a"
+    },
+    {
+      "file": "result.json",
+      "run_id": "498d300a5ebeb415",
+      "sha256": "c021ba55aabc569c14addc70502ff5601263a7b44a6d96226c588aa53eab938d"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "498d300a5ebeb415",
+      "sha256": "83055d0257e9ce6b496d4ef6023866786647d7d4844f599fd5ed98aa970e76d2"
+    },
+    {
+      "file": "config.json",
+      "run_id": "28a0eed340f9e4d1",
+      "sha256": "28a0eed340f9e4d1e46934f962455a59fc9ea9f0437a5bbe5af6083c1a33dbb6"
+    },
+    {
+      "file": "result.json",
+      "run_id": "28a0eed340f9e4d1",
+      "sha256": "e16b8361bc5147dd5b6d3aee827ec6c3518c82cee6901d0f8aca0d20fce6faec"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "28a0eed340f9e4d1",
+      "sha256": "4a61ba6c1feae1ff447537bc5f0f03f376b97e189cbf97be9653fa3b4b8111c9"
+    },
+    {
+      "file": "config.json",
+      "run_id": "19b5f46b16c030ea",
+      "sha256": "19b5f46b16c030ea8162e62549b7a30b7b6d727c7950d1987d0a91583a8122a8"
+    },
+    {
+      "file": "result.json",
+      "run_id": "19b5f46b16c030ea",
+      "sha256": "6926a512a97d7263d79e4b222fe38bf19f69e8009a75f4558b63b0828899cc7a"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "19b5f46b16c030ea",
+      "sha256": "bb7205e803e07697b4ca818e5d91218f16526be84958dc3a688647829f1ef69f"
+    },
+    {
+      "file": "config.json",
+      "run_id": "6115920595d260e6",
+      "sha256": "6115920595d260e6c06400395ce8663427d2e3998cdc6e447dc38289419e272d"
+    },
+    {
+      "file": "result.json",
+      "run_id": "6115920595d260e6",
+      "sha256": "c63eec862248b09ca598828cad510f2912c3a5bebb5b9509b4f99f8fedb5e026"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "6115920595d260e6",
+      "sha256": "91fb169d4cf3931e40b2fbe1913db85e65a51e20fcec0dbb56890e653f3d9228"
+    },
+    {
+      "file": "config.json",
+      "run_id": "36753786f46c4777",
+      "sha256": "36753786f46c477714c39152ec748464f4b83259f297f93b35539abb90fa2a95"
+    },
+    {
+      "file": "result.json",
+      "run_id": "36753786f46c4777",
+      "sha256": "91ca7f90850b06b9dddaaae20e645f1829750ee0b3a5fbc6f0286efe0c0d8e90"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "36753786f46c4777",
+      "sha256": "9ff3b2c48a1e41c2d28ee3b85fd90fce3ae075cf09919afe568da78e3b28ea48"
+    },
+    {
+      "file": "config.json",
+      "run_id": "da8a73b84539e465",
+      "sha256": "da8a73b84539e465dc8526639272c35b34e015839a24aa587ae447c6dc5d3939"
+    },
+    {
+      "file": "result.json",
+      "run_id": "da8a73b84539e465",
+      "sha256": "ebefbcd15975778dfff251c97dd707d38c605dda899c471b11d31c96f10b21f3"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "da8a73b84539e465",
+      "sha256": "a1f502636a57d882fce5814ed28afd656b85a7c8f6fe4eec3977ae0693320317"
+    },
+    {
+      "file": "config.json",
+      "run_id": "1c340197ef97aba3",
+      "sha256": "1c340197ef97aba3a5f4c4b17c35a96cef86a00b729152be0a2e210ca6830b44"
+    },
+    {
+      "file": "result.json",
+      "run_id": "1c340197ef97aba3",
+      "sha256": "e557265d3d167f8218fa79eec0b5a1ea88f2f3175b6f42d55fab237038c283bc"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "1c340197ef97aba3",
+      "sha256": "89133687c58ceceb9f9e5e8723fd0af8132c78cf3f24fc684459ec5dd8acf878"
+    },
+    {
+      "file": "config.json",
+      "run_id": "58bf89aca5b84281",
+      "sha256": "58bf89aca5b8428194c47c42f347cbf47a19901ae1f08ad62a5f88c1fac1dce6"
+    },
+    {
+      "file": "result.json",
+      "run_id": "58bf89aca5b84281",
+      "sha256": "d7ae7e1bbcd919ef3a0eceee1ff100cb2cb0017b7cedb5aadb2a8b10ae6ade36"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "58bf89aca5b84281",
+      "sha256": "fd47b202008ece195afb1b17dcd3256cefbb0512f2b67bf8332af63a28f907b6"
+    },
+    {
+      "file": "config.json",
+      "run_id": "48f57df25c8b867e",
+      "sha256": "48f57df25c8b867e17a4717ba634bbf4aacad99874ed03a5a6d815d528e58d2d"
+    },
+    {
+      "file": "result.json",
+      "run_id": "48f57df25c8b867e",
+      "sha256": "bccb1307ad1a89c1307743759b7f3f475f67d4f73a2315a1a9e61229d9589bd1"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "48f57df25c8b867e",
+      "sha256": "5e10146fe74a824f779693b083a47858e77acff8885a55039718dd18387724e8"
+    },
+    {
+      "file": "config.json",
+      "run_id": "738233e05b51418e",
+      "sha256": "738233e05b51418e9e320ff83785d1a9eb703a9e169a05e0d723e86f36c547ee"
+    },
+    {
+      "file": "result.json",
+      "run_id": "738233e05b51418e",
+      "sha256": "2e309dade129f29c3bfa8c555a94358b7dac173cff480a63c031e6209bc8029d"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "738233e05b51418e",
+      "sha256": "a39445659c172a02af9144e06ff30b760327e2f402f014e07eaa0776c74786c5"
+    },
+    {
+      "file": "config.json",
+      "run_id": "2b19af6bbdf7ac13",
+      "sha256": "2b19af6bbdf7ac13fae1bf16f19645f026c48c6be11c8cf32f581cbd1f9dd7a9"
+    },
+    {
+      "file": "result.json",
+      "run_id": "2b19af6bbdf7ac13",
+      "sha256": "5751d01099ab8fb785664e3c483268b0de3871292a43fcf7d2fbf28f606d570f"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "2b19af6bbdf7ac13",
+      "sha256": "b536094723ac9ed47159abdd173ead6582ad06776738e75a2aa1d49bebe13436"
+    },
+    {
+      "file": "config.json",
+      "run_id": "808fcb26bce5376f",
+      "sha256": "808fcb26bce5376f39940da537e7ff61aeb5fa4b7f99553fbd739a8788138cd7"
+    },
+    {
+      "file": "result.json",
+      "run_id": "808fcb26bce5376f",
+      "sha256": "1f4b7798247364456bda65cfe425f8933fd87a792cd81e86d986fd618974edf6"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "808fcb26bce5376f",
+      "sha256": "e3ec2ee382a456d48e9d6e6cf43bff00a36a0976cabb6de0ac72a14a022965c1"
+    },
+    {
+      "file": "config.json",
+      "run_id": "0abc1b57cfd9457a",
+      "sha256": "0abc1b57cfd9457ad2fbb8e6f3f8e785f62bdd11ec5d7a4e9256877c205dad10"
+    },
+    {
+      "file": "result.json",
+      "run_id": "0abc1b57cfd9457a",
+      "sha256": "3025d9f0c0883fb6dd972a0fb94135c4499da1e34bf1af76f34a06ea0b134020"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "0abc1b57cfd9457a",
+      "sha256": "4c96035dfce70511d921e96c6a687a86698034a95b6d3425e9fc8dcaf9a3765b"
+    },
+    {
+      "file": "config.json",
+      "run_id": "33130586530a9065",
+      "sha256": "33130586530a90651e12a754e26cf04b9a6d1e3542a077f8f022abdd3168e74a"
+    },
+    {
+      "file": "result.json",
+      "run_id": "33130586530a9065",
+      "sha256": "e6c75bde4b48d4eb2e56bf3178830cef5d6966ca5682f2b971a64e449ab1a3ef"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "33130586530a9065",
+      "sha256": "17298bc6a6f4cd69d3cb84733880fc4088c6a431013461791c2ec5c9a1ba5c2a"
+    },
+    {
+      "file": "config.json",
+      "run_id": "bdf8e09bd349bb34",
+      "sha256": "bdf8e09bd349bb34e8674a45a029abeaa41c464ce12dad043307401547054ed6"
+    },
+    {
+      "file": "result.json",
+      "run_id": "bdf8e09bd349bb34",
+      "sha256": "69b57860f50e9d7dc9c383d7ab0f5386d0f92fc9eeaf58a085d1d19598947880"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "bdf8e09bd349bb34",
+      "sha256": "153898af9913643e791df3ae09ec9cdee9d1820c3701de1e4c96c8ef31fe30ba"
+    },
+    {
+      "file": "config.json",
+      "run_id": "f35eca8be47bf039",
+      "sha256": "f35eca8be47bf0397319f4e289e9d969ea0a9ca3a7ad4fd2c5c0c0e284f46618"
+    },
+    {
+      "file": "result.json",
+      "run_id": "f35eca8be47bf039",
+      "sha256": "42036eae1183dfecdc3df3f57b75ed5be18dff22deefefd1b63a5be4343181ee"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "f35eca8be47bf039",
+      "sha256": "70506f5980a11c8869e981d038e16b1b8abe3b3fbc17fc9d3d5524dc55d55a0e"
+    },
+    {
+      "file": "config.json",
+      "run_id": "8350d2b47bc80b11",
+      "sha256": "8350d2b47bc80b111654fc80db6b263f412a3b2c1654a67e9e7eae2e4c04215d"
+    },
+    {
+      "file": "result.json",
+      "run_id": "8350d2b47bc80b11",
+      "sha256": "8315375d2d142696c182ea9296c3f8f755b12f5097ff2a28d6a6ba7d49fb44a4"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "8350d2b47bc80b11",
+      "sha256": "735343448acfcf745765132bd8bf3791aa077956cc26fa05ef5fbed307d97d9a"
+    },
+    {
+      "file": "config.json",
+      "run_id": "2e7d3c9aca942291",
+      "sha256": "2e7d3c9aca942291cb77bed221de976ccb911b038292fb1cb93136d39c23095b"
+    },
+    {
+      "file": "result.json",
+      "run_id": "2e7d3c9aca942291",
+      "sha256": "8636db21e99ba9a2712e26162f5de4da49e0c552539a98f4f0827c54da664b89"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "2e7d3c9aca942291",
+      "sha256": "307345eb2d444087f1f8b91aef204cc562f80f0e553c57e964413010dc7e1dfe"
+    },
+    {
+      "file": "config.json",
+      "run_id": "5ff31badf42c180b",
+      "sha256": "5ff31badf42c180bbfa6df4627bf5b0fbbd0cc4fe52ed71629718a337d21b593"
+    },
+    {
+      "file": "result.json",
+      "run_id": "5ff31badf42c180b",
+      "sha256": "0f834006b880e55736aafc3cfd2868f391b96903f638bcef572e5eca77953f8e"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "5ff31badf42c180b",
+      "sha256": "7199ca47edf871a98ac727f41011ce71cb4874dd4b6c2243b3d2911cfd916745"
+    },
+    {
+      "file": "config.json",
+      "run_id": "44ec2b10127e7d6b",
+      "sha256": "44ec2b10127e7d6b238895fefe12b4cb1bca3363dd2779414031cf43126ad735"
+    },
+    {
+      "file": "result.json",
+      "run_id": "44ec2b10127e7d6b",
+      "sha256": "fccfd2da919d55e0802cebcb578325a0872a82508398592787f32ccafc327f60"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "44ec2b10127e7d6b",
+      "sha256": "d1514403908068fd6dfb93c5405f02087d9d82ca8c11f0667b4b5e3ddd6e5f63"
+    },
+    {
+      "file": "config.json",
+      "run_id": "84e433b7c63c8491",
+      "sha256": "84e433b7c63c8491b2801a14f53315b16913b211e0789158296d689a8a94aab6"
+    },
+    {
+      "file": "result.json",
+      "run_id": "84e433b7c63c8491",
+      "sha256": "e50e2a40092abd308e1840354e555d9197bfb77f70c9f2f627a34fee2ee46909"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "84e433b7c63c8491",
+      "sha256": "807f808f8c9e1ca6489ce60614e9a48426b86b8137b8ed862669f2c4c16a801a"
+    },
+    {
+      "file": "config.json",
+      "run_id": "a759eda03d349ba6",
+      "sha256": "a759eda03d349ba639be616f15e2e6c66abd7722cb7d713a0f98725f0cf26bd0"
+    },
+    {
+      "file": "result.json",
+      "run_id": "a759eda03d349ba6",
+      "sha256": "14eb95938e47a863e979feb0ccf11b2f292c6387875ce061e8b2526d62841fbe"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "a759eda03d349ba6",
+      "sha256": "79c8b2da1db8559c5ae10e126212e4bb9f9408f855a38c40374f3e237834478b"
+    },
+    {
+      "file": "config.json",
+      "run_id": "b38238ef95c73da9",
+      "sha256": "b38238ef95c73da91d8937280549b9bded2c74af5a4b193225209283acdfcae9"
+    },
+    {
+      "file": "result.json",
+      "run_id": "b38238ef95c73da9",
+      "sha256": "5740fd3e48e7ed9c599ef2ee7656ac51227b0efb2dc2554fee7449c451715284"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "b38238ef95c73da9",
+      "sha256": "e856949e7481a34153a94144b8914557b8d1c13e002d512184cdc2d6a8741fae"
+    },
+    {
+      "file": "config.json",
+      "run_id": "5249b02e21c6408a",
+      "sha256": "5249b02e21c6408afea38177e998c3e3e93328d5efc59d9fb01548a7478e4c62"
+    },
+    {
+      "file": "result.json",
+      "run_id": "5249b02e21c6408a",
+      "sha256": "2a40407be984969f5b8de206bb76c7f8a03677b46e4d0b1d45972e4d085bf795"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "5249b02e21c6408a",
+      "sha256": "7e91b424a849cd678305852f9f2e829e30ff2145989a9612a8ec324d4ddeba59"
+    },
+    {
+      "file": "config.json",
+      "run_id": "36eb9bdcf41ac855",
+      "sha256": "36eb9bdcf41ac855afe22bea058724acc64917cb7a688a749943a480f0e8386b"
+    },
+    {
+      "file": "result.json",
+      "run_id": "36eb9bdcf41ac855",
+      "sha256": "fd277032f3985eedf6eb624b0ebac7efff6014ae0dccd956bb25a159c38ea184"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "36eb9bdcf41ac855",
+      "sha256": "16089341317a811c0a7e6f4bf81e1859b137acde27fe57a6adac351b2ded614b"
+    },
+    {
+      "file": "config.json",
+      "run_id": "243ee7bd667de5f6",
+      "sha256": "243ee7bd667de5f64c92a81d1b98c02f82b2573a0dbf19e3821f37727bf57311"
+    },
+    {
+      "file": "result.json",
+      "run_id": "243ee7bd667de5f6",
+      "sha256": "86bfd7d16698f899c1f1fb0172f32365ac45485ec6d655311c4978bfd3b43af5"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "243ee7bd667de5f6",
+      "sha256": "e7fc357f53397da00aa76044e8db955ead6f395e7c4536f2580f90d2a12efb61"
+    },
+    {
+      "file": "config.json",
+      "run_id": "e3c831f0c58e8062",
+      "sha256": "e3c831f0c58e806293420979738ab24e5731657460efdfa7921001f039f5f0c6"
+    },
+    {
+      "file": "result.json",
+      "run_id": "e3c831f0c58e8062",
+      "sha256": "9e317dcd95237eb27cc94bd2e872d19ef21345e59daeced2be3f59f410840edf"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "e3c831f0c58e8062",
+      "sha256": "93e1759fb14abb067f2400b77bf68b09b92e8ed4f7ea430ce75eef17b42a5fa4"
+    },
+    {
+      "file": "config.json",
+      "run_id": "cda7cce5eb458a75",
+      "sha256": "cda7cce5eb458a758535351e4d5e1738969d887c9970cd70f5d9b0124896ac7d"
+    },
+    {
+      "file": "result.json",
+      "run_id": "cda7cce5eb458a75",
+      "sha256": "41b7c3c144c78596799710eee3cac20c710c23845d8cee51c3e920f458187086"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "cda7cce5eb458a75",
+      "sha256": "03757a146ef17932b16f389f43cc3b9869caf9e0bd0463ea8523b10e291f5d29"
+    },
+    {
+      "file": "config.json",
+      "run_id": "6f9d66e624e4a6fa",
+      "sha256": "6f9d66e624e4a6faf907aa65d96a694b7bc85df25eaebe43cee8383817758db8"
+    },
+    {
+      "file": "result.json",
+      "run_id": "6f9d66e624e4a6fa",
+      "sha256": "8ccccab210c93513f18f4f3e9f9b661c60346a33d417332e7b9b1603ccac67bd"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "6f9d66e624e4a6fa",
+      "sha256": "98af1fc93d8bd30ef4b46cbb2f74ebb309b4fb7622c1c2fc3b3fe38745b9e458"
+    },
+    {
+      "file": "config.json",
+      "run_id": "4a804a513ad47957",
+      "sha256": "4a804a513ad47957dba01c01ce9e027929e1c0a4c46a623166e2a64a475653b2"
+    },
+    {
+      "file": "result.json",
+      "run_id": "4a804a513ad47957",
+      "sha256": "c7f68972c9fc78a6250d20f6758d4bcb6e2b5c9e99be54cd14fd6850bff17cb6"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "4a804a513ad47957",
+      "sha256": "94df46ba7a5da55f627c367f7d8dee2ca86d89291d14ac9a4a7d6a0f12834780"
+    },
+    {
+      "file": "config.json",
+      "run_id": "637e7f0a65159e68",
+      "sha256": "637e7f0a65159e6811b7d9c9a904eb8f0761e8e3ff7e35c127775b1349ce89da"
+    },
+    {
+      "file": "result.json",
+      "run_id": "637e7f0a65159e68",
+      "sha256": "589260f49f8c352cac3818928a1801176fd3be074653024427d28e522ae9da07"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "637e7f0a65159e68",
+      "sha256": "142911174aa8cce72f770077185452d074485a648a8e7baa55d16ae4a57224a2"
+    },
+    {
+      "file": "config.json",
+      "run_id": "f73072611aa50260",
+      "sha256": "f73072611aa50260e6ed0c07da689f38ad1949ec8df1ef89390f9dafd8bcd057"
+    },
+    {
+      "file": "result.json",
+      "run_id": "f73072611aa50260",
+      "sha256": "9e444cd464903fdace6167ec36372b5caef9ac9e32b63a570ad7937d22552863"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "f73072611aa50260",
+      "sha256": "16edf39a9d0d1f028d26fd624713040a3c42f34eb420fcd6910ba7509614e5d4"
+    },
+    {
+      "file": "config.json",
+      "run_id": "4b1a2064ce66d06f",
+      "sha256": "4b1a2064ce66d06f5f037bdb6a8b90284898ff0efb1fa675d612a7d315f602f9"
+    },
+    {
+      "file": "result.json",
+      "run_id": "4b1a2064ce66d06f",
+      "sha256": "43605d0a4a0bc1d6520d7a3cdafd0afb251921a4d4b62e284684a6d13cbfd88c"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "4b1a2064ce66d06f",
+      "sha256": "516708589e14229d18bf504c5d2017659e0043b34c9904d55e8df006bc22fc45"
+    },
+    {
+      "file": "config.json",
+      "run_id": "8d0cfed3753cccd9",
+      "sha256": "8d0cfed3753cccd95f0c8469f459e87f2f4356348ac37511e975546750583c5d"
+    },
+    {
+      "file": "result.json",
+      "run_id": "8d0cfed3753cccd9",
+      "sha256": "ea824406fc902798c55506edd0530193de8abb30da8f0a3db8abf4c5c73e2cde"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "8d0cfed3753cccd9",
+      "sha256": "67a4b1a9757ac055ad232155ca5b6ec9c49661b4683962e379681a2cb2c70fc8"
+    },
+    {
+      "file": "config.json",
+      "run_id": "df12af191e7b94f4",
+      "sha256": "df12af191e7b94f4e8540ab9d885aa81584c3ac2417704732a5555229524fdd1"
+    },
+    {
+      "file": "result.json",
+      "run_id": "df12af191e7b94f4",
+      "sha256": "f74d35a2a3bd9e3e1d183c00952d789ef6581688c1f82e373339a3814eb92159"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "df12af191e7b94f4",
+      "sha256": "a5b5260cd68063f1c9308849a065b5437453b6dbf66d669715880a50de2d1f90"
+    },
+    {
+      "file": "config.json",
+      "run_id": "0d6d61d45cae00f8",
+      "sha256": "0d6d61d45cae00f850756e194fb9d7c45f79889ccb5a5b47e588da7cec4e7428"
+    },
+    {
+      "file": "result.json",
+      "run_id": "0d6d61d45cae00f8",
+      "sha256": "34f4107ebe333e2825d594a16229726112dbe7df2c027fb9468cbe74c4c51b30"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "0d6d61d45cae00f8",
+      "sha256": "b536eb85a35eda393852d2161bc74d4af40ef1faed852948b71e9c90e00c246e"
+    },
+    {
+      "file": "config.json",
+      "run_id": "5ca1aac1208c867a",
+      "sha256": "5ca1aac1208c867adaa1b3b9a4ed93e4bbc9b808c410ef64832340299188a5cf"
+    },
+    {
+      "file": "result.json",
+      "run_id": "5ca1aac1208c867a",
+      "sha256": "6daae3227d578405bbe606863d3e32246e773c44fcafda15f4ab1e085243af86"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "5ca1aac1208c867a",
+      "sha256": "15da36daa56a1a52062273a282b017d8002f450cd89cefd0dc09c67551f9cdfa"
+    },
+    {
+      "file": "config.json",
+      "run_id": "9aad8391a4194e37",
+      "sha256": "9aad8391a4194e37722bc5282b36daada5e36aa75d8ff158d2ab32edbde65353"
+    },
+    {
+      "file": "result.json",
+      "run_id": "9aad8391a4194e37",
+      "sha256": "f2f894b6e5e9d5d355c3cfa291541f2ed2af07e5db1f09ea9af4a00d8cadfee8"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "9aad8391a4194e37",
+      "sha256": "80b642b63196bf22721d3bcdd32cffb302c70739e454825aa1d95e0c3b38c6c8"
+    },
+    {
+      "file": "config.json",
+      "run_id": "1ab63e02653515ca",
+      "sha256": "1ab63e02653515ca8a4b538c838f1835f66f46a4afb382fe1bb09f26860625e2"
+    },
+    {
+      "file": "result.json",
+      "run_id": "1ab63e02653515ca",
+      "sha256": "db252d937fc23e29fb4c102aa8378c22fef5903bb4508fae2892a34b506689da"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "1ab63e02653515ca",
+      "sha256": "5522d0c1932eb790dc23e41f4f14136d0465ea8da825a442dad152feb246e04f"
+    },
+    {
+      "file": "config.json",
+      "run_id": "404c0fb8ca508efd",
+      "sha256": "404c0fb8ca508efd014a57369aa5ce6609f83e841204f24823d14e415946972d"
+    },
+    {
+      "file": "result.json",
+      "run_id": "404c0fb8ca508efd",
+      "sha256": "ca035ecc9017d161b40d028bb55595fba2ba921c62ca0f5df7d1d779f46c0c78"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "404c0fb8ca508efd",
+      "sha256": "59f9be514080352faa353cf0fd46678ec666b7036c90ddd43e2736d6a56e3252"
+    },
+    {
+      "file": "config.json",
+      "run_id": "52dd938ffebf779d",
+      "sha256": "52dd938ffebf779d42ee5b0982c2ca2415c83bb02d5f2e48deec69c7e920eca6"
+    },
+    {
+      "file": "result.json",
+      "run_id": "52dd938ffebf779d",
+      "sha256": "06b22642935330735cfe913808677ca919375243cc16a71f086f5f46e2ed57ce"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "52dd938ffebf779d",
+      "sha256": "0a93d89a53a81080d0c9f7fba2ff2aaba9348ee96893d6b4d1c10f56304c41ac"
+    },
+    {
+      "file": "config.json",
+      "run_id": "a398e65ac818cebb",
+      "sha256": "a398e65ac818cebb838f32c6adfb1548d9f421681d1b6e90f0b2b12d162856c2"
+    },
+    {
+      "file": "result.json",
+      "run_id": "a398e65ac818cebb",
+      "sha256": "5c0e959ce5ac8ff6dc56c9a2d12357cd66909c004790187e6175e98804978877"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "a398e65ac818cebb",
+      "sha256": "ff89c3d3c113ce5d2acc579f1f1993a809555079261cafcf1a4e3012bc623147"
+    },
+    {
+      "file": "config.json",
+      "run_id": "37901482b7990c16",
+      "sha256": "37901482b7990c16968af07ce4b5d4e8180d4701ff9ae62b9cb8bdc95ddf7e1f"
+    },
+    {
+      "file": "result.json",
+      "run_id": "37901482b7990c16",
+      "sha256": "2f5bbacc9a9a7de21f77ff479d8ed7a18ff41d8de5bf401014247c2bf8d7a840"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "37901482b7990c16",
+      "sha256": "940693fc02d76d243d64c0e6334d7d80d743edf3b622b18e7140c8afb31d4593"
+    },
+    {
+      "file": "config.json",
+      "run_id": "5b86b2873403f95f",
+      "sha256": "5b86b2873403f95ff552b21eaa31d9e6afa869eb8f34e361413580955b4d738d"
+    },
+    {
+      "file": "result.json",
+      "run_id": "5b86b2873403f95f",
+      "sha256": "4036c697ee09f3bec0586541fd784ace3208e8c6a476f4921326a7a182e8bb83"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "5b86b2873403f95f",
+      "sha256": "faee4aa9527f2c1799bf0c02075799e0989b6ea4066fbb044d1747c85bdf97f5"
+    },
+    {
+      "file": "config.json",
+      "run_id": "5b3d6d11c4d17158",
+      "sha256": "5b3d6d11c4d171582adb30cef4dae2aad882eed4beb03c35e65a2f177c90db07"
+    },
+    {
+      "file": "result.json",
+      "run_id": "5b3d6d11c4d17158",
+      "sha256": "26edff1874ece8bfe2a839a554871c331267fc016ab53a0657df274cc27bb86c"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "5b3d6d11c4d17158",
+      "sha256": "7829261362fbdfdffe371356810e3dfa75998853b41b9868af2c6b0979c3eb6e"
+    },
+    {
+      "file": "config.json",
+      "run_id": "61e5f731e0098dbe",
+      "sha256": "61e5f731e0098dbe7c23e1ef27a698532b4c69d63320ae8a00b83fd81679f54d"
+    },
+    {
+      "file": "result.json",
+      "run_id": "61e5f731e0098dbe",
+      "sha256": "4eb2dc4a1927136d56ab99a367c52af0e8339fbbe69f7c5abbbce9cb74fc3758"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "61e5f731e0098dbe",
+      "sha256": "5d5ac0b6586782913d4ab98d305a2e455a529b6da433949697debea51dbf605c"
+    },
+    {
+      "file": "config.json",
+      "run_id": "0bf855f002d25fd0",
+      "sha256": "0bf855f002d25fd037a49dbe3cb2af9f1e7bdc86640e7750d7eb8315231fb410"
+    },
+    {
+      "file": "result.json",
+      "run_id": "0bf855f002d25fd0",
+      "sha256": "8462aac4c4271068b576dfa33d37f2e15de6558676a2f70e323c2d8e1cb569e3"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "0bf855f002d25fd0",
+      "sha256": "29403cb9ab7545820bba1064b540489298e52d55db1ad49e3656aa28079dc4ae"
+    },
+    {
+      "file": "config.json",
+      "run_id": "4971b9868f4b9d2b",
+      "sha256": "4971b9868f4b9d2b5b865096fa280531c1ad0b96024ae37fc53b8ac8f1ea5a1c"
+    },
+    {
+      "file": "result.json",
+      "run_id": "4971b9868f4b9d2b",
+      "sha256": "f2dd0a6f739e6a8a02ca63d8f059d3b293fffe7231ac3c5ce1e702286de67ea6"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "4971b9868f4b9d2b",
+      "sha256": "9f117e24e4d5e6546ac2bda307cbc48faf0160c1c8c3e6d9763df183d9ac1928"
+    },
+    {
+      "file": "config.json",
+      "run_id": "a6b534f5468658e4",
+      "sha256": "a6b534f5468658e400189ec4a3059334c8f26fd8cb8db5d3c52b43ea282243d5"
+    },
+    {
+      "file": "result.json",
+      "run_id": "a6b534f5468658e4",
+      "sha256": "593d401a1cb519a34fe1f9e1b2f051a9edacf077c0e7f43039cebb55971d4989"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "a6b534f5468658e4",
+      "sha256": "3bd25a3fdd392d11036eb2a6f51130ab127a54f7e2eaf3f2626b71991958cdec"
+    },
+    {
+      "file": "config.json",
+      "run_id": "065cd42cdae4dba3",
+      "sha256": "065cd42cdae4dba3a132f44f5bddacf8ac07d8481ef923f045d6e29b2a49a53a"
+    },
+    {
+      "file": "result.json",
+      "run_id": "065cd42cdae4dba3",
+      "sha256": "02d02ee4c6722efd0d84cf38780eb1b87c36fcc1ac3f66a461692ebeb1e823ac"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "065cd42cdae4dba3",
+      "sha256": "5bb3170aeeeb2fe99cf6ee3a2e9dcc260354bc429d9839f1c225be481da195bc"
+    },
+    {
+      "file": "config.json",
+      "run_id": "c034f2eb82dec795",
+      "sha256": "c034f2eb82dec7956b17212da804e68ae2380ac61acd75205aab804e4cc636a5"
+    },
+    {
+      "file": "result.json",
+      "run_id": "c034f2eb82dec795",
+      "sha256": "e4715d536e9506f20fdd19b783318de4ac9c6df6b13053b863aa1173bee74183"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "c034f2eb82dec795",
+      "sha256": "3045899ea6ba3969139a71390948e6ebc32f8c5e168a58f06da82bfe38421fe8"
+    },
+    {
+      "file": "config.json",
+      "run_id": "b58e2ad1c7b8b53c",
+      "sha256": "b58e2ad1c7b8b53cd7f6a51470d2728cd10ea7921ba166f514a97c3c58ceb843"
+    },
+    {
+      "file": "result.json",
+      "run_id": "b58e2ad1c7b8b53c",
+      "sha256": "2b484f863876af80ff037f5fdf616676a4aaa398879ee11911667323d4a67ac7"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "b58e2ad1c7b8b53c",
+      "sha256": "d245adb2b948a34ebb0e6a548937010f68fe82a246bc292715f6a5ef551a4a5c"
+    },
+    {
+      "file": "config.json",
+      "run_id": "f84c8223d4370d2c",
+      "sha256": "f84c8223d4370d2ca13f8b5266e1081c6d87579e9ac7f280d28277a10d4f9e21"
+    },
+    {
+      "file": "result.json",
+      "run_id": "f84c8223d4370d2c",
+      "sha256": "a3d858451df729c0e22294f2df12496f2926eb8ba69472f126cd2b646be8c497"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "f84c8223d4370d2c",
+      "sha256": "b176ec7c8398bfe47837ceb09e8162c5a65e76822a9c00c87b553617d9e333b0"
+    },
+    {
+      "file": "config.json",
+      "run_id": "a9e73c07fac7ff0d",
+      "sha256": "a9e73c07fac7ff0d7917c5aad6a352d8d5ab154274f6526f8ba865612e8ac53a"
+    },
+    {
+      "file": "result.json",
+      "run_id": "a9e73c07fac7ff0d",
+      "sha256": "847054886d98e180fa10c0ed760018dfd101d3f4860fbe1c5a5aec52fc3a3308"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "a9e73c07fac7ff0d",
+      "sha256": "3ed149cd4f39cf002984c19badc4066185a14c2077bcc6316587a4c68e0f2b22"
+    },
+    {
+      "file": "config.json",
+      "run_id": "f782e1a5910dc16b",
+      "sha256": "f782e1a5910dc16b12d1e1add3383baee6f71458172334eda6be8cd7cd645e69"
+    },
+    {
+      "file": "result.json",
+      "run_id": "f782e1a5910dc16b",
+      "sha256": "a4c61743a73d5acc6a28909d41622ad079c0153d0e8dffd6771912da3b5132fa"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "f782e1a5910dc16b",
+      "sha256": "f124dca3f6b1fa59233a83523bfbf7408c294e214540268c95e6ac446f41cbd2"
+    },
+    {
+      "file": "config.json",
+      "run_id": "1890442be6ab2b9a",
+      "sha256": "1890442be6ab2b9a876bb940447496857ca77bc108d93fb7d7604bc324d6bb7e"
+    },
+    {
+      "file": "result.json",
+      "run_id": "1890442be6ab2b9a",
+      "sha256": "c01dd52290ec62899eb14e00e11cb2fbf26548ac21e5abff202e7686502c1af8"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "1890442be6ab2b9a",
+      "sha256": "2aa29c2560ae2fbfa402f85eb84ab76541a4e4ad0100fa06ca067251d89811c9"
+    },
+    {
+      "file": "config.json",
+      "run_id": "b5117ab63457fe3a",
+      "sha256": "b5117ab63457fe3a26eb84c5fd84bc02422dca416d9d1342798ec4cf1ab18c2f"
+    },
+    {
+      "file": "result.json",
+      "run_id": "b5117ab63457fe3a",
+      "sha256": "ef4f40e72a78c097a5a3e51d52fd243d62d1a8ed4c9fe70d1e9c7d2a52d0de7c"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "b5117ab63457fe3a",
+      "sha256": "fb551fc38358fc94b24725f25e5e073ee1d7347eea6ab1d1511ef6198a7862c9"
+    },
+    {
+      "file": "config.json",
+      "run_id": "1ac1ba59cc7b841a",
+      "sha256": "1ac1ba59cc7b841adf0810c61a8c2d2b22cc297b08de387f3afc46e2c29ec2a9"
+    },
+    {
+      "file": "result.json",
+      "run_id": "1ac1ba59cc7b841a",
+      "sha256": "89c39a51505ed0da63960d35ecedb351867c683807e1ed051cb530fae6642523"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "1ac1ba59cc7b841a",
+      "sha256": "794480e03ebbc7cf1c5f7671b9a098d99731e8d837cff8b50d61f900ac9ecbbf"
+    },
+    {
+      "file": "config.json",
+      "run_id": "80f269105dba271e",
+      "sha256": "80f269105dba271e34b928457f08fbb552e2094d702370f287c7d9410751f2ce"
+    },
+    {
+      "file": "result.json",
+      "run_id": "80f269105dba271e",
+      "sha256": "cb095f37357c56b20c96d926f69f03510cc9e80f9f963606ec9cbb5c88e8378f"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "80f269105dba271e",
+      "sha256": "8f876e810fdb0a639e0975ab705ba4d62427fdd3e01bf6cf21cffecb565b8914"
+    },
+    {
+      "file": "config.json",
+      "run_id": "8776ef55242bc4ab",
+      "sha256": "8776ef55242bc4ab418d5cf44b5feeb1f1fc8f45c14c292c4a270541ac2f6cdf"
+    },
+    {
+      "file": "result.json",
+      "run_id": "8776ef55242bc4ab",
+      "sha256": "72c278eb4adab5011411bbcd468bde0b29833ec5dfa53bf7d3b25aa6751f47e5"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "8776ef55242bc4ab",
+      "sha256": "5b8a7a8ea220ddf6a3c1c3ed20852866535bb5ba643c13487729e798c68b281f"
+    },
+    {
+      "file": "config.json",
+      "run_id": "d65da06e549a8f75",
+      "sha256": "d65da06e549a8f75aacdea24d464c50492c7ef6292717afa1a8709d6e29171f9"
+    },
+    {
+      "file": "result.json",
+      "run_id": "d65da06e549a8f75",
+      "sha256": "3560241951f3bd5f0dcbae2051960bcd82f5939ee93433d1731a5a72648bf1a5"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "d65da06e549a8f75",
+      "sha256": "63bce9715bf628130725a4efe9d362051d680b1abbe89713e3fe8e52d736590f"
+    },
+    {
+      "file": "config.json",
+      "run_id": "a268b455db1d7025",
+      "sha256": "a268b455db1d702594fccd1d7c78479c87a34d2ef3d1c4372d4552e1c4310b3b"
+    },
+    {
+      "file": "result.json",
+      "run_id": "a268b455db1d7025",
+      "sha256": "e1c6967cadd228573366ed157ebf0c3276f924a2388b1c3fa4ec143b3b26234f"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "a268b455db1d7025",
+      "sha256": "3a6cc454146c966660f803ea54b5f74dcee048253156db0f7a3eac2c3f7b8cb4"
+    },
+    {
+      "file": "config.json",
+      "run_id": "c3ee4583dbcaf506",
+      "sha256": "c3ee4583dbcaf5061bcfe2949486b08629562abb3173d3851e1a324c5fa94d38"
+    },
+    {
+      "file": "result.json",
+      "run_id": "c3ee4583dbcaf506",
+      "sha256": "fb4601419945dca076ee12c44adde9106f6a66f3ff0a4f65c540294474d11c3d"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "c3ee4583dbcaf506",
+      "sha256": "b954e89d0e672a2280eb614642fa52f03362a5c2e1585f69efdd64a72ffa5fd6"
+    },
+    {
+      "file": "config.json",
+      "run_id": "283ee4f9aba0bb16",
+      "sha256": "283ee4f9aba0bb16da53d74652d68550a58cbe226bfba256003ea16bda611a5d"
+    },
+    {
+      "file": "result.json",
+      "run_id": "283ee4f9aba0bb16",
+      "sha256": "407e2ff95d2f42e85a8c711252091d8052a59dc899d4935f38423c5cb88f710d"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "283ee4f9aba0bb16",
+      "sha256": "efa4976f739c29b2593854984caaccf5856992cf38379a7d615dc3cc51d7f68f"
+    },
+    {
+      "file": "config.json",
+      "run_id": "1a094207fb446e88",
+      "sha256": "1a094207fb446e88b643dc04d4dd2ebf77585401b059376f2cc0781904d06baf"
+    },
+    {
+      "file": "result.json",
+      "run_id": "1a094207fb446e88",
+      "sha256": "05e6618af2ac3688737f70512424d110fbd1c57b7bf703601262deba3c73a459"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "1a094207fb446e88",
+      "sha256": "d57ef7f02608f78482aed3173a936966c9e611c4eef13308dfb64ab54bcaabff"
+    },
+    {
+      "file": "config.json",
+      "run_id": "8a1568563d414569",
+      "sha256": "8a1568563d414569387e28dc83cc992576ef17afc0d883efc81729a57a8bddbe"
+    },
+    {
+      "file": "result.json",
+      "run_id": "8a1568563d414569",
+      "sha256": "90b1e72558e6009bb46bacf3ee9d15c94902b130ba5cdcb534f4826d6482a798"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "8a1568563d414569",
+      "sha256": "a2bc50e2b2a534f523ee1887d59df5121a7ec2763fd42b03f02441cb860b6b37"
+    },
+    {
+      "file": "config.json",
+      "run_id": "e86b9eeda914cc98",
+      "sha256": "e86b9eeda914cc9803ef976056b53de066ddae4b3b49bab51e8f77fa1a544c76"
+    },
+    {
+      "file": "result.json",
+      "run_id": "e86b9eeda914cc98",
+      "sha256": "34ef55898a4d8ff79f2b1f7227c319d5842575b93439b85225b46fd078edf817"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "e86b9eeda914cc98",
+      "sha256": "342e2507bfe8f4311d6dd93911b1edba5464c4ced874142bb610bd0358756f11"
+    },
+    {
+      "file": "config.json",
+      "run_id": "fe9f4fb9bb213ad5",
+      "sha256": "fe9f4fb9bb213ad5cc9710056bb3dbfdceaee84008127a86c998842ad0100b4d"
+    },
+    {
+      "file": "result.json",
+      "run_id": "fe9f4fb9bb213ad5",
+      "sha256": "f6ce3cd39797143b7a542b84074bb88b940e18aeecd7ae046cf665c19c33a6dc"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "fe9f4fb9bb213ad5",
+      "sha256": "8878c62929f9cf152db42e35ce2e08f66d95e516650ab5001a6ed4aaeda6ef9b"
+    },
+    {
+      "file": "config.json",
+      "run_id": "d7ec9e98f1d0a527",
+      "sha256": "d7ec9e98f1d0a5272eb42664db6902a84b51a20c58870c6eaad2da4db791baba"
+    },
+    {
+      "file": "result.json",
+      "run_id": "d7ec9e98f1d0a527",
+      "sha256": "6950ae7bd59ed92b395442de2e50090b1481222d611a09a9282866b161c8cc05"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "d7ec9e98f1d0a527",
+      "sha256": "d8085494e19fbeac0a2a6a9282a16134d95699a4f304c0db300a481e1af5584b"
+    },
+    {
+      "file": "config.json",
+      "run_id": "b0f95c51ebcdfd6a",
+      "sha256": "b0f95c51ebcdfd6a627185b682992e635d0127c69c5e5054e5351272b998389a"
+    },
+    {
+      "file": "result.json",
+      "run_id": "b0f95c51ebcdfd6a",
+      "sha256": "c01da88b6153013c440ba7d8a76ee17b01e68e808c46385680526d4beb1a5d25"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "b0f95c51ebcdfd6a",
+      "sha256": "b897e2ad79077e274e9555b45b249b8116e16d53b441e49f885e258055c6d6ef"
+    },
+    {
+      "file": "config.json",
+      "run_id": "31a024ad2537b8f7",
+      "sha256": "31a024ad2537b8f71c1be21bc821d98db77a55dce038f16ab7a08f776019196e"
+    },
+    {
+      "file": "result.json",
+      "run_id": "31a024ad2537b8f7",
+      "sha256": "5541c3c6ab98b8326ff37d7dc83a56f57242af3a9ee5ed17915e5271fb3066dd"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "31a024ad2537b8f7",
+      "sha256": "f432c72d26eed2b1b0386c865eb55f80a39fdd1e457c362fb0c93faef4bb201a"
+    },
+    {
+      "file": "config.json",
+      "run_id": "d3daa680f6a9b291",
+      "sha256": "d3daa680f6a9b29136f4dc004ca1933c3ca4ffa59af6906705864d338ca18cb3"
+    },
+    {
+      "file": "result.json",
+      "run_id": "d3daa680f6a9b291",
+      "sha256": "cf2556491dcafc8c7a429e18143db749cb07fa0a3c74cba7cd2fd820e7765660"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "d3daa680f6a9b291",
+      "sha256": "e77e8a58a2034a432340bb218a4b9044bdef17c0177c06eac63113e5b83298dd"
+    },
+    {
+      "file": "config.json",
+      "run_id": "1ce3289e9154bf9f",
+      "sha256": "1ce3289e9154bf9fa6ba16ce3f6aa7ed047b658296d768b55e6b906513178c62"
+    },
+    {
+      "file": "result.json",
+      "run_id": "1ce3289e9154bf9f",
+      "sha256": "3b5dfe62bfac3a8c5a4b84477382be1a90a7ec828c0608c024507038f8789fb8"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "1ce3289e9154bf9f",
+      "sha256": "d562fb1ee83e9863d37121ad1bb5356f6dfa36b5a60c196b12ad391d28acaa39"
+    },
+    {
+      "file": "config.json",
+      "run_id": "9e636d7ebb496d31",
+      "sha256": "9e636d7ebb496d31320f1c6ec5a6d810864ec5faff0d33df5dddcd98d6fb7110"
+    },
+    {
+      "file": "result.json",
+      "run_id": "9e636d7ebb496d31",
+      "sha256": "87e860851dad227cba98b881f2f756a3cb5e7516420d78e9467b32e1dfec7574"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "9e636d7ebb496d31",
+      "sha256": "44f776833efe2fbdd5a14d922262d7ed309cd0c0cb1cfc4fc7f9ffce3969ccd0"
+    },
+    {
+      "file": "config.json",
+      "run_id": "aac2d3b7beb32427",
+      "sha256": "aac2d3b7beb324279117db3f4a60cafc1aea57486e46a5edb65ad04015893b34"
+    },
+    {
+      "file": "result.json",
+      "run_id": "aac2d3b7beb32427",
+      "sha256": "11ed36f813f815423229a3bad6126fa5fba146d5de2aaa5bae6acc56082cb501"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "aac2d3b7beb32427",
+      "sha256": "331e5ebafce86b1e8a2e4224887057ceb54de83c8f689b5be93c0a020081eee5"
+    },
+    {
+      "file": "config.json",
+      "run_id": "af1bd4cc9a4b7bba",
+      "sha256": "af1bd4cc9a4b7bba2270d72f804202132179c64b277d4aa901138f9d7af50a84"
+    },
+    {
+      "file": "result.json",
+      "run_id": "af1bd4cc9a4b7bba",
+      "sha256": "fbb10d6f0ef5408b960fb4364af60b8e9168e8d29b284b12ee1158c56e39a473"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "af1bd4cc9a4b7bba",
+      "sha256": "0a189d6bfd7cf0a1a55b3a4e2bd1b15d3accc6293062ef78a77c1058353aaed1"
+    },
+    {
+      "file": "config.json",
+      "run_id": "25e1100789e80b75",
+      "sha256": "25e1100789e80b756d65e0e43feea718a86e2a35c5a3a61699b9bc20032d91c6"
+    },
+    {
+      "file": "result.json",
+      "run_id": "25e1100789e80b75",
+      "sha256": "501feb7656be5302233effe388c0c27674efbccbad14a55785c822285fbf2e40"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "25e1100789e80b75",
+      "sha256": "315d31ee6d8698db68b0d30fb6ef2673564ddbe156c9e898734a66aad5f9b98d"
+    },
+    {
+      "file": "config.json",
+      "run_id": "c849cf53c887468c",
+      "sha256": "c849cf53c887468c42bc58166447e491b67bc7161ce21642d365275a3d159594"
+    },
+    {
+      "file": "result.json",
+      "run_id": "c849cf53c887468c",
+      "sha256": "ad859e684fd458a69e5e062c310136c01f72987de50ce52189f356f803efdaae"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "c849cf53c887468c",
+      "sha256": "e713f108312f2746905632e40b4c72dfbfb2f1302f42b62a3d4ed701d7c6e792"
+    },
+    {
+      "file": "config.json",
+      "run_id": "9d5c0b0cb32f4056",
+      "sha256": "9d5c0b0cb32f40565e6ffc9d40a387f17d2f3b708b3fd1b5d2c943686f2efe27"
+    },
+    {
+      "file": "result.json",
+      "run_id": "9d5c0b0cb32f4056",
+      "sha256": "7977dfd7c9602f0e7479e1f6b4ea04e3108f9c8435ac1dce01137095db091307"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "9d5c0b0cb32f4056",
+      "sha256": "f98ab7b1e5d7bf4c40d051b00cb0a59d167aaed6dbfb5589d0f61ca869b8fb6f"
+    },
+    {
+      "file": "config.json",
+      "run_id": "e3f8b8d1f48d42f9",
+      "sha256": "e3f8b8d1f48d42f9a5f14eeb6e58cbe4550871479ff9b15bbb6671b8f7393f5c"
+    },
+    {
+      "file": "result.json",
+      "run_id": "e3f8b8d1f48d42f9",
+      "sha256": "4015200df239573e55b290bc1847421b08ff4b15044348cc0978327fae7aeae3"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "e3f8b8d1f48d42f9",
+      "sha256": "7fb7b606f9abaa1ce4569792f9bcb2889b3855500a8d602429ba02bf67ed0c5d"
+    },
+    {
+      "file": "config.json",
+      "run_id": "819171a940335a00",
+      "sha256": "819171a940335a00dbbd9d23ab94a2441818dbc2301cb04ee7e610d3944a3c23"
+    },
+    {
+      "file": "result.json",
+      "run_id": "819171a940335a00",
+      "sha256": "3c51db92fa546c899e1cc7bcfa48f34d0b8025cfe5c769e9aa255bcd86ed2572"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "819171a940335a00",
+      "sha256": "cd626d1a29a2a08a0414e25c5e12345e199c1f4b549eb9b6df89f87aece7e6bf"
+    },
+    {
+      "file": "config.json",
+      "run_id": "e42670eada95526b",
+      "sha256": "e42670eada95526b89de4d57fac61ab20db799f120422033b53a9bd5763b1c3d"
+    },
+    {
+      "file": "result.json",
+      "run_id": "e42670eada95526b",
+      "sha256": "1c01b22a646bcfc07a8033226141902dda01e6e80412870b863ce47153ef4b44"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "e42670eada95526b",
+      "sha256": "940e39a5e533b79aa83eb3af95be8cf28e480946feb3c8e81decde48222edfa3"
+    },
+    {
+      "file": "config.json",
+      "run_id": "9fe4aa1bd4d5ff7e",
+      "sha256": "9fe4aa1bd4d5ff7e0fd2f6e42fc1421e32bbdb7f093c5446a55c6380f1a04fda"
+    },
+    {
+      "file": "result.json",
+      "run_id": "9fe4aa1bd4d5ff7e",
+      "sha256": "b8dc6082c9dbb7f788187fcd214ffc1f60dc547917bd22c690cea2f3fc515fb5"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "9fe4aa1bd4d5ff7e",
+      "sha256": "8e809ac1cf0d60b26d93080171852180e6c19ee85c427da9d8c0921a9f72351f"
+    },
+    {
+      "file": "config.json",
+      "run_id": "9b5170520c261a93",
+      "sha256": "9b5170520c261a93d4090088ce0a397611ea816e65d305c6e05f49ab7808f461"
+    },
+    {
+      "file": "result.json",
+      "run_id": "9b5170520c261a93",
+      "sha256": "565fc04e28add6c432b1784441ac1818b09d68f108524643144a0cd766be890d"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "9b5170520c261a93",
+      "sha256": "4e64cf0b8f79b04b147e3fc69b5afcc8e08d0ec2129a0c7b2e7613d4cd98f448"
+    },
+    {
+      "file": "config.json",
+      "run_id": "9c9b85c788a303e5",
+      "sha256": "9c9b85c788a303e5cb2cff42995ec8ac848d10c0d0c13f498ab1497cd448c312"
+    },
+    {
+      "file": "result.json",
+      "run_id": "9c9b85c788a303e5",
+      "sha256": "1431009d578f8a1c928813ebc66a8af7f44ade974a318b75632faf18872903fd"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "9c9b85c788a303e5",
+      "sha256": "2a52d118834d2cb01bce68691507c043e70a416c17f00532d6db1a417a925dcb"
+    },
+    {
+      "file": "config.json",
+      "run_id": "aed26f9196a30835",
+      "sha256": "aed26f9196a3083581ff06b5230b16fb56a35707439a605baf469ea785b0f097"
+    },
+    {
+      "file": "result.json",
+      "run_id": "aed26f9196a30835",
+      "sha256": "851efbff19e479d144e456052c08e6f57fa540742f2737afc710ac8e57150b93"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "aed26f9196a30835",
+      "sha256": "e526d5403855867642996c50a52b8a048d84f8b61c169b91c847da85787f3da3"
+    },
+    {
+      "file": "config.json",
+      "run_id": "135cced0bbefa94c",
+      "sha256": "135cced0bbefa94cf2776c9139d83ceb95b89e1f325ce1ae732a858ba7527e81"
+    },
+    {
+      "file": "result.json",
+      "run_id": "135cced0bbefa94c",
+      "sha256": "e9100b8921c04decad53cf8065681f2d3aeacd912e12ad4e71b2e9c3f4f0c4c1"
+    },
+    {
+      "file": "token_ids.json",
+      "run_id": "135cced0bbefa94c",
+      "sha256": "896a3178dd1cd50bc5a0383af813ad651f4a54b7896200303b085a40a12b48f4"
+    }
+  ],
+  "source_inventory_sha256": "93d904a67d30797e171ef8229f41fbbe097f5a72b90dbeebcf68659d4e7b166f",
+  "status": "verified",
+  "summary": [
+    {
+      "decoder_complete_count": 16,
+      "exact_count": 15,
+      "kl_ref_to_stego_infinite_run_count": 16,
+      "kl_ref_to_stego_infinite_steps": 4096,
+      "kl_stego_to_ref_infinite_steps": 0,
+      "metrics": {
+        "ber": {
+          "mean": 0.0017137096774193549,
+          "median": 0.0
+        },
+        "bits_per_token": {
+          "mean": 3.24365234375,
+          "median": 3.3671875
+        },
+        "entropy_utilization": {
+          "mean": 0.9215258495098653,
+          "median": 0.9128912597547172
+        },
+        "kl_stego_to_ref_mean_bits": {
+          "mean": 0.03204970817954387,
+          "median": 0.03421935287630961
+        },
+        "kl_stego_to_ref_median_bits": {
+          "mean": 0.018807832531624182,
+          "median": 0.019358559111020402
+        },
+        "ppl_raw_lm": {
+          "mean": 10.405462712856028,
+          "median": 10.645972094003861
+        },
+        "reference_entropy_mean_bits": {
+          "mean": 3.510736796346062,
+          "median": 3.5785712182318963
+        },
+        "tvd_mean": {
+          "mean": 0.022127451252121077,
+          "median": 0.023640545060977722
+        },
+        "tvd_median": {
+          "mean": 0.013746543755993677,
+          "median": 0.014195796354056912
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 16,
+      "precision": 16,
+      "soft_failure_count": 1,
+      "token_exact_count": 15
+    },
+    {
+      "decoder_complete_count": 16,
+      "exact_count": 16,
+      "kl_ref_to_stego_infinite_run_count": 16,
+      "kl_ref_to_stego_infinite_steps": 4096,
+      "kl_stego_to_ref_infinite_steps": 0,
+      "metrics": {
+        "ber": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "bits_per_token": {
+          "mean": 3.56982421875,
+          "median": 3.609375
+        },
+        "entropy_utilization": {
+          "mean": 0.9596520722835595,
+          "median": 0.9753791998094019
+        },
+        "kl_stego_to_ref_mean_bits": {
+          "mean": 0.010482454627765161,
+          "median": 0.010332525874039992
+        },
+        "kl_stego_to_ref_median_bits": {
+          "mean": 0.0034595734479713758,
+          "median": 0.0030241496410043952
+        },
+        "ppl_raw_lm": {
+          "mean": 12.990887727092161,
+          "median": 12.461534496780532
+        },
+        "reference_entropy_mean_bits": {
+          "mean": 3.714056530048878,
+          "median": 3.7091008369733336
+        },
+        "tvd_mean": {
+          "mean": 0.007138734872191839,
+          "median": 0.00707894812355208
+        },
+        "tvd_median": {
+          "mean": 0.0023944606191594097,
+          "median": 0.0020939827313019325
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 16,
+      "precision": 32,
+      "soft_failure_count": 0,
+      "token_exact_count": 16
+    },
+    {
+      "decoder_complete_count": 16,
+      "exact_count": 16,
+      "kl_ref_to_stego_infinite_run_count": 16,
+      "kl_ref_to_stego_infinite_steps": 4096,
+      "kl_stego_to_ref_infinite_steps": 0,
+      "metrics": {
+        "ber": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "bits_per_token": {
+          "mean": 3.5908203125,
+          "median": 3.630859375
+        },
+        "entropy_utilization": {
+          "mean": 0.9580553464462748,
+          "median": 0.9466889451030694
+        },
+        "kl_stego_to_ref_mean_bits": {
+          "mean": 0.010659782112435373,
+          "median": 0.008656884130232207
+        },
+        "kl_stego_to_ref_median_bits": {
+          "mean": 0.0038378363623137977,
+          "median": 0.0036576680639742293
+        },
+        "ppl_raw_lm": {
+          "mean": 12.722612046083157,
+          "median": 12.539189244884545
+        },
+        "reference_entropy_mean_bits": {
+          "mean": 3.750865654618656,
+          "median": 3.859454966712085
+        },
+        "tvd_mean": {
+          "mean": 0.007252035878504265,
+          "median": 0.005929544948947168
+        },
+        "tvd_median": {
+          "mean": 0.0026556500747159993,
+          "median": 0.0025320908658871934
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "n": 16,
+      "precision": 48,
+      "soft_failure_count": 0,
+      "token_exact_count": 16
+    },
+    {
+      "decoder_complete_count": 15,
+      "exact_count": 14,
+      "kl_ref_to_stego_infinite_run_count": 16,
+      "kl_ref_to_stego_infinite_steps": 4096,
+      "kl_stego_to_ref_infinite_steps": 0,
+      "metrics": {
+        "ber": {
+          "mean": 0.02398806503172532,
+          "median": 0.0
+        },
+        "bits_per_token": {
+          "mean": 2.4345703125,
+          "median": 2.083984375
+        },
+        "entropy_utilization": {
+          "mean": 0.8937443075583532,
+          "median": 0.8821069051451675
+        },
+        "kl_stego_to_ref_mean_bits": {
+          "mean": 0.02459450038790319,
+          "median": 0.022355174034208492
+        },
+        "kl_stego_to_ref_median_bits": {
+          "mean": 0.01091267938573626,
+          "median": 0.00549638615169028
+        },
+        "ppl_raw_lm": {
+          "mean": 6.87870765646711,
+          "median": 4.433671169397323
+        },
+        "reference_entropy_mean_bits": {
+          "mean": 2.7164595877435254,
+          "median": 2.2790034772941135
+        },
+        "tvd_mean": {
+          "mean": 0.016997804778851034,
+          "median": 0.015297447791815633
+        },
+        "tvd_median": {
+          "mean": 0.008008402141165303,
+          "median": 0.004052476666567376
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 16,
+      "precision": 16,
+      "soft_failure_count": 2,
+      "token_exact_count": 14
+    },
+    {
+      "decoder_complete_count": 14,
+      "exact_count": 13,
+      "kl_ref_to_stego_infinite_run_count": 16,
+      "kl_ref_to_stego_infinite_steps": 4096,
+      "kl_stego_to_ref_infinite_steps": 0,
+      "metrics": {
+        "ber": {
+          "mean": 0.03320227323663723,
+          "median": 0.0
+        },
+        "bits_per_token": {
+          "mean": 3.0126953125,
+          "median": 3.498046875
+        },
+        "entropy_utilization": {
+          "mean": 0.9725322259700306,
+          "median": 0.9724826557306763
+        },
+        "kl_stego_to_ref_mean_bits": {
+          "mean": 0.008686210083666117,
+          "median": 0.008131169482788863
+        },
+        "kl_stego_to_ref_median_bits": {
+          "mean": 0.002683851896469433,
+          "median": 0.0027521517532608144
+        },
+        "ppl_raw_lm": {
+          "mean": 10.403476343699603,
+          "median": 11.447797401720617
+        },
+        "reference_entropy_mean_bits": {
+          "mean": 3.1004218534519525,
+          "median": 3.600549350263379
+        },
+        "tvd_mean": {
+          "mean": 0.005933871039283378,
+          "median": 0.005565230670254685
+        },
+        "tvd_median": {
+          "mean": 0.0018571615578181152,
+          "median": 0.0019058262127933448
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 16,
+      "precision": 32,
+      "soft_failure_count": 3,
+      "token_exact_count": 13
+    },
+    {
+      "decoder_complete_count": 16,
+      "exact_count": 16,
+      "kl_ref_to_stego_infinite_run_count": 16,
+      "kl_ref_to_stego_infinite_steps": 4096,
+      "kl_stego_to_ref_infinite_steps": 0,
+      "metrics": {
+        "ber": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "bits_per_token": {
+          "mean": 2.559814453125,
+          "median": 2.7734375
+        },
+        "entropy_utilization": {
+          "mean": 0.9467789727680795,
+          "median": 0.9441351881261507
+        },
+        "kl_stego_to_ref_mean_bits": {
+          "mean": 0.007775280870618494,
+          "median": 0.007274906687876633
+        },
+        "kl_stego_to_ref_median_bits": {
+          "mean": 0.0019283601712071646,
+          "median": 0.0009368860364476051
+        },
+        "ppl_raw_lm": {
+          "mean": 7.447258906555965,
+          "median": 6.931029966174156
+        },
+        "reference_entropy_mean_bits": {
+          "mean": 2.6920046872278545,
+          "median": 2.751577315980282
+        },
+        "tvd_mean": {
+          "mean": 0.0053047858488669605,
+          "median": 0.004987717170552549
+        },
+        "tvd_median": {
+          "mean": 0.0013342226400418439,
+          "median": 0.0006491887022676204
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "n": 16,
+      "precision": 48,
+      "soft_failure_count": 0,
+      "token_exact_count": 16
+    }
+  ],
+  "test_access": "none",
+  "token_mismatch_count": 6
+}
