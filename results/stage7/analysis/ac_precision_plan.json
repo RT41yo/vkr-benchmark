@@ -1,0 +1,3885 @@
+{
+  "frozen_manifest_sha256": "4cc8e69c0c69513e23aabdf74e633de762e21ace7e59cc943bd531024dff4e1f",
+  "groups": [
+    {
+      "article_id": "19496d97273879cee7e2a41de48fa2d6f445459e",
+      "context_sha256": "fbe76ad8b6e4eadb24d21af1f337e93b0fb9dc63274a4fe62803159868baafb7",
+      "partition": "validation",
+      "prompt_id": "s7p0082",
+      "row_index": 5676,
+      "selection_rank": 113
+    },
+    {
+      "article_id": "da9588f556b1c3575e7ad2109967fa3156699813",
+      "context_sha256": "ba0f3c354c39c8eff1dc6baffae41724a0c0c4cd5d1bfad2827a05f4bb38c61d",
+      "partition": "validation",
+      "prompt_id": "s7p0045",
+      "row_index": 164,
+      "selection_rank": 76
+    },
+    {
+      "article_id": "3fc79d1edd92630f7b199df53dcb648fdb7944f1",
+      "context_sha256": "163d0d73654dd7915e40194215c554e3632c321c09f43c07b63d90fa16e752aa",
+      "partition": "validation",
+      "prompt_id": "s7p0112",
+      "row_index": 5445,
+      "selection_rank": 143
+    },
+    {
+      "article_id": "b542d4b1c8f05f2558ebea97c42e814d41f7a204",
+      "context_sha256": "427b1226f663fa444a1ecc6d672cbf7b9c545f4d9a9cb2a668c8de6f60786ea6",
+      "partition": "validation",
+      "prompt_id": "s7p0003",
+      "row_index": 2331,
+      "selection_rank": 34
+    },
+    {
+      "article_id": "6721edf88c95f480a4db2c63649dbb03736aeadf",
+      "context_sha256": "890144cb4601b768d4f6203aca7410efd58bc910068159008b74d32e56dc5bc8",
+      "partition": "validation",
+      "prompt_id": "s7p0032",
+      "row_index": 5966,
+      "selection_rank": 63
+    },
+    {
+      "article_id": "9f81c3049ff1b636ba416283ba4f5326fd578cc8",
+      "context_sha256": "9018f98f6b5949956aa2e3bdca9cf4f008479131fcce109fb0e2092088b2b755",
+      "partition": "validation",
+      "prompt_id": "s7p0040",
+      "row_index": 7613,
+      "selection_rank": 71
+    },
+    {
+      "article_id": "24f53c358c6776a9a25b9dcbd60b33ca7bae5675",
+      "context_sha256": "1931a0e6146d967e86f010c72d3190dc5ef0e0695aa6cec0e5807f0af2af83bc",
+      "partition": "validation",
+      "prompt_id": "s7p0079",
+      "row_index": 3610,
+      "selection_rank": 110
+    },
+    {
+      "article_id": "3ff0f4c8a07d6d10360a2ad416f0ffcd154f07db",
+      "context_sha256": "b1b12f751300a15d986667f2f075ba6ff67c30890d6de911af4b79749346dc0e",
+      "partition": "validation",
+      "prompt_id": "s7p0002",
+      "row_index": 5659,
+      "selection_rank": 33
+    },
+    {
+      "article_id": "14eb36ee40a85e3e1374c6b580d38f2fe985a6b8",
+      "context_sha256": "a4996d781f1fca9c97d25211122cfe5c3ac40c2d41d72935ad92aa981068a044",
+      "partition": "validation",
+      "prompt_id": "s7p0116",
+      "row_index": 5019,
+      "selection_rank": 147
+    },
+    {
+      "article_id": "262a4c33b8b8ca620c56f87cf22ca25c30aae0ec",
+      "context_sha256": "757d751ee6f36defd4aa37c68114cba2a18452c306f9e73cd6f534c1cddaa12b",
+      "partition": "validation",
+      "prompt_id": "s7p0117",
+      "row_index": 9043,
+      "selection_rank": 148
+    },
+    {
+      "article_id": "497585e636790d661b58456b729a0abd764f096b",
+      "context_sha256": "027c453edee5a689ffacc746f06fdfd26ae68585909eac1977ed806c89e9d3f6",
+      "partition": "validation",
+      "prompt_id": "s7p0070",
+      "row_index": 8134,
+      "selection_rank": 101
+    },
+    {
+      "article_id": "596382734b3ab8dd717aec845ab452359b1398d3",
+      "context_sha256": "9938491235ffc84ab606b3f167dce505b856b095eb60bf786a09b0d994e466ae",
+      "partition": "validation",
+      "prompt_id": "s7p0065",
+      "row_index": 9950,
+      "selection_rank": 96
+    },
+    {
+      "article_id": "dda1b7351041877d62c6ccf9df2a34f8771e5fe5",
+      "context_sha256": "3eec51fc0f9d6396c33fada97a27e97afc7f32293bfc695a87178bdef6687cf4",
+      "partition": "validation",
+      "prompt_id": "s7p0029",
+      "row_index": 1760,
+      "selection_rank": 60
+    },
+    {
+      "article_id": "4de5712d98b34bef9b4cbfd8dde3abc3c75510fd",
+      "context_sha256": "c7a7ac0796b94d7043eda1b564349d3aefc390aa8d86497dda4021ffd545b3fa",
+      "partition": "validation",
+      "prompt_id": "s7p0107",
+      "row_index": 10135,
+      "selection_rank": 138
+    },
+    {
+      "article_id": "ac2c3e7c5adf3df988a1eec4c81afa5ea7788047",
+      "context_sha256": "0ac225ac6d8568209e06968a0978ba7c598e7dbc63b3b26a65166745e1fb7172",
+      "partition": "validation",
+      "prompt_id": "s7p0035",
+      "row_index": 4005,
+      "selection_rank": 66
+    },
+    {
+      "article_id": "f7c18070d3a80551e0bf2c280bd46a2def2c4516",
+      "context_sha256": "b1b903926b334183f872bb7959f54f2fc170d16ea3ce75b09220dfce2bd0be54",
+      "partition": "validation",
+      "prompt_id": "s7p0088",
+      "row_index": 10353,
+      "selection_rank": 119
+    }
+  ],
+  "prompts_sha256": "3de9e303f980bebc572eb79837e364b77aeb6e4d8678b8cfafa413446b4f07f8",
+  "role": "validation_only_diagnostic",
+  "rows": [
+    {
+      "article_id": "19496d97273879cee7e2a41de48fa2d6f445459e",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0082",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0082-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0082",
+      "run_id": "2ce027b2f0218726"
+    },
+    {
+      "article_id": "19496d97273879cee7e2a41de48fa2d6f445459e",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0082",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0082-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0082",
+      "run_id": "cf02b2c1a5fff02b"
+    },
+    {
+      "article_id": "19496d97273879cee7e2a41de48fa2d6f445459e",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0082",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0082-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0082",
+      "run_id": "2805a37294aa91c5"
+    },
+    {
+      "article_id": "da9588f556b1c3575e7ad2109967fa3156699813",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0045",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0045-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0045",
+      "run_id": "186b5368afd9c833"
+    },
+    {
+      "article_id": "da9588f556b1c3575e7ad2109967fa3156699813",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0045",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0045-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0045",
+      "run_id": "6db7ec3b39cc6b24"
+    },
+    {
+      "article_id": "da9588f556b1c3575e7ad2109967fa3156699813",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0045",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0045-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0045",
+      "run_id": "6fb0ed456ecb517c"
+    },
+    {
+      "article_id": "3fc79d1edd92630f7b199df53dcb648fdb7944f1",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0112",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0112-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0112",
+      "run_id": "b89cdffbda112ed6"
+    },
+    {
+      "article_id": "3fc79d1edd92630f7b199df53dcb648fdb7944f1",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0112",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0112-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0112",
+      "run_id": "da0007ccadbf4b74"
+    },
+    {
+      "article_id": "3fc79d1edd92630f7b199df53dcb648fdb7944f1",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0112",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0112-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0112",
+      "run_id": "62c49d3bc49e43fe"
+    },
+    {
+      "article_id": "b542d4b1c8f05f2558ebea97c42e814d41f7a204",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0003",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0003-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0003",
+      "run_id": "498d300a5ebeb415"
+    },
+    {
+      "article_id": "b542d4b1c8f05f2558ebea97c42e814d41f7a204",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0003",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0003-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0003",
+      "run_id": "28a0eed340f9e4d1"
+    },
+    {
+      "article_id": "b542d4b1c8f05f2558ebea97c42e814d41f7a204",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0003",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0003-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0003",
+      "run_id": "19b5f46b16c030ea"
+    },
+    {
+      "article_id": "6721edf88c95f480a4db2c63649dbb03736aeadf",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0032",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0032-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0032",
+      "run_id": "6115920595d260e6"
+    },
+    {
+      "article_id": "6721edf88c95f480a4db2c63649dbb03736aeadf",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0032",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0032-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0032",
+      "run_id": "36753786f46c4777"
+    },
+    {
+      "article_id": "6721edf88c95f480a4db2c63649dbb03736aeadf",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0032",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0032-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0032",
+      "run_id": "da8a73b84539e465"
+    },
+    {
+      "article_id": "9f81c3049ff1b636ba416283ba4f5326fd578cc8",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0040",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0040-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0040",
+      "run_id": "1c340197ef97aba3"
+    },
+    {
+      "article_id": "9f81c3049ff1b636ba416283ba4f5326fd578cc8",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0040",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0040-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0040",
+      "run_id": "58bf89aca5b84281"
+    },
+    {
+      "article_id": "9f81c3049ff1b636ba416283ba4f5326fd578cc8",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0040",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0040-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0040",
+      "run_id": "48f57df25c8b867e"
+    },
+    {
+      "article_id": "24f53c358c6776a9a25b9dcbd60b33ca7bae5675",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0079",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0079-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0079",
+      "run_id": "738233e05b51418e"
+    },
+    {
+      "article_id": "24f53c358c6776a9a25b9dcbd60b33ca7bae5675",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0079",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0079-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0079",
+      "run_id": "2b19af6bbdf7ac13"
+    },
+    {
+      "article_id": "24f53c358c6776a9a25b9dcbd60b33ca7bae5675",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0079",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0079-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0079",
+      "run_id": "808fcb26bce5376f"
+    },
+    {
+      "article_id": "3ff0f4c8a07d6d10360a2ad416f0ffcd154f07db",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0002",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0002-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0002",
+      "run_id": "0abc1b57cfd9457a"
+    },
+    {
+      "article_id": "3ff0f4c8a07d6d10360a2ad416f0ffcd154f07db",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0002",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0002-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0002",
+      "run_id": "33130586530a9065"
+    },
+    {
+      "article_id": "3ff0f4c8a07d6d10360a2ad416f0ffcd154f07db",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0002",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0002-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0002",
+      "run_id": "bdf8e09bd349bb34"
+    },
+    {
+      "article_id": "14eb36ee40a85e3e1374c6b580d38f2fe985a6b8",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0116",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0116-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0116",
+      "run_id": "f35eca8be47bf039"
+    },
+    {
+      "article_id": "14eb36ee40a85e3e1374c6b580d38f2fe985a6b8",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0116",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0116-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0116",
+      "run_id": "8350d2b47bc80b11"
+    },
+    {
+      "article_id": "14eb36ee40a85e3e1374c6b580d38f2fe985a6b8",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0116",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0116-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0116",
+      "run_id": "2e7d3c9aca942291"
+    },
+    {
+      "article_id": "262a4c33b8b8ca620c56f87cf22ca25c30aae0ec",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0117",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0117-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0117",
+      "run_id": "5ff31badf42c180b"
+    },
+    {
+      "article_id": "262a4c33b8b8ca620c56f87cf22ca25c30aae0ec",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0117",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0117-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0117",
+      "run_id": "44ec2b10127e7d6b"
+    },
+    {
+      "article_id": "262a4c33b8b8ca620c56f87cf22ca25c30aae0ec",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0117",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0117-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0117",
+      "run_id": "84e433b7c63c8491"
+    },
+    {
+      "article_id": "497585e636790d661b58456b729a0abd764f096b",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0070",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0070-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0070",
+      "run_id": "a759eda03d349ba6"
+    },
+    {
+      "article_id": "497585e636790d661b58456b729a0abd764f096b",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0070",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0070-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0070",
+      "run_id": "b38238ef95c73da9"
+    },
+    {
+      "article_id": "497585e636790d661b58456b729a0abd764f096b",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0070",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0070-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0070",
+      "run_id": "5249b02e21c6408a"
+    },
+    {
+      "article_id": "596382734b3ab8dd717aec845ab452359b1398d3",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0065",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0065-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0065",
+      "run_id": "36eb9bdcf41ac855"
+    },
+    {
+      "article_id": "596382734b3ab8dd717aec845ab452359b1398d3",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0065",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0065-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0065",
+      "run_id": "243ee7bd667de5f6"
+    },
+    {
+      "article_id": "596382734b3ab8dd717aec845ab452359b1398d3",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0065",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0065-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0065",
+      "run_id": "e3c831f0c58e8062"
+    },
+    {
+      "article_id": "dda1b7351041877d62c6ccf9df2a34f8771e5fe5",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0029",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0029-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0029",
+      "run_id": "cda7cce5eb458a75"
+    },
+    {
+      "article_id": "dda1b7351041877d62c6ccf9df2a34f8771e5fe5",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0029",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0029-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0029",
+      "run_id": "6f9d66e624e4a6fa"
+    },
+    {
+      "article_id": "dda1b7351041877d62c6ccf9df2a34f8771e5fe5",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0029",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0029-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0029",
+      "run_id": "4a804a513ad47957"
+    },
+    {
+      "article_id": "4de5712d98b34bef9b4cbfd8dde3abc3c75510fd",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0107",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0107-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0107",
+      "run_id": "637e7f0a65159e68"
+    },
+    {
+      "article_id": "4de5712d98b34bef9b4cbfd8dde3abc3c75510fd",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0107",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0107-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0107",
+      "run_id": "f73072611aa50260"
+    },
+    {
+      "article_id": "4de5712d98b34bef9b4cbfd8dde3abc3c75510fd",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0107",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0107-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0107",
+      "run_id": "4b1a2064ce66d06f"
+    },
+    {
+      "article_id": "ac2c3e7c5adf3df988a1eec4c81afa5ea7788047",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0035",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0035-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0035",
+      "run_id": "8d0cfed3753cccd9"
+    },
+    {
+      "article_id": "ac2c3e7c5adf3df988a1eec4c81afa5ea7788047",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0035",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0035-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0035",
+      "run_id": "df12af191e7b94f4"
+    },
+    {
+      "article_id": "ac2c3e7c5adf3df988a1eec4c81afa5ea7788047",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0035",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0035-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0035",
+      "run_id": "0d6d61d45cae00f8"
+    },
+    {
+      "article_id": "f7c18070d3a80551e0bf2c280bd46a2def2c4516",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0088",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0088-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 16,
+      "prompt_id": "s7p0088",
+      "run_id": "5ca1aac1208c867a"
+    },
+    {
+      "article_id": "f7c18070d3a80551e0bf2c280bd46a2def2c4516",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0088",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0088-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 32,
+      "prompt_id": "s7p0088",
+      "run_id": "9aad8391a4194e37"
+    },
+    {
+      "article_id": "f7c18070d3a80551e0bf2c280bd46a2def2c4516",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "meta-llama/Llama-3.2-3B",
+          "prompt_add_special_tokens": true,
+          "revision": "13afe5124825b4f3751f836b40dafda64c1ed062"
+        },
+        "prompt_id": "s7p0088",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0088-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "meta-llama/Llama-3.2-3B",
+      "precision": 48,
+      "prompt_id": "s7p0088",
+      "run_id": "1ab63e02653515ca"
+    },
+    {
+      "article_id": "19496d97273879cee7e2a41de48fa2d6f445459e",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0082",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0082-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0082",
+      "run_id": "404c0fb8ca508efd"
+    },
+    {
+      "article_id": "19496d97273879cee7e2a41de48fa2d6f445459e",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0082",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0082-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0082",
+      "run_id": "52dd938ffebf779d"
+    },
+    {
+      "article_id": "19496d97273879cee7e2a41de48fa2d6f445459e",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0082",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0082-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0082",
+      "run_id": "a398e65ac818cebb"
+    },
+    {
+      "article_id": "da9588f556b1c3575e7ad2109967fa3156699813",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0045",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0045-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0045",
+      "run_id": "37901482b7990c16"
+    },
+    {
+      "article_id": "da9588f556b1c3575e7ad2109967fa3156699813",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0045",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0045-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0045",
+      "run_id": "5b86b2873403f95f"
+    },
+    {
+      "article_id": "da9588f556b1c3575e7ad2109967fa3156699813",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0045",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0045-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0045",
+      "run_id": "5b3d6d11c4d17158"
+    },
+    {
+      "article_id": "3fc79d1edd92630f7b199df53dcb648fdb7944f1",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0112",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0112-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0112",
+      "run_id": "61e5f731e0098dbe"
+    },
+    {
+      "article_id": "3fc79d1edd92630f7b199df53dcb648fdb7944f1",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0112",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0112-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0112",
+      "run_id": "0bf855f002d25fd0"
+    },
+    {
+      "article_id": "3fc79d1edd92630f7b199df53dcb648fdb7944f1",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0112",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0112-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0112",
+      "run_id": "4971b9868f4b9d2b"
+    },
+    {
+      "article_id": "b542d4b1c8f05f2558ebea97c42e814d41f7a204",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0003",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0003-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0003",
+      "run_id": "a6b534f5468658e4"
+    },
+    {
+      "article_id": "b542d4b1c8f05f2558ebea97c42e814d41f7a204",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0003",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0003-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0003",
+      "run_id": "065cd42cdae4dba3"
+    },
+    {
+      "article_id": "b542d4b1c8f05f2558ebea97c42e814d41f7a204",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0003",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0003-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0003",
+      "run_id": "c034f2eb82dec795"
+    },
+    {
+      "article_id": "6721edf88c95f480a4db2c63649dbb03736aeadf",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0032",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0032-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0032",
+      "run_id": "b58e2ad1c7b8b53c"
+    },
+    {
+      "article_id": "6721edf88c95f480a4db2c63649dbb03736aeadf",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0032",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0032-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0032",
+      "run_id": "f84c8223d4370d2c"
+    },
+    {
+      "article_id": "6721edf88c95f480a4db2c63649dbb03736aeadf",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0032",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0032-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0032",
+      "run_id": "a9e73c07fac7ff0d"
+    },
+    {
+      "article_id": "9f81c3049ff1b636ba416283ba4f5326fd578cc8",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0040",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0040-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0040",
+      "run_id": "f782e1a5910dc16b"
+    },
+    {
+      "article_id": "9f81c3049ff1b636ba416283ba4f5326fd578cc8",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0040",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0040-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0040",
+      "run_id": "1890442be6ab2b9a"
+    },
+    {
+      "article_id": "9f81c3049ff1b636ba416283ba4f5326fd578cc8",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0040",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0040-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0040",
+      "run_id": "b5117ab63457fe3a"
+    },
+    {
+      "article_id": "24f53c358c6776a9a25b9dcbd60b33ca7bae5675",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0079",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0079-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0079",
+      "run_id": "1ac1ba59cc7b841a"
+    },
+    {
+      "article_id": "24f53c358c6776a9a25b9dcbd60b33ca7bae5675",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0079",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0079-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0079",
+      "run_id": "80f269105dba271e"
+    },
+    {
+      "article_id": "24f53c358c6776a9a25b9dcbd60b33ca7bae5675",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0079",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0079-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0079",
+      "run_id": "8776ef55242bc4ab"
+    },
+    {
+      "article_id": "3ff0f4c8a07d6d10360a2ad416f0ffcd154f07db",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0002",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0002-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0002",
+      "run_id": "d65da06e549a8f75"
+    },
+    {
+      "article_id": "3ff0f4c8a07d6d10360a2ad416f0ffcd154f07db",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0002",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0002-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0002",
+      "run_id": "a268b455db1d7025"
+    },
+    {
+      "article_id": "3ff0f4c8a07d6d10360a2ad416f0ffcd154f07db",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0002",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0002-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0002",
+      "run_id": "c3ee4583dbcaf506"
+    },
+    {
+      "article_id": "14eb36ee40a85e3e1374c6b580d38f2fe985a6b8",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0116",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0116-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0116",
+      "run_id": "283ee4f9aba0bb16"
+    },
+    {
+      "article_id": "14eb36ee40a85e3e1374c6b580d38f2fe985a6b8",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0116",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0116-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0116",
+      "run_id": "1a094207fb446e88"
+    },
+    {
+      "article_id": "14eb36ee40a85e3e1374c6b580d38f2fe985a6b8",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0116",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0116-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0116",
+      "run_id": "8a1568563d414569"
+    },
+    {
+      "article_id": "262a4c33b8b8ca620c56f87cf22ca25c30aae0ec",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0117",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0117-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0117",
+      "run_id": "e86b9eeda914cc98"
+    },
+    {
+      "article_id": "262a4c33b8b8ca620c56f87cf22ca25c30aae0ec",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0117",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0117-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0117",
+      "run_id": "fe9f4fb9bb213ad5"
+    },
+    {
+      "article_id": "262a4c33b8b8ca620c56f87cf22ca25c30aae0ec",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0117",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0117-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0117",
+      "run_id": "d7ec9e98f1d0a527"
+    },
+    {
+      "article_id": "497585e636790d661b58456b729a0abd764f096b",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0070",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0070-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0070",
+      "run_id": "b0f95c51ebcdfd6a"
+    },
+    {
+      "article_id": "497585e636790d661b58456b729a0abd764f096b",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0070",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0070-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0070",
+      "run_id": "31a024ad2537b8f7"
+    },
+    {
+      "article_id": "497585e636790d661b58456b729a0abd764f096b",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0070",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0070-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0070",
+      "run_id": "d3daa680f6a9b291"
+    },
+    {
+      "article_id": "596382734b3ab8dd717aec845ab452359b1398d3",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0065",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0065-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0065",
+      "run_id": "1ce3289e9154bf9f"
+    },
+    {
+      "article_id": "596382734b3ab8dd717aec845ab452359b1398d3",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0065",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0065-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0065",
+      "run_id": "9e636d7ebb496d31"
+    },
+    {
+      "article_id": "596382734b3ab8dd717aec845ab452359b1398d3",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0065",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0065-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0065",
+      "run_id": "aac2d3b7beb32427"
+    },
+    {
+      "article_id": "dda1b7351041877d62c6ccf9df2a34f8771e5fe5",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0029",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0029-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0029",
+      "run_id": "af1bd4cc9a4b7bba"
+    },
+    {
+      "article_id": "dda1b7351041877d62c6ccf9df2a34f8771e5fe5",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0029",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0029-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0029",
+      "run_id": "25e1100789e80b75"
+    },
+    {
+      "article_id": "dda1b7351041877d62c6ccf9df2a34f8771e5fe5",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0029",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0029-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0029",
+      "run_id": "c849cf53c887468c"
+    },
+    {
+      "article_id": "4de5712d98b34bef9b4cbfd8dde3abc3c75510fd",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0107",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0107-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0107",
+      "run_id": "9d5c0b0cb32f4056"
+    },
+    {
+      "article_id": "4de5712d98b34bef9b4cbfd8dde3abc3c75510fd",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0107",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0107-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0107",
+      "run_id": "e3f8b8d1f48d42f9"
+    },
+    {
+      "article_id": "4de5712d98b34bef9b4cbfd8dde3abc3c75510fd",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0107",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0107-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0107",
+      "run_id": "819171a940335a00"
+    },
+    {
+      "article_id": "ac2c3e7c5adf3df988a1eec4c81afa5ea7788047",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0035",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0035-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0035",
+      "run_id": "e42670eada95526b"
+    },
+    {
+      "article_id": "ac2c3e7c5adf3df988a1eec4c81afa5ea7788047",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0035",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0035-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0035",
+      "run_id": "9fe4aa1bd4d5ff7e"
+    },
+    {
+      "article_id": "ac2c3e7c5adf3df988a1eec4c81afa5ea7788047",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0035",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0035-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0035",
+      "run_id": "9b5170520c261a93"
+    },
+    {
+      "article_id": "f7c18070d3a80551e0bf2c280bd46a2def2c4516",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 16,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0088",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0088-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 16,
+      "prompt_id": "s7p0088",
+      "run_id": "9c9b85c788a303e5"
+    },
+    {
+      "article_id": "f7c18070d3a80551e0bf2c280bd46a2def2c4516",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 32,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0088",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0088-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 32,
+      "prompt_id": "s7p0088",
+      "run_id": "aed26f9196a30835"
+    },
+    {
+      "article_id": "f7c18070d3a80551e0bf2c280bd46a2def2c4516",
+      "config": {
+        "benchmark_version": "1.0",
+        "generation": {
+          "exclude_special_tokens": true,
+          "kv_cache": true,
+          "temperature": 1.0,
+          "top_k": null,
+          "top_p": 1.0
+        },
+        "method": {
+          "id": "arithmetic_coding",
+          "implementation_revision": "vkr-benchmark-0.2.0.dev0",
+          "params": {
+            "precision": 48,
+            "top_k": 2048
+          }
+        },
+        "model": {
+          "attn_implementation": null,
+          "dtype": "bfloat16",
+          "id": "Qwen/Qwen3-4B-Base",
+          "prompt_add_special_tokens": true,
+          "revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539"
+        },
+        "prompt_id": "s7p0088",
+        "run_kind": "normalized",
+        "secret_id": "stage7-det-s7p0088-r01",
+        "termination": {
+          "mode": "fixed_carrier_tokens",
+          "target_carrier_tokens": 256
+        }
+      },
+      "model_id": "Qwen/Qwen3-4B-Base",
+      "precision": 48,
+      "prompt_id": "s7p0088",
+      "run_id": "135cced0bbefa94c"
+    }
+  ],
+  "schema_version": "stage7.ac_precision_plan.v1",
+  "selection_rule": "VKR-BENCHMARK-STAGE7-v1|implementation-factors|seed=741|article_id=<id>",
+  "selection_seed": 741,
+  "split_sha256": "bfb6b6323177f834d72fe2e1236e53b9e559cd7d907c37890b058ab0fece52d6"
+}
